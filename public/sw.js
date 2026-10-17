@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gymtracker-v1';
+const CACHE_NAME = 'gymtracker-v2';
 
 // Tài nguyên core cần cache ngay khi install
 const PRECACHE_URLS = [
@@ -6,18 +6,17 @@ const PRECACHE_URLS = [
   '/manifest.webmanifest',
 ];
 
-// Install: Cache app shell
+// Install: Cache app shell & skip waiting
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
       return cache.addAll(PRECACHE_URLS);
     })
   );
-  // Kích hoạt ngay, không chờ tab cũ đóng
   self.skipWaiting();
 });
 
-// Activate: Xóa cache cũ
+// Activate: Xóa sạch cache cũ (v1, ...) & chiếm quyền điều khiển client ngay
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -26,25 +25,43 @@ self.addEventListener('activate', (event) => {
           .filter((key) => key !== CACHE_NAME)
           .map((key) => caches.delete(key))
       );
-    })
+    }).then(() => self.clients.claim())
   );
-  // Chiếm quyền điều khiển tất cả các tab
-  self.clients.claim();
 });
 
-// Fetch: Stale-While-Revalidate cho navigation & static assets
-// Network-first cho exercise images (CDN), Cache-first cho JS/CSS/fonts
+// Fetch Strategy:
+// 1. Navigation / Document (HTML trang chính): Network-First, fallback to Cache khi offline
+//    -> Giúp App đã cài PWA luôn tải ngay giao diện mới nhất khi có mạng, không bị kẹt giao diện cũ!
+// 2. Ảnh bài tập từ CDN: Cache-First
+// 3. Static JS/CSS: Stale-While-Revalidate
 self.addEventListener('fetch', (event) => {
   const { request } = event;
   const url = new URL(request.url);
 
-  // Bỏ qua các request không phải GET
+  // Bỏ qua các request không phải GET hoặc không phải http(s)
   if (request.method !== 'GET') return;
-
-  // Bỏ qua Chrome extensions & non-http
   if (!url.protocol.startsWith('http')) return;
 
-  // Exercise images từ GitHub CDN: Cache-first (ảnh không đổi)
+  // 1. Navigation / HTML trang chủ: NETWORK-FIRST (Luôn ưu tiên nạp bản mới nhất)
+  if (request.mode === 'navigate' || request.destination === 'document') {
+    event.respondWith(
+      fetch(request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const responseClone = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(request, responseClone));
+          }
+          return response;
+        })
+        .catch(() => {
+          // Khi offline -> trả về cache
+          return caches.match(request).then((cached) => cached || caches.match('/'));
+        })
+    );
+    return;
+  }
+
+  // 2. Exercise images từ GitHub CDN: Cache-first (ảnh không thay đổi)
   if (url.hostname === 'raw.githubusercontent.com') {
     event.respondWith(
       caches.open(CACHE_NAME).then((cache) => {
@@ -56,7 +73,6 @@ self.addEventListener('fetch', (event) => {
             }
             return response;
           }).catch(() => {
-            // Offline fallback: trả về response rỗng cho ảnh
             return new Response('', { status: 408, statusText: 'Offline' });
           });
         });
@@ -65,11 +81,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // App shell & static assets: Stale-While-Revalidate
+  // 3. Static assets (JS, CSS, Font, Next chunk): Stale-While-Revalidate
   if (
     url.origin === self.location.origin &&
-    (request.destination === 'document' ||
-     request.destination === 'script' ||
+    (request.destination === 'script' ||
      request.destination === 'style' ||
      request.destination === 'font' ||
      request.destination === 'image' ||
@@ -85,9 +100,8 @@ self.addEventListener('fetch', (event) => {
               }
               return response;
             })
-            .catch(() => cached); // Offline: trả cached version
+            .catch(() => cached);
 
-          // Trả cached ngay (nhanh), đồng thời cập nhật cache nền
           return cached || fetchPromise;
         });
       })

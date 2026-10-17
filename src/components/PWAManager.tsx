@@ -10,21 +10,33 @@ export default function PWAManager() {
   const [swRegistered, setSwRegistered] = useState(false);
 
   useEffect(() => {
-    // 1. Đăng ký Service Worker
+    // 1. Đăng ký Service Worker & Tự động cập nhật
     if ('serviceWorker' in navigator) {
+      let isRefreshing = false;
+      navigator.serviceWorker.addEventListener('controllerchange', () => {
+        if (!isRefreshing) {
+          isRefreshing = true;
+          window.location.reload();
+        }
+      });
+
       navigator.serviceWorker
         .register('/sw.js')
         .then((reg) => {
           setSwRegistered(true);
           console.log('[GymTracker] Service Worker registered:', reg.scope);
 
+          // Ép kiểm tra phiên bản mới từ server
+          reg.update().catch(() => {});
+
           // Kiểm tra bản cập nhật mới
           reg.addEventListener('updatefound', () => {
             const newWorker = reg.installing;
             if (newWorker) {
               newWorker.addEventListener('statechange', () => {
-                if (newWorker.state === 'activated') {
-                  console.log('[GymTracker] New version available — refresh to update');
+                if (newWorker.state === 'activated' && navigator.serviceWorker.controller) {
+                  console.log('[GymTracker] New version active — reloading');
+                  window.location.reload();
                 }
               });
             }
