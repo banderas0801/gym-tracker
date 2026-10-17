@@ -84,7 +84,7 @@ export default function PWAManager() {
 
       {/* Install Banner */}
       {showInstallBanner && (
-        <div className="fixed bottom-20 sm:bottom-4 left-3 right-3 sm:left-auto sm:right-4 sm:max-w-sm z-[55] bg-zinc-900 border border-emerald-500/40 rounded-2xl p-4 shadow-2xl shadow-emerald-500/10 animate-in slide-in-from-bottom duration-300">
+        <div className="fixed bottom-20 md:bottom-4 left-3 right-3 md:left-auto md:right-4 md:max-w-sm z-[55] bg-zinc-900 border border-emerald-500/40 rounded-2xl p-4 shadow-2xl shadow-emerald-500/10 animate-in slide-from-bottom duration-300">
           <div className="flex items-start justify-between gap-3">
             <div className="flex items-center space-x-3">
               <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shrink-0 shadow-lg shadow-emerald-500/30">

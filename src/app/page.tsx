@@ -54,7 +54,7 @@ export default function Home() {
 
         {/* Tab Navigation Menu (Desktop & Tablet) */}
         {!activeSession && (
-          <div className="max-w-4xl mx-auto px-4 flex items-center space-x-2 overflow-x-auto pb-2.5 scrollbar-none text-xs">
+          <div className="hidden md:flex max-w-4xl mx-auto px-4 items-center space-x-2 overflow-x-auto pb-2.5 scrollbar-none text-xs">
             <button
               onClick={() => setActiveTab('routines')}
               className={`px-3.5 py-2 rounded-xl font-bold transition flex items-center space-x-1.5 whitespace-nowrap active:scale-95 ${
@@ -107,7 +107,7 @@ export default function Home() {
       </header>
 
       {/* Main Container */}
-      <main className="pt-6 pb-28 sm:pb-12">
+      <main className="pt-4 pb-28 md:pb-12">
         {activeSession ? (
           <ErrorBoundary fallbackTitle="Buổi tập gặp sự cố">
             <ActiveWorkoutView
@@ -144,45 +144,45 @@ export default function Home() {
 
       {/* Bottom Sticky Tab Bar for Mobile with Safe Area */}
       {!activeSession && (
-        <nav className="sm:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-800/80 backdrop-blur-xl px-2 pt-1.5 pb-[max(0.6rem,env(safe-area-inset-bottom))] flex items-center justify-around shadow-2xl">
+        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-800 backdrop-blur-2xl px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-center justify-around shadow-2xl">
           <button
             onClick={() => setActiveTab('routines')}
-            className={`flex flex-col items-center space-y-1 py-1 px-3 rounded-xl transition active:scale-95 ${
+            className={`flex flex-col items-center py-1 px-3 rounded-xl transition active:scale-95 ${
               activeTab === 'routines' ? 'text-emerald-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            <Calendar className="w-5 h-5" />
-            <span className="text-[10px]">Tập Luyện</span>
+            <Calendar className="w-5 h-5 mb-0.5" />
+            <span className="text-[11px]">Tập Luyện</span>
           </button>
 
           <button
             onClick={() => setActiveTab('body')}
-            className={`flex flex-col items-center space-y-1 py-1 px-3 rounded-xl transition active:scale-95 ${
+            className={`flex flex-col items-center py-1 px-3 rounded-xl transition active:scale-95 ${
               activeTab === 'body' ? 'text-teal-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            <Scale className="w-5 h-5" />
-            <span className="text-[10px]">Hình Thể</span>
+            <Scale className="w-5 h-5 mb-0.5" />
+            <span className="text-[11px]">Hình Thể</span>
           </button>
 
           <button
             onClick={() => setActiveTab('exercises')}
-            className={`flex flex-col items-center space-y-1 py-1 px-3 rounded-xl transition active:scale-95 ${
+            className={`flex flex-col items-center py-1 px-3 rounded-xl transition active:scale-95 ${
               activeTab === 'exercises' ? 'text-emerald-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            <BookOpen className="w-5 h-5" />
-            <span className="text-[10px]">Bài Tập</span>
+            <BookOpen className="w-5 h-5 mb-0.5" />
+            <span className="text-[11px]">Bài Tập</span>
           </button>
 
           <button
             onClick={() => setActiveTab('history')}
-            className={`flex flex-col items-center space-y-1 py-1 px-3 rounded-xl transition active:scale-95 ${
+            className={`flex flex-col items-center py-1 px-3 rounded-xl transition active:scale-95 ${
               activeTab === 'history' ? 'text-amber-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
-            <Trophy className="w-5 h-5" />
-            <span className="text-[10px]">Kỷ Lục</span>
+            <Trophy className="w-5 h-5 mb-0.5" />
+            <span className="text-[11px]">Kỷ Lục</span>
           </button>
         </nav>
       )}

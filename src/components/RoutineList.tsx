@@ -146,20 +146,20 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
             </div>
           </div>
 
-          <div className="flex flex-wrap items-center gap-2.5 pt-2">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-3">
             <button
               type="button"
               onClick={handleStartTodayRecommendation}
-              className="px-5 py-3 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-zinc-950 font-black text-sm shadow-lg shadow-emerald-500/25 transition flex items-center space-x-2 active:scale-95"
+              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-zinc-950 font-black text-sm sm:text-base shadow-lg shadow-emerald-500/25 transition flex items-center justify-center space-x-2 active:scale-95"
             >
-              <Play className="w-4 h-4 fill-zinc-950" />
+              <Play className="w-5 h-5 fill-zinc-950" />
               <span>Vào Tập Ngay Buổi Đề Xuất (1-Chạm)</span>
             </button>
 
             <button
               type="button"
               onClick={() => setIsSmartModalOpen(true)}
-              className="px-4 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs sm:text-sm border border-zinc-700 transition flex items-center space-x-1.5 active:scale-95 shadow-md"
+              className="px-5 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs sm:text-sm border border-zinc-700 transition flex items-center justify-center space-x-2 active:scale-95 shadow-md"
             >
               <Wand2 className="w-4 h-4 text-amber-400" />
               <span>Trợ Lý Tạo Buổi Tập (Theo Ý Bạn)</span>
@@ -169,27 +169,27 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
       </div>
 
       {/* Quick Action Options: Tập Tự Do & Tạo Lịch Thủ Công */}
-      <div className="grid grid-cols-2 gap-2.5">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
         <button
           onClick={handleStartEmptyWorkout}
-          className="p-3 rounded-2xl bg-zinc-900/80 hover:bg-zinc-850 border border-zinc-800 text-left transition group active:scale-[0.99]"
+          className="p-4 rounded-2xl bg-zinc-900/90 hover:bg-zinc-850 border border-zinc-800 text-left transition group active:scale-[0.99]"
         >
-          <div className="text-xs font-bold text-zinc-200 group-hover:text-emerald-400 transition flex items-center space-x-1.5">
-            <Play className="w-3.5 h-3.5 text-zinc-500 group-hover:text-emerald-400" />
+          <div className="text-sm font-bold text-zinc-200 group-hover:text-emerald-400 transition flex items-center space-x-2">
+            <Play className="w-4 h-4 text-zinc-400 group-hover:text-emerald-400" />
             <span>Tập Tự Do (Tự Chọn Bài)</span>
           </div>
-          <div className="text-[10px] text-zinc-500 mt-0.5">Không theo giáo án cố định</div>
+          <div className="text-xs text-zinc-400 mt-1">Không theo giáo án cố định, thêm bài tùy ý</div>
         </button>
 
         <button
           onClick={() => setIsCreatingRoutine(true)}
-          className="p-3 rounded-2xl bg-zinc-900/80 hover:bg-zinc-850 border border-zinc-800 text-left transition group active:scale-[0.99]"
+          className="p-4 rounded-2xl bg-zinc-900/90 hover:bg-zinc-850 border border-zinc-800 text-left transition group active:scale-[0.99]"
         >
-          <div className="text-xs font-bold text-zinc-200 group-hover:text-emerald-400 transition flex items-center space-x-1.5">
-            <Plus className="w-3.5 h-3.5 text-emerald-400" />
+          <div className="text-sm font-bold text-zinc-200 group-hover:text-emerald-400 transition flex items-center space-x-2">
+            <Plus className="w-4 h-4 text-emerald-400" />
             <span>Tự Thiết Kế Giáo Án Mới</span>
           </div>
-          <div className="text-[10px] text-zinc-500 mt-0.5">Lưu lại lịch tập riêng của bạn</div>
+          <div className="text-xs text-zinc-400 mt-1">Lưu lại lịch tập riêng phù hợp với bạn</div>
         </button>
       </div>
 
@@ -229,12 +229,12 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
                     </span>
                   )}
                 </div>
-                <h4 className="text-base font-bold text-white group-hover:text-emerald-400 transition">
+                <h4 className="text-base sm:text-lg font-bold text-white group-hover:text-emerald-400 transition">
                   {routine.name}
                 </h4>
                 <p className="text-xs text-zinc-400">{routine.targetFocus}</p>
                 {routine.description && (
-                  <p className="text-[11px] text-zinc-500 line-clamp-2 leading-relaxed">
+                  <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
                     {routine.description}
                   </p>
                 )}
@@ -242,7 +242,7 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
 
               <button
                 onClick={() => handleStartRoutine(routine)}
-                className="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-bold text-xs flex items-center space-x-1.5 shadow-md shadow-emerald-500/15 transition shrink-0 self-start"
+                className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-bold text-xs sm:text-sm flex items-center space-x-1.5 shadow-md shadow-emerald-500/15 transition shrink-0 self-start"
               >
                 <Play className="w-3.5 h-3.5 fill-zinc-950" />
                 <span>Bắt đầu</span>
@@ -250,20 +250,20 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
             </div>
 
             {/* Exercises List inside routine */}
-            <div className="pt-2 border-t border-zinc-800/80 space-y-1.5">
-              <div className="text-[11px] uppercase font-bold text-zinc-500">
-                {routine.exercises.length} Bài Tập:
+            <div className="pt-3 border-t border-zinc-800/80 space-y-2">
+              <div className="text-xs uppercase font-bold text-zinc-400 tracking-wider">
+                {routine.exercises.length} Bài Tập Trong Buổi:
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
                 {routine.exercises.map((ex, i) => {
                   const media = getExerciseMedia(ex.exerciseId, ex.exerciseName);
                   return (
                     <div
                       key={i}
-                      className="bg-zinc-950/60 border border-zinc-800/60 rounded-xl p-2 flex items-center justify-between space-x-2"
+                      className="bg-zinc-950/70 border border-zinc-800/70 rounded-2xl p-2.5 flex items-center justify-between space-x-3"
                     >
-                      <div className="flex items-center space-x-2.5 min-w-0">
-                        <div className="w-9 h-9 rounded-lg bg-zinc-900 border border-zinc-800 shrink-0 overflow-hidden flex items-center justify-center">
+                      <div className="flex items-center space-x-3 min-w-0">
+                        <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 shrink-0 overflow-hidden flex items-center justify-center">
                           {media.startImageUrl ? (
                             <img
                               src={media.startImageUrl}
@@ -272,14 +272,14 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
                               loading="lazy"
                             />
                           ) : (
-                            <Dumbbell className="w-4 h-4 text-zinc-600" />
+                            <Dumbbell className="w-5 h-5 text-zinc-600" />
                           )}
                         </div>
-                        <span className="text-zinc-300 font-medium truncate">
+                        <span className="text-zinc-200 font-semibold text-sm truncate">
                           {i + 1}. {ex.exerciseName}
                         </span>
                       </div>
-                      <span className="text-zinc-500 text-[11px] font-mono shrink-0">
+                      <span className="text-emerald-400 font-mono text-xs font-semibold shrink-0 bg-zinc-900 px-2.5 py-1 rounded-lg border border-zinc-800/80">
                         {ex.defaultSets} × {ex.defaultReps} {ex.suggestedWeightKg ? `(~${ex.suggestedWeightKg}kg)` : ''}
                       </span>
                     </div>
