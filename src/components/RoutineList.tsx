@@ -8,6 +8,7 @@ import { getExerciseMedia } from '@/lib/exerciseMedia';
 import { getTodayRecommendation } from '@/lib/workoutGenerator';
 import ExerciseSelectorModal from './ExerciseSelectorModal';
 import SmartWorkoutModal from './SmartWorkoutModal';
+import ExerciseQuickViewModal from './ExerciseQuickViewModal';
 
 interface RoutineListProps {
   onStartSession: (session: WorkoutSession) => void;
@@ -23,11 +24,9 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
   >([]);
   const [isExerciseModalOpen, setIsExerciseModalOpen] = useState(false);
   const [isSmartModalOpen, setIsSmartModalOpen] = useState(false);
+  const [quickViewExerciseId, setQuickViewExerciseId] = useState<string | null>(null);
+  const [quickViewExerciseName, setQuickViewExerciseName] = useState<string>('');
   const [todayRec, setTodayRec] = useState(() => getTodayRecommendation(1));
-  const isMobileUA = React.useMemo(() => {
-    if (typeof navigator === 'undefined') return false;
-    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
-  }, []);
 
   React.useEffect(() => {
     setTodayRec(getTodayRecommendation(new Date().getDay()));
@@ -255,37 +254,53 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
 
             {/* Exercises List inside routine */}
             <div className="pt-3 border-t border-zinc-800/80 space-y-2">
-              <div className="text-xs uppercase font-bold text-zinc-400 tracking-wider">
-                {routine.exercises.length} Bài Tập Trong Buổi:
+              <div className="flex items-center justify-between text-xs uppercase font-bold text-zinc-400 tracking-wider">
+                <span>{routine.exercises.length} Bài Tập Trong Buổi:</span>
+                <span className="text-[11px] text-emerald-400 font-normal normal-case">Chạm bài tập để xem kỹ thuật</span>
               </div>
-              <div className={`grid ${isMobileUA ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-2.5`}>
+              <div className="grid grid-cols-1 gap-2.5">
                 {routine.exercises.map((ex, i) => {
                   const media = getExerciseMedia(ex.exerciseId, ex.exerciseName);
                   return (
                     <div
                       key={i}
-                      className="bg-zinc-950/70 border border-zinc-800/70 rounded-2xl p-2.5 flex items-center justify-between space-x-3"
+                      onClick={() => {
+                        setQuickViewExerciseId(ex.exerciseId);
+                        setQuickViewExerciseName(ex.exerciseName);
+                      }}
+                      className="bg-zinc-950/80 border border-zinc-800/80 hover:border-emerald-500/50 hover:bg-zinc-900/90 rounded-2xl p-3 flex items-center justify-between space-x-3 cursor-pointer transition active:scale-[0.99] group/item shadow-sm"
                     >
-                      <div className="flex items-center space-x-3 min-w-0">
-                        <div className="w-11 h-11 rounded-xl bg-zinc-900 border border-zinc-800 shrink-0 overflow-hidden flex items-center justify-center">
+                      <div className="flex items-center space-x-3.5 min-w-0">
+                        <div className="w-13 h-13 rounded-xl bg-zinc-900 border border-zinc-800 shrink-0 overflow-hidden flex items-center justify-center relative group-hover/item:border-emerald-500/40 transition">
                           {media.startImageUrl ? (
                             <img
                               src={media.startImageUrl}
                               alt={ex.exerciseName}
-                              className="w-full h-full object-cover"
+                              className="w-full h-full object-cover group-hover/item:scale-105 transition"
                               loading="lazy"
                             />
                           ) : (
-                            <Dumbbell className="w-5 h-5 text-zinc-600" />
+                            <Dumbbell className="w-6 h-6 text-zinc-600" />
                           )}
                         </div>
-                        <span className="text-zinc-200 font-semibold text-sm truncate">
-                          {i + 1}. {ex.exerciseName}
-                        </span>
+                        <div className="min-w-0">
+                          <div className="text-zinc-100 font-bold text-sm sm:text-base group-hover/item:text-emerald-400 transition truncate">
+                            {i + 1}. {ex.exerciseName}
+                          </div>
+                          <div className="text-xs text-zinc-400 flex items-center space-x-2 mt-0.5">
+                            <span className="text-emerald-400 font-bold font-mono">
+                              {ex.defaultSets} × {ex.defaultReps} {ex.suggestedWeightKg ? `(~${ex.suggestedWeightKg}kg)` : ''}
+                            </span>
+                            <span>•</span>
+                            <span className="text-zinc-500 underline underline-offset-2">Bấm xem chi tiết</span>
+                          </div>
+                        </div>
                       </div>
-                      <span className="text-emerald-400 font-mono text-xs font-semibold shrink-0 bg-zinc-900 px-2.5 py-1 rounded-lg border border-zinc-800/80">
-                        {ex.defaultSets} × {ex.defaultReps} {ex.suggestedWeightKg ? `(~${ex.suggestedWeightKg}kg)` : ''}
-                      </span>
+
+                      <div className="px-2.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400 group-hover/item:text-emerald-400 group-hover/item:border-emerald-500/30 transition shrink-0 flex items-center space-x-1">
+                        <span>Xem</span>
+                        <ChevronRight className="w-3.5 h-3.5" />
+                      </div>
                     </div>
                   );
                 })}
@@ -406,6 +421,41 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
         isOpen={isSmartModalOpen}
         onClose={() => setIsSmartModalOpen(false)}
         onStartSession={onStartSession}
+      />
+
+      {/* Modal Xem Nhanh Chi Tiết Bài Tập Khi Bấm Vào */}
+      <ExerciseQuickViewModal
+        exerciseId={quickViewExerciseId}
+        exerciseName={quickViewExerciseName}
+        onClose={() => setQuickViewExerciseId(null)}
+        onStartSingleExercise={(exId, exName) => {
+          const singleExerciseSession: WorkoutSession = {
+            id: `session-${Date.now()}`,
+            title: `Tập: ${exName}`,
+            startTime: new Date().toISOString(),
+            durationSeconds: 0,
+            exercises: [
+              {
+                exerciseId: exId,
+                exerciseName: exName,
+                primaryMuscle: 'Cơ bắp',
+                sets: [
+                  {
+                    id: `set-${Date.now()}-1`,
+                    setNumber: 1,
+                    setType: 'normal',
+                    weightKg: 20,
+                    reps: 10,
+                    isCompleted: false,
+                  },
+                ],
+              },
+            ],
+            totalVolumeKg: 0,
+            totalSets: 0,
+          };
+          onStartSession(singleExerciseSession);
+        }}
       />
     </div>
   );

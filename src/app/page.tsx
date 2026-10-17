@@ -47,6 +47,10 @@ export default function Home() {
             'width=390, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'
           );
         }
+        if (!saved) {
+          setZoomScale(1.5);
+          document.documentElement.style.zoom = '1.5';
+        }
       }
     };
 
@@ -56,11 +60,10 @@ export default function Home() {
   }, []);
 
   const handleToggleZoom = () => {
-    // Luân chuyển: 100% -> 118% (To) -> 132% (Siêu To) -> 100%
-    let next = 1;
-    if (zoomScale === 1) next = 1.18;
-    else if (zoomScale === 1.18) next = 1.32;
-    else next = 1;
+    // Luân chuyển: 100% -> 125% -> 150% -> 175% -> 200%
+    const SCALES = [1, 1.25, 1.5, 1.75, 2.0];
+    const currentIndex = SCALES.indexOf(zoomScale);
+    const next = currentIndex !== -1 ? SCALES[(currentIndex + 1) % SCALES.length] : 1.25;
 
     setZoomScale(next);
     localStorage.setItem('gym_zoom_scale', String(next));
@@ -94,12 +97,20 @@ export default function Home() {
             <button
               type="button"
               onClick={handleToggleZoom}
-              className="px-2.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500/50 text-xs font-bold transition active:scale-95 shadow-sm flex items-center space-x-1"
-              title="Nhấn để phóng to chữ và toàn bộ giao diện"
+              className="px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500/50 text-xs font-bold transition active:scale-95 shadow-sm flex items-center space-x-1.5"
+              title="Nhấn để chuyển các mức phóng to: 100% -> 125% -> 150% -> 175% -> 200%"
             >
               <span className="text-emerald-400 font-black text-sm">Aa</span>
-              <span className="text-[10px] text-zinc-300 font-mono">
-                {zoomScale === 1 ? '100%' : zoomScale === 1.18 ? '118% To' : '132% Lớn'}
+              <span className="text-[11px] text-zinc-300 font-mono font-semibold">
+                {zoomScale === 1
+                  ? '100%'
+                  : zoomScale === 1.25
+                  ? '125% To'
+                  : zoomScale === 1.5
+                  ? '150% Lớn'
+                  : zoomScale === 1.75
+                  ? '175% Siêu To'
+                  : '200% Cực Đại'}
               </span>
             </button>
 
