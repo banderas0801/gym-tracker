@@ -24,6 +24,10 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
   const [isExerciseModalOpen, setIsExerciseModalOpen] = useState(false);
   const [isSmartModalOpen, setIsSmartModalOpen] = useState(false);
   const [todayRec, setTodayRec] = useState(() => getTodayRecommendation(1));
+  const isMobileUA = React.useMemo(() => {
+    if (typeof navigator === 'undefined') return false;
+    return /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+  }, []);
 
   React.useEffect(() => {
     setTodayRec(getTodayRecommendation(new Date().getDay()));
@@ -254,7 +258,7 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
               <div className="text-xs uppercase font-bold text-zinc-400 tracking-wider">
                 {routine.exercises.length} Bài Tập Trong Buổi:
               </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+              <div className={`grid ${isMobileUA ? 'grid-cols-1' : 'grid-cols-1 md:grid-cols-2'} gap-2.5`}>
                 {routine.exercises.map((ex, i) => {
                   const media = getExerciseMedia(ex.exerciseId, ex.exerciseName);
                   return (

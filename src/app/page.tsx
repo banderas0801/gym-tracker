@@ -16,6 +16,56 @@ type Tab = 'routines' | 'exercises' | 'history' | 'body';
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>('routines');
   const [activeSession, setActiveSession] = useState<WorkoutSession | null>(null);
+  const [zoomScale, setZoomScale] = useState<number>(1);
+  const [isMobileDevice, setIsMobileDevice] = useState(false);
+
+  React.useEffect(() => {
+    // 1. Khôi phục kích thước zoom người dùng chọn
+    const saved = localStorage.getItem('gym_zoom_scale');
+    if (saved) {
+      const num = parseFloat(saved);
+      if (!isNaN(num) && num >= 1) {
+        setZoomScale(num);
+        document.documentElement.style.zoom = String(num);
+      }
+    }
+
+    // 2. Nhận diện thiết bị di động độc lập với chế độ Desktop của Chrome
+    const checkMobile = () => {
+      const isTouch = navigator.maxTouchPoints > 0;
+      const isMobileUA = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+      const isSmallScreen = window.innerWidth <= 768 || (window.screen && window.screen.width <= 768);
+      const mobile = (isTouch && isMobileUA) || isSmallScreen;
+      setIsMobileDevice(mobile);
+
+      // Nếu là điện thoại mà bị Chrome WebAPK ép viewport Desktop (> 550px)
+      if (isMobileUA && (window.screen?.width <= 550 || window.outerWidth <= 550) && window.innerWidth > 550) {
+        const meta = document.querySelector('meta[name="viewport"]');
+        if (meta) {
+          meta.setAttribute(
+            'content',
+            'width=390, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'
+          );
+        }
+      }
+    };
+
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  const handleToggleZoom = () => {
+    // Luân chuyển: 100% -> 118% (To) -> 132% (Siêu To) -> 100%
+    let next = 1;
+    if (zoomScale === 1) next = 1.18;
+    else if (zoomScale === 1.18) next = 1.32;
+    else next = 1;
+
+    setZoomScale(next);
+    localStorage.setItem('gym_zoom_scale', String(next));
+    document.documentElement.style.zoom = String(next);
+  };
 
   return (
     <div className="min-h-screen bg-black text-zinc-100 selection:bg-emerald-500 selection:text-black">
@@ -39,21 +89,36 @@ export default function Home() {
             </div>
           </div>
 
-          {/* Persistent Mini Session Banner if active */}
-          {activeSession && (
+          <div className="flex items-center space-x-2">
+            {/* Quick Zoom Button */}
             <button
-              onClick={() => setActiveTab('routines')}
-              className="px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center space-x-1.5 hover:bg-emerald-500/20 transition active:scale-95 animate-pulse"
+              type="button"
+              onClick={handleToggleZoom}
+              className="px-2.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500/50 text-xs font-bold transition active:scale-95 shadow-sm flex items-center space-x-1"
+              title="Nhấn để phóng to chữ và toàn bộ giao diện"
             >
-              <Flame className="w-3.5 h-3.5" />
-              <span className="hidden sm:inline">Buổi tập đang diễn ra:</span>
-              <span className="truncate max-w-[120px] sm:max-w-none">{activeSession.title}</span>
+              <span className="text-emerald-400 font-black text-sm">Aa</span>
+              <span className="text-[10px] text-zinc-300 font-mono">
+                {zoomScale === 1 ? '100%' : zoomScale === 1.18 ? '118% To' : '132% Lớn'}
+              </span>
             </button>
-          )}
+
+            {/* Persistent Mini Session Banner if active */}
+            {activeSession && (
+              <button
+                onClick={() => setActiveTab('routines')}
+                className="px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center space-x-1.5 hover:bg-emerald-500/20 transition active:scale-95 animate-pulse"
+              >
+                <Flame className="w-3.5 h-3.5" />
+                <span className="hidden sm:inline">Buổi tập:</span>
+                <span className="truncate max-w-[90px] sm:max-w-none">{activeSession.title}</span>
+              </button>
+            )}
+          </div>
         </div>
 
         {/* Tab Navigation Menu (Desktop & Tablet) */}
-        {!activeSession && (
+        {!activeSession && !isMobileDevice && (
           <div className="hidden md:flex max-w-4xl mx-auto px-4 items-center space-x-2 overflow-x-auto pb-2.5 scrollbar-none text-xs">
             <button
               onClick={() => setActiveTab('routines')}
@@ -144,7 +209,7 @@ export default function Home() {
 
       {/* Bottom Sticky Tab Bar for Mobile with Safe Area */}
       {!activeSession && (
-        <nav className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-800 backdrop-blur-2xl px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] flex items-center justify-around shadow-2xl">
+        <nav className={`${isMobileDevice ? 'flex' : 'md:hidden'} fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-800 backdrop-blur-2xl px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] items-center justify-around shadow-2xl`}>
           <button
             onClick={() => setActiveTab('routines')}
             className={`flex flex-col items-center py-1 px-3 rounded-xl transition active:scale-95 ${
