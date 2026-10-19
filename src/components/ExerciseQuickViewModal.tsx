@@ -190,6 +190,22 @@ export default function ExerciseQuickViewModal({
               ))}
             </div>
           </div>
+        ) : exercise.instructionsVi && exercise.instructionsVi.length > 0 ? (
+          <div className="space-y-2 pt-2 border-t border-zinc-800">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+              Chi tiết các bước thực hiện:
+            </h4>
+            <div className="space-y-2">
+              {exercise.instructionsVi.map((step, i) => (
+                <div key={i} className="text-xs text-zinc-200 leading-relaxed bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-800/60 flex items-start space-x-2">
+                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center shrink-0 text-[11px]">
+                    {i + 1}
+                  </span>
+                  <span className="flex-1">{step.replace(/^Bước \d+:\s*/, '')}</span>
+                </div>
+              ))}
+            </div>
+          </div>
         ) : exercise.instructions && exercise.instructions.length > 0 ? (
           <div className="space-y-2 pt-2 border-t border-zinc-800">
             <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">

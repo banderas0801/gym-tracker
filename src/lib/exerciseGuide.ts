@@ -2,7 +2,7 @@ export interface ExerciseTechniqueGuide {
   vietnameseName: string;
   formCues: [string, string, string]; // 3 khẩu quyết cốt tử
   commonMistake: string;             // Lỗi sai phổ biến
-  detailedStepsVi: string[];         // Toàn bộ hướng dẫn từng bước 100% Tiếng Việt
+  detailedStepsVi?: string[];        // Hướng dẫn từng bước đặc thù (nếu có)
   startingWeightGuide: {
     recommendedWeightKg: number;
     recommendedUnit: 'kg' | 'kg/bên' | 'nấc pin';
@@ -398,13 +398,6 @@ export function getExerciseGuide(
       'Hít thở đúng nhịp: Hít sâu khi vào pha hạ tạ dãn cơ, thở ra dứt khoát khi dùng lực đẩy/kéo tạ.'
     ],
     commonMistake: 'Tập quá nhanh và dùng đà cơ thể thay vì để cơ bắp mục tiêu thực hiện chuyển động.',
-    detailedStepsVi: [
-      'Bước 1: Chuẩn bị tư thế đứng hoặc ngồi vững chắc, điều chỉnh mức tạ phù hợp với khả năng.',
-      'Bước 2: Hít sâu một hơi căng lồng ngực và gồng chặt cơ bụng (Core) để khóa cố định cột sống.',
-      'Bước 3: Thực hiện chuyển động đẩy/kéo có kiểm soát, tập trung suy nghĩ vào nhóm cơ bắp mục tiêu (Mind-Muscle Connection).',
-      'Bước 4: Giữ lại 1 giây ở điểm co cơ tối đa để tối ưu kích thích tăng trưởng sợi cơ.',
-      'Bước 5: Hạ tạ về tư thế ban đầu chậm rãi trong 2-3 giây đồng thời thở ra dứt khoát.'
-    ],
     startingWeightGuide: {
       recommendedWeightKg: isBarbell ? 20.0 : isDumbbell ? 5.0 : isMachine ? 15.0 : 0,
       recommendedUnit: isBarbell ? 'kg' : isDumbbell ? 'kg/bên' : isMachine ? 'nấc pin' : 'kg',

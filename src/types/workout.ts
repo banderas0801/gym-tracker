@@ -1,6 +1,7 @@
 export interface Exercise {
   id: string;
   name: string;
+  nameVi?: string;
   force?: string | null;
   level?: string;
   mechanic?: string | null;
@@ -8,6 +9,7 @@ export interface Exercise {
   primaryMuscles: string[];
   secondaryMuscles: string[];
   instructions: string[];
+  instructionsVi?: string[];
   category: string;
   images: string[];
 }

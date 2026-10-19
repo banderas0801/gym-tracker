@@ -170,8 +170,10 @@ export default function ExerciseBrowser() {
           selectedExercise.equipment,
           selectedExercise.primaryMuscles[0]
         );
-        const steps = guide.detailedStepsVi && guide.detailedStepsVi.length > 0
+        const steps = (guide.detailedStepsVi && guide.detailedStepsVi.length > 0)
           ? guide.detailedStepsVi
+          : (selectedExercise.instructionsVi && selectedExercise.instructionsVi.length > 0)
+          ? selectedExercise.instructionsVi
           : translateInstructions(selectedExercise.instructions);
 
         return (

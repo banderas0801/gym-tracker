@@ -202,8 +202,10 @@ export default function ExerciseSelectorModal({
             previewExercise.equipment,
             previewExercise.primaryMuscles[0]
           );
-          const steps = guide.detailedStepsVi && guide.detailedStepsVi.length > 0
+          const steps = (guide.detailedStepsVi && guide.detailedStepsVi.length > 0)
             ? guide.detailedStepsVi
+            : (previewExercise.instructionsVi && previewExercise.instructionsVi.length > 0)
+            ? previewExercise.instructionsVi
             : translateInstructions(previewExercise.instructions);
 
           return (
