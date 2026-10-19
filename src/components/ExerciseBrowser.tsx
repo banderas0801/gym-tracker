@@ -4,6 +4,8 @@ import React, { useState, useMemo } from 'react';
 import { Search, X, Dumbbell, Filter, Info } from 'lucide-react';
 import { Exercise } from '@/types/workout';
 import exercisesData from '@/data/exercises.json';
+import { translateMuscle, translateEquipment, translateCategory, translateInstructions } from '@/lib/translations';
+import { getExerciseGuide } from '@/lib/exerciseGuide';
 
 const MUSCLE_GROUPS = [
   { id: 'all', label: 'Tất cả' },
@@ -134,11 +136,11 @@ export default function ExerciseBrowser() {
                   </h3>
                   <div className="flex flex-wrap items-center gap-1.5 mt-1.5 text-[11px]">
                     <span className="px-2 py-0.5 rounded-md bg-emerald-500/10 text-emerald-400 font-semibold border border-emerald-500/20 capitalize">
-                      {ex.primaryMuscles.join(', ')}
+                      {ex.primaryMuscles.map(translateMuscle).join(', ')}
                     </span>
                     {ex.equipment && (
-                      <span className="px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-400 capitalize">
-                        {ex.equipment}
+                      <span className="px-2 py-0.5 rounded-md bg-zinc-800 text-zinc-300 capitalize">
+                        {translateEquipment(ex.equipment)}
                       </span>
                     )}
                   </div>
@@ -161,67 +163,101 @@ export default function ExerciseBrowser() {
       )}
 
       {/* Detail Modal */}
-      {selectedExercise && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
-          <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-6 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-4 shadow-2xl">
-            <div className="flex justify-between items-start">
-              <div>
-                <h3 className="text-xl font-bold text-white">{selectedExercise.name}</h3>
-                <div className="flex flex-wrap items-center gap-2 mt-1 text-xs">
-                  <span className="text-emerald-400 font-bold capitalize">
-                    {selectedExercise.primaryMuscles.join(', ')}
-                  </span>
-                  <span>•</span>
-                  <span className="text-zinc-400 capitalize">{selectedExercise.equipment}</span>
-                  <span>•</span>
-                  <span className="text-zinc-500 capitalize">{selectedExercise.category}</span>
-                </div>
-              </div>
-              <button
-                onClick={() => setSelectedExercise(null)}
-                className="p-1 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
-              >
-                <X className="w-5 h-5" />
-              </button>
-            </div>
+      {selectedExercise && (() => {
+        const guide = getExerciseGuide(
+          selectedExercise.id,
+          selectedExercise.name,
+          selectedExercise.equipment,
+          selectedExercise.primaryMuscles[0]
+        );
+        const steps = guide.detailedStepsVi && guide.detailedStepsVi.length > 0
+          ? guide.detailedStepsVi
+          : translateInstructions(selectedExercise.instructions);
 
-            {/* Side-by-side start / peak pictures */}
-            <div className="grid grid-cols-2 gap-2.5">
-              {selectedExercise.images?.map((img, i) => (
-                <div key={i} className="rounded-2xl overflow-hidden border border-zinc-800 bg-black">
-                  <img
-                    src={`https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${img}`}
-                    alt="Demonstration"
-                    className="w-full h-48 object-cover"
-                  />
-                  <div className="text-[11px] font-semibold text-zinc-400 text-center py-1.5 bg-zinc-900/80">
-                    {i === 0 ? '① Tư thế bắt đầu (Start)' : '② Điểm co căng cơ (Peak)'}
+        return (
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
+            <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-6 max-w-xl w-full max-h-[90vh] overflow-y-auto space-y-4 shadow-2xl">
+              <div className="flex justify-between items-start">
+                <div>
+                  <h3 className="text-xl font-bold text-white">{guide.vietnameseName || selectedExercise.name}</h3>
+                  <div className="flex flex-wrap items-center gap-2 mt-1 text-xs">
+                    <span className="text-emerald-400 font-bold capitalize">
+                      {selectedExercise.primaryMuscles.map(translateMuscle).join(', ')}
+                    </span>
+                    <span>•</span>
+                    <span className="text-zinc-300 capitalize">{translateEquipment(selectedExercise.equipment)}</span>
+                    <span>•</span>
+                    <span className="text-zinc-400 font-mono text-[11px]">{selectedExercise.name}</span>
                   </div>
                 </div>
-              ))}
-            </div>
+                <button
+                  onClick={() => setSelectedExercise(null)}
+                  className="p-1 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+                >
+                  <X className="w-5 h-5" />
+                </button>
+              </div>
 
-            {/* Instruction Steps */}
-            <div className="space-y-2 pt-2 border-t border-zinc-800">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-                Kỹ thuật & Hướng dẫn thực hiện:
-              </h4>
-              <ol className="text-xs text-zinc-300 space-y-2 list-decimal pl-4 leading-relaxed">
-                {selectedExercise.instructions?.map((inst, i) => (
-                  <li key={i}>{inst}</li>
+              {/* Side-by-side start / peak pictures */}
+              <div className="grid grid-cols-2 gap-2.5">
+                {selectedExercise.images?.map((img, i) => (
+                  <div key={i} className="rounded-2xl overflow-hidden border border-zinc-800 bg-black">
+                    <img
+                      src={`https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${img}`}
+                      alt="Demonstration"
+                      className="w-full h-48 object-cover"
+                    />
+                    <div className="text-[11px] font-semibold text-zinc-300 text-center py-1.5 bg-zinc-900/90">
+                      {i === 0 ? '① Tư thế bắt đầu (Start)' : '② Điểm co căng cơ (Peak)'}
+                    </div>
+                  </div>
                 ))}
-              </ol>
-            </div>
+              </div>
 
-            <button
-              onClick={() => setSelectedExercise(null)}
-              className="w-full py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs transition"
-            >
-              Đóng
-            </button>
+              {/* Form Cues */}
+              {guide.formCues && guide.formCues.length > 0 && (
+                <div className="bg-emerald-950/20 border border-emerald-500/20 rounded-2xl p-3.5 space-y-2">
+                  <h4 className="text-xs font-bold text-emerald-400">
+                    💡 Khẩu quyết kỹ thuật chuẩn:
+                  </h4>
+                  <ul className="text-xs text-zinc-200 space-y-1.5 pl-2">
+                    {guide.formCues.map((cue, i) => (
+                      <li key={i} className="flex items-start space-x-2">
+                        <span className="text-emerald-400 font-bold">•</span>
+                        <span>{cue}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              )}
+
+              {/* Instruction Steps 100% Vietnamese */}
+              <div className="space-y-2 pt-2 border-t border-zinc-800">
+                <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+                  Chi tiết các bước thực hiện:
+                </h4>
+                <div className="space-y-2">
+                  {steps.map((step, i) => (
+                    <div key={i} className="text-xs text-zinc-200 leading-relaxed bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-800/60 flex items-start space-x-2">
+                      <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center shrink-0 text-[11px]">
+                        {i + 1}
+                      </span>
+                      <span className="flex-1">{step.replace(/^Bước \d+:\s*/, '')}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              <button
+                onClick={() => setSelectedExercise(null)}
+                className="w-full py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs transition"
+              >
+                Đóng
+              </button>
+            </div>
           </div>
-        </div>
-      )}
+        );
+      })()}
     </div>
   );
 }

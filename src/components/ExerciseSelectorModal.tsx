@@ -4,6 +4,8 @@ import React, { useState, useMemo } from 'react';
 import { Search, X, Dumbbell, Filter, Info, Check } from 'lucide-react';
 import { Exercise } from '@/types/workout';
 import exercisesData from '@/data/exercises.json';
+import { translateMuscle, translateEquipment, translateInstructions } from '@/lib/translations';
+import { getExerciseGuide } from '@/lib/exerciseGuide';
 
 interface ExerciseSelectorModalProps {
   isOpen: boolean;
@@ -193,65 +195,103 @@ export default function ExerciseSelectorModal({
         </div>
 
         {/* Modal Chi tiết bài tập */}
-        {previewExercise && (
-          <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/90">
-            <div className="bg-zinc-900 border border-zinc-700 rounded-3xl p-6 max-w-lg w-full max-h-[85vh] overflow-y-auto space-y-4">
-              <div className="flex justify-between items-start">
-                <div>
-                  <h3 className="text-lg font-bold text-white">{previewExercise.name}</h3>
-                  <p className="text-xs text-emerald-400 capitalize">
-                    Nhóm cơ chính: {previewExercise.primaryMuscles.join(', ')}
-                  </p>
-                </div>
-                <button
-                  onClick={() => setPreviewExercise(null)}
-                  className="p-1 rounded-lg text-zinc-400 hover:text-white"
-                >
-                  <X className="w-5 h-5" />
-                </button>
-              </div>
+        {previewExercise && (() => {
+          const guide = getExerciseGuide(
+            previewExercise.id,
+            previewExercise.name,
+            previewExercise.equipment,
+            previewExercise.primaryMuscles[0]
+          );
+          const steps = guide.detailedStepsVi && guide.detailedStepsVi.length > 0
+            ? guide.detailedStepsVi
+            : translateInstructions(previewExercise.instructions);
 
-              {/* Demo Photos */}
-              <div className="grid grid-cols-2 gap-2">
-                {previewExercise.images?.map((img, i) => (
-                  <div key={i} className="rounded-xl overflow-hidden border border-zinc-800 bg-black">
-                    <img
-                      src={`https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${img}`}
-                      alt="Demo"
-                      className="w-full h-40 object-cover"
-                    />
-                    <div className="text-[10px] text-zinc-400 text-center py-1">
-                      {i === 0 ? 'Tư thế bắt đầu' : 'Điểm căng cơ'}
+          return (
+            <div className="fixed inset-0 z-60 flex items-center justify-center p-4 bg-black/90 animate-in fade-in">
+              <div className="bg-zinc-950 border border-zinc-800 rounded-3xl p-6 max-w-lg w-full max-h-[85vh] overflow-y-auto space-y-4 shadow-2xl">
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h3 className="text-lg font-bold text-white">{guide.vietnameseName || previewExercise.name}</h3>
+                    <div className="flex flex-wrap items-center gap-1.5 mt-1 text-xs">
+                      <span className="text-emerald-400 font-bold capitalize">
+                        {previewExercise.primaryMuscles.map(translateMuscle).join(', ')}
+                      </span>
+                      <span>•</span>
+                      <span className="text-zinc-300 capitalize">{translateEquipment(previewExercise.equipment)}</span>
+                      <span>•</span>
+                      <span className="text-zinc-400 font-mono text-[11px]">{previewExercise.name}</span>
                     </div>
                   </div>
-                ))}
-              </div>
+                  <button
+                    onClick={() => setPreviewExercise(null)}
+                    className="p-1 rounded-lg text-zinc-400 hover:text-white"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
 
-              {/* Instructions */}
-              <div className="space-y-2">
-                <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
-                  Hướng dẫn thực hiện:
-                </h4>
-                <ol className="text-xs text-zinc-300 space-y-1.5 list-decimal pl-4">
-                  {previewExercise.instructions?.map((inst, i) => (
-                    <li key={i}>{inst}</li>
+                {/* Demo Photos */}
+                <div className="grid grid-cols-2 gap-2">
+                  {previewExercise.images?.map((img, i) => (
+                    <div key={i} className="rounded-xl overflow-hidden border border-zinc-800 bg-black">
+                      <img
+                        src={`https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/${img}`}
+                        alt="Demo"
+                        className="w-full h-40 object-cover"
+                      />
+                      <div className="text-[10px] text-zinc-300 text-center py-1 bg-zinc-900/90 font-medium">
+                        {i === 0 ? '① Tư thế bắt đầu (Start)' : '② Điểm co căng cơ (Peak)'}
+                      </div>
+                    </div>
                   ))}
-                </ol>
-              </div>
+                </div>
 
-              <button
-                onClick={() => {
-                  onSelectExercise(previewExercise);
-                  setPreviewExercise(null);
-                  onClose();
-                }}
-                className="w-full py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-bold text-sm transition"
-              >
-                Thêm bài này vào buổi tập
-              </button>
+                {/* Form Cues */}
+                {guide.formCues && guide.formCues.length > 0 && (
+                  <div className="bg-emerald-950/20 border border-emerald-500/20 rounded-2xl p-3 space-y-1.5 text-xs">
+                    <h4 className="font-bold text-emerald-400">💡 Khẩu quyết kỹ thuật:</h4>
+                    <ul className="text-zinc-200 space-y-1 pl-1">
+                      {guide.formCues.map((cue, i) => (
+                        <li key={i} className="flex items-start space-x-1.5">
+                          <span className="text-emerald-400 font-bold">•</span>
+                          <span>{cue}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                {/* Instructions */}
+                <div className="space-y-2 pt-2 border-t border-zinc-800">
+                  <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+                    Hướng dẫn thực hiện:
+                  </h4>
+                  <div className="space-y-1.5">
+                    {steps.map((step, i) => (
+                      <div key={i} className="text-xs text-zinc-200 leading-relaxed bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-800/60 flex items-start space-x-2">
+                        <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center shrink-0 text-[11px]">
+                          {i + 1}
+                        </span>
+                        <span className="flex-1">{step.replace(/^Bước \d+:\s*/, '')}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                <button
+                  onClick={() => {
+                    onSelectExercise(previewExercise);
+                    setPreviewExercise(null);
+                    onClose();
+                  }}
+                  className="w-full py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-sm transition shadow-lg shadow-emerald-500/20 active:scale-95"
+                >
+                  Thêm bài này vào buổi tập
+                </button>
+              </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </div>
   );

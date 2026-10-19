@@ -5,6 +5,7 @@ import { X, Dumbbell, Sparkles, AlertTriangle, ShieldCheck, Play } from 'lucide-
 import exercisesData from '@/data/exercises.json';
 import { getExerciseGuide } from '@/lib/exerciseGuide';
 import { getExerciseMedia } from '@/lib/exerciseMedia';
+import { translateMuscle, translateEquipment, translateInstructions } from '@/lib/translations';
 import { Exercise } from '@/types/workout';
 
 interface ExerciseQuickViewModalProps {
@@ -26,17 +27,17 @@ export default function ExerciseQuickViewModal({
   const exercise = allExercises.find((e) => e.id === exerciseId) || {
     id: exerciseId,
     name: exerciseName || exerciseId,
-    primaryMuscles: ['Cơ bắp'],
+    primaryMuscles: ['chest'],
     secondaryMuscles: [],
-    equipment: 'Tự do',
+    equipment: 'barbell',
     instructions: [],
     level: 'Newbie',
     category: 'strength',
     images: [],
   };
 
-  const primaryMuscle = exercise.primaryMuscles?.[0] || 'Cơ bắp';
-  const guide = getExerciseGuide(exerciseId, exercise.name, null, primaryMuscle);
+  const primaryMuscle = exercise.primaryMuscles?.[0] || 'chest';
+  const guide = getExerciseGuide(exerciseId, exercise.name, exercise.equipment, primaryMuscle);
   const media = getExerciseMedia(exerciseId, exercise.name);
 
   return (
@@ -55,13 +56,15 @@ export default function ExerciseQuickViewModal({
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold capitalize">
                 {guide.vietnameseName || exercise.name}
               </span>
-              <span className="px-2 py-0.5 rounded-full bg-zinc-900 text-zinc-400 border border-zinc-800 text-[11px] font-medium capitalize">
-                {exercise.equipment || 'Tạ tay/máy'}
+              <span className="px-2 py-0.5 rounded-full bg-zinc-900 text-zinc-300 border border-zinc-800 text-[11px] font-medium capitalize">
+                {translateEquipment(exercise.equipment)}
               </span>
             </div>
-            <h3 className="text-lg sm:text-xl font-black text-white">{exercise.name}</h3>
-            <p className="text-xs text-zinc-400 mt-0.5">
-              Nhóm cơ chính: <strong className="text-emerald-400 capitalize">{exercise.primaryMuscles.join(', ')}</strong>
+            <h3 className="text-lg sm:text-xl font-black text-white">{guide.vietnameseName}</h3>
+            <p className="text-xs text-zinc-400 mt-0.5 flex flex-wrap items-center gap-1.5">
+              <span>Tên quốc tế: <span className="text-zinc-300 font-mono">{exercise.name}</span></span>
+              <span>•</span>
+              <span>Cơ chính: <strong className="text-emerald-400 capitalize">{exercise.primaryMuscles.map(translateMuscle).join(', ')}</strong></span>
             </p>
           </div>
 
@@ -170,19 +173,40 @@ export default function ExerciseQuickViewModal({
           </div>
         )}
 
-        {/* Instructions (nếu có thêm từ DB) */}
-        {exercise.instructions && exercise.instructions.length > 0 && (
-          <div className="space-y-1.5 pt-2 border-t border-zinc-800">
+        {/* Hướng Dẫn Từng Bước 100% Tiếng Việt */}
+        {guide.detailedStepsVi && guide.detailedStepsVi.length > 0 ? (
+          <div className="space-y-2 pt-2 border-t border-zinc-800">
+            <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
+              Chi tiết các bước thực hiện chuẩn:
+            </h4>
+            <div className="space-y-2">
+              {guide.detailedStepsVi.map((step, i) => (
+                <div key={i} className="text-xs text-zinc-200 leading-relaxed bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-800/60 flex items-start space-x-2">
+                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center shrink-0 text-[11px]">
+                    {i + 1}
+                  </span>
+                  <span className="flex-1">{step.replace(/^Bước \d+:\s*/, '')}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        ) : exercise.instructions && exercise.instructions.length > 0 ? (
+          <div className="space-y-2 pt-2 border-t border-zinc-800">
             <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">
               Chi tiết các bước thực hiện:
             </h4>
-            <ol className="text-xs text-zinc-300 space-y-1.5 list-decimal pl-4 leading-relaxed">
-              {exercise.instructions.map((inst, i) => (
-                <li key={i}>{inst}</li>
+            <div className="space-y-2">
+              {translateInstructions(exercise.instructions).map((step, i) => (
+                <div key={i} className="text-xs text-zinc-200 leading-relaxed bg-zinc-900/60 p-2.5 rounded-xl border border-zinc-800/60 flex items-start space-x-2">
+                  <span className="w-5 h-5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold flex items-center justify-center shrink-0 text-[11px]">
+                    {i + 1}
+                  </span>
+                  <span className="flex-1">{step}</span>
+                </div>
               ))}
-            </ol>
+            </div>
           </div>
-        )}
+        ) : null}
 
         {/* Bottom Actions */}
         <div className="pt-2 flex items-center space-x-2">
