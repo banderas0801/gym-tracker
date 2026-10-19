@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Play, Plus, Dumbbell, Calendar, Flame, ChevronRight, Layers, Sparkles, Wand2, Compass } from 'lucide-react';
+import { Play, Plus, Dumbbell, Calendar, Flame, ChevronRight, Layers, Sparkles, Wand2, Compass, BookOpen, Wind, ShieldCheck, X } from 'lucide-react';
 import { RoutineTemplate, WorkoutSession, WorkoutExerciseItem, SetLog, Exercise } from '@/types/workout';
 import { getRoutines, saveRoutine, getPreviousPerformance } from '@/lib/storage';
 import { getExerciseMedia } from '@/lib/exerciseMedia';
@@ -16,6 +16,8 @@ interface RoutineListProps {
 
 export default function RoutineList({ onStartSession }: RoutineListProps) {
   const [routines, setRoutines] = useState<RoutineTemplate[]>(() => getRoutines());
+  const [routineFilter, setRoutineFilter] = useState<'all' | 'thol' | 'newbie' | 'intermediate'>('all');
+  const [isGymPhoModalOpen, setIsGymPhoModalOpen] = useState(false);
   const [isCreatingRoutine, setIsCreatingRoutine] = useState(false);
   const [newRoutineName, setNewRoutineName] = useState('');
   const [newRoutineFocus, setNewRoutineFocus] = useState('');
@@ -117,6 +119,13 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
     setNewRoutineExercises([]);
   };
 
+  const filteredRoutines = routines.filter((r) => {
+    if (routineFilter === 'thol') return r.id.startsWith('thol-');
+    if (routineFilter === 'newbie') return r.level === 'Newbie' && !r.id.startsWith('thol-');
+    if (routineFilter === 'intermediate') return r.level === 'Intermediate';
+    return true;
+  });
+
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
       {/* 1. GỢI Ý HÔM NAY (TODAY'S AI RECOMMENDATION HERO CARD) */}
@@ -196,20 +205,102 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
         </button>
       </div>
 
-      {/* Routine Templates Header */}
-      <div className="flex items-center justify-between pt-2">
-        <div>
-          <h3 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
-            <Calendar className="w-4 h-4 text-emerald-400" />
-            <span>Giáo Án & Lịch Tập ({routines.length})</span>
-          </h3>
-          <p className="text-xs text-zinc-400">Chọn một giáo án để bắt đầu theo kế hoạch chuẩn</p>
+      {/* Cẩm Nang & Triết Lý Gym Phổ Banner */}
+      <div className="bg-gradient-to-r from-emerald-950/70 via-zinc-900 to-zinc-950 border border-emerald-500/30 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
+            <BookOpen className="w-5 h-5" />
+          </div>
+          <div>
+            <div className="flex items-center space-x-2">
+              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono">
+                THOL Duy Nguyễn
+              </span>
+              <span className="text-xs font-bold text-white">Cẩm Nang Gym Phổ</span>
+            </div>
+            <p className="text-xs text-zinc-300 mt-0.5 italic">
+              “Thể hình phục vụ cuộc sống chứ đừng để cuộc sống phục vụ thể hình.”
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsGymPhoModalOpen(true)}
+          className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-emerald-400 hover:text-emerald-300 border border-zinc-700 font-bold text-xs flex items-center justify-center space-x-1.5 transition active:scale-95 shrink-0 shadow-sm"
+        >
+          <Wind className="w-3.5 h-3.5" />
+          <span>Đọc Kỹ Thuật Hít Thở & Lộ Trình</span>
+        </button>
+      </div>
+
+      {/* Routine Templates Header & Filters */}
+      <div className="space-y-3 pt-2">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
+              <Calendar className="w-4 h-4 text-emerald-400" />
+              <span>Giáo Án & Lịch Tập ({filteredRoutines.length})</span>
+            </h3>
+            <p className="text-xs text-zinc-400">Chọn một giáo án để bắt đầu theo kế hoạch chuẩn</p>
+          </div>
+        </div>
+
+        {/* Filter Pills */}
+        <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none text-xs">
+          <button
+            type="button"
+            onClick={() => setRoutineFilter('all')}
+            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 ${
+              routineFilter === 'all'
+                ? 'bg-zinc-700 text-white shadow-sm'
+                : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
+            }`}
+          >
+            Tất Cả ({routines.length})
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setRoutineFilter('thol')}
+            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
+              routineFilter === 'thol'
+                ? 'bg-emerald-500 text-black font-black shadow-sm'
+                : 'bg-zinc-900 border border-zinc-800 text-emerald-400 hover:text-emerald-300'
+            }`}
+          >
+            <span>🎓 Gym Phổ THOL ({routines.filter(r => r.id.startsWith('thol-')).length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setRoutineFilter('newbie')}
+            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 ${
+              routineFilter === 'newbie'
+                ? 'bg-zinc-700 text-white shadow-sm'
+                : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
+            }`}
+          >
+            ⭐ Người Mới ({routines.filter(r => r.level === 'Newbie' && !r.id.startsWith('thol-')).length})
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setRoutineFilter('intermediate')}
+            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 ${
+              routineFilter === 'intermediate'
+                ? 'bg-zinc-700 text-white shadow-sm'
+                : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
+            }`}
+          >
+            🔥 Phân Hóa PPL ({routines.filter(r => r.level === 'Intermediate').length})
+          </button>
         </div>
       </div>
 
       {/* Routine Grid */}
       <div className="space-y-4">
-        {routines.map((routine) => (
+        {filteredRoutines.map((routine) => (
           <div
             key={routine.id}
             className={`border rounded-3xl p-5 hover:border-zinc-700 transition shadow-lg space-y-3 group ${
@@ -462,6 +553,142 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
           onStartSession(singleExerciseSession);
         }}
       />
+
+      {/* Modal Cẩm Nang Kiến Thức Gym Phổ (THOL Duy Nguyễn) */}
+      {isGymPhoModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
+          <div className="bg-zinc-950 border border-zinc-800 rounded-3xl max-w-2xl w-full max-h-[90vh] overflow-y-auto p-5 sm:p-6 space-y-5 shadow-2xl">
+            {/* Modal Header */}
+            <div className="flex items-start justify-between gap-3 border-b border-zinc-800/80 pb-4">
+              <div className="space-y-1">
+                <div className="flex items-center space-x-2">
+                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono">
+                    THOL Duy Nguyễn
+                  </span>
+                  <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-teal-500/20 text-teal-300 font-mono">
+                    Giáo Án Đẳng Cấp
+                  </span>
+                </div>
+                <h3 className="text-lg sm:text-xl font-black text-white">
+                  CẨM NANG & KỸ THUẬT GYM PHỔ
+                </h3>
+                <p className="text-xs text-zinc-300 italic border-l-2 border-emerald-500 pl-2 mt-1">
+                  “Thể hình phục vụ cuộc sống chứ đừng để cuộc sống phục vụ thể hình.”
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsGymPhoModalOpen(false)}
+                className="p-2 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Phần 1: Nguyên Tắc Hít Thở Yếm Khí */}
+            <div className="space-y-3">
+              <h4 className="text-xs font-black uppercase tracking-wider text-cyan-400 flex items-center space-x-1.5">
+                <Wind className="w-4 h-4 text-cyan-400" />
+                <span>1. Bí Kíp Hít Thở Yếm Khí (Khóa Khớp & Tăng Lực)</span>
+              </h4>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-1.5">
+                  <span className="text-[10px] font-bold text-emerald-400 uppercase font-mono block">
+                    Pha Kháng Lực (Dãn Cơ)
+                  </span>
+                  <p className="text-xs text-zinc-300 leading-relaxed">
+                    Hạ tạ chậm 2-3s: Hít thật sâu bằng mũi vào khoang bụng, nén chặt khí trong ổ bụng để khóa cứng cột sống.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-1.5">
+                  <span className="text-[10px] font-bold text-cyan-400 uppercase font-mono block">
+                    Pha Phát Lực (Co Cơ)
+                  </span>
+                  <p className="text-xs text-zinc-300 leading-relaxed">
+                    Đẩy/Kéo bùng nổ: Dồn lực vượt qua điểm nặng nhất và thở dồn/thở mạnh ra bằng miệng dứt khoát.
+                  </p>
+                </div>
+
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-1.5">
+                  <span className="text-[10px] font-bold text-amber-400 uppercase font-mono block">
+                    Đỉnh Co Cơ (Peak)
+                  </span>
+                  <p className="text-xs text-zinc-300 leading-relaxed">
+                    Siết cơ 0.5 - 1s: Nén chặt khí giữ tạ ở đỉnh, tập trung 100% cảm nhận vào thớ cơ mục tiêu.
+                  </p>
+                </div>
+              </div>
+
+              <div className="p-3 rounded-2xl bg-cyan-950/20 border border-cyan-500/20 text-xs text-zinc-300 flex items-start space-x-2">
+                <ShieldCheck className="w-4 h-4 text-cyan-400 shrink-0 mt-0.5" />
+                <span>
+                  <strong>Nghỉ giữa hiệp:</strong> Nghỉ từ 1 - 2 phút giữa các set. Trong lúc nghỉ, uống từng ngụm nhỏ nước bù khoáng điện giải hoặc Intra-workout (BCAA/EAA) để chống mỏi cơ.
+                </span>
+              </div>
+            </div>
+
+            {/* Phần 2: Lộ Trình 3 Tầng */}
+            <div className="space-y-3 pt-2 border-t border-zinc-800">
+              <h4 className="text-xs font-black uppercase tracking-wider text-emerald-400 flex items-center space-x-1.5">
+                <Layers className="w-4 h-4 text-emerald-400" />
+                <span>2. Lộ Trình Phát Triển 3 Tầng Khoa Học</span>
+              </h4>
+
+              <div className="space-y-2">
+                <div className="p-3 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-start space-x-3">
+                  <span className="text-xs font-mono font-black px-2 py-0.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 shrink-0">
+                    TẦNG 1
+                  </span>
+                  <div>
+                    <h5 className="text-xs font-bold text-white">Tuần 1 - 4: Tạ Khối (Selectorized) & Thể Trọng (Bodyweight)</h5>
+                    <p className="text-[11px] text-zinc-400 leading-relaxed mt-0.5">
+                      Giúp người mới kích hoạt hệ thần kinh cơ, an toàn tuyệt đối cho khớp, không lo chấn thương và thuần thục nhịp thở yếm khí.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-start space-x-3">
+                  <span className="text-xs font-mono font-black px-2 py-0.5 rounded-lg bg-teal-500/20 text-teal-300 border border-teal-500/30 shrink-0">
+                    TẦNG 2
+                  </span>
+                  <div>
+                    <h5 className="text-xs font-bold text-white">Tuần 5 - 8: Đòn Bẩy Robot (Leverage)</h5>
+                    <p className="text-[11px] text-zinc-400 leading-relaxed mt-0.5">
+                      Tăng tải trọng cơ bắp với máy đòn bẩy robot, cô lập từng bên cơ trái/phải độc lập để phát triển cơ bắp cân đối.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-start space-x-3">
+                  <span className="text-xs font-mono font-black px-2 py-0.5 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-500/30 shrink-0">
+                    TẦNG 3
+                  </span>
+                  <div>
+                    <h5 className="text-xs font-bold text-white">Tuần 9 - 12: Tạ Tự Do (Free Weight - Đòn & Đơn)</h5>
+                    <p className="text-[11px] text-zinc-400 leading-relaxed mt-0.5">
+                      Huy động toàn bộ cơ thăng bằng và nhóm cơ lõi (core), xây dựng sức mạnh nguyên bản và độ dày cơ bắp toàn diện.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Nút đóng */}
+            <div className="pt-2">
+              <button
+                type="button"
+                onClick={() => setIsGymPhoModalOpen(false)}
+                className="w-full py-3 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-zinc-950 font-black text-xs transition"
+              >
+                ĐÃ HIỂU & QUAY LẠI TẬP LUYỆN
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

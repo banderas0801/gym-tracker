@@ -18,7 +18,9 @@ import {
   Sparkles,
   Info,
   X,
-  Check
+  Check,
+  Calculator,
+  Apple
 } from 'lucide-react';
 import { BodyMetricLog, BodyGoal, GoalType } from '@/types/body';
 import { 
@@ -321,6 +323,113 @@ export default function BodyTracker() {
           </div>
         </div>
       </div>
+
+      {/* THOL Gym Pho - HSHT & Nutrition Card */}
+      {(() => {
+        const hscc = goal.heightCm - 100;
+        const hscn = Math.round(currentWeight * 10) / 10;
+        const hsht = Math.round((hscc - hscn) * 10) / 10;
+
+        let statusText = '';
+        let adviceText = '';
+        let badgeColor = '';
+
+        if (hsht >= 10) {
+          statusText = 'Cơ thể quá gầy, thiếu cơ và mỡ';
+          adviceText = 'Nên dùng Mass Gainer cao năng lượng (>1000 Calo/liều), tập trung nạp tinh bột chậm và tăng cơ trước.';
+          badgeColor = 'text-amber-400 border-amber-500/30 bg-amber-500/10';
+        } else if (hsht > 0 && hsht < 10) {
+          statusText = 'Thể trạng hơi gầy hoặc tương đối cân đối';
+          adviceText = 'Nên dùng Mass Gainer trung năng lượng (~600 Calo/liều) hoặc kết hợp Whey Protein để tăng cơ nạc tối ưu.';
+          badgeColor = 'text-blue-400 border-blue-500/30 bg-blue-500/10';
+        } else {
+          statusText = 'Thể trạng đậm người, đủ cân hoặc có mỡ';
+          adviceText = 'Tuyệt đối KHÔNG dùng Mass. Dùng Protein hoàn chỉnh / Whey Protein Isolate (~150 Calo) kết hợp siết mỡ tăng cơ.';
+          badgeColor = 'text-emerald-400 border-emerald-500/30 bg-emerald-500/10';
+        }
+
+        return (
+          <div className="bg-gradient-to-br from-zinc-900 via-zinc-900 to-zinc-950 border border-zinc-800 rounded-3xl p-5 shadow-xl space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800 pb-3">
+              <div className="flex items-center space-x-2">
+                <div className="w-8 h-8 rounded-xl bg-amber-500/15 border border-amber-500/30 flex items-center justify-center text-amber-400 shrink-0">
+                  <Calculator className="w-4 h-4" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-black text-white flex items-center space-x-2">
+                    <span>HỆ SỐ HÌNH THỂ (HSHT DUY NGUYỄN THOL)</span>
+                    <span className="text-[10px] px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold">
+                      GIÁO ÁN
+                    </span>
+                  </h3>
+                  <p className="text-[11px] text-zinc-400">
+                    Công thức chuẩn đoán thể trạng & định hướng dòng Thực Phẩm Bổ Sung tối ưu
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex items-center space-x-2 text-xs font-mono self-start sm:self-auto">
+                <span className="text-zinc-400">HSHT của bạn:</span>
+                <span className={`text-base font-black px-2.5 py-0.5 rounded-xl border ${badgeColor}`}>
+                  {hsht > 0 ? `+${hsht}` : hsht}
+                </span>
+              </div>
+            </div>
+
+            {/* Calculations Breakdown */}
+            <div className="grid grid-cols-3 gap-2 text-center text-xs">
+              <div className="p-2.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80">
+                <div className="text-[10px] text-zinc-400 font-semibold">Hệ Số Chiều Cao (HSCC)</div>
+                <div className="text-[11px] text-zinc-500 mt-0.5">{goal.heightCm} - 100</div>
+                <div className="text-sm font-black text-white font-mono mt-0.5">{hscc}</div>
+              </div>
+              <div className="p-2.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80">
+                <div className="text-[10px] text-zinc-400 font-semibold">Hệ Số Cân Nặng (HSCN)</div>
+                <div className="text-[11px] text-zinc-500 mt-0.5">Cân nặng hiện tại</div>
+                <div className="text-sm font-black text-white font-mono mt-0.5">{hscn} kg</div>
+              </div>
+              <div className="p-2.5 rounded-xl bg-zinc-950/70 border border-zinc-800/80">
+                <div className="text-[10px] text-zinc-400 font-semibold">Hệ Số Hình Thể (HSHT)</div>
+                <div className="text-[11px] text-zinc-500 mt-0.5">HSCC - HSCN</div>
+                <div className={`text-sm font-black font-mono mt-0.5 ${hsht >= 10 ? 'text-amber-400' : hsht > 0 ? 'text-blue-400' : 'text-emerald-400'}`}>
+                  {hsht}
+                </div>
+              </div>
+            </div>
+
+            {/* Assessment & Advice */}
+            <div className={`p-3.5 rounded-2xl border ${badgeColor} space-y-1 text-xs`}>
+              <div className="font-extrabold uppercase tracking-wide flex items-center space-x-1.5">
+                <Info className="w-4 h-4 shrink-0" />
+                <span>Đánh giá: {statusText}</span>
+              </div>
+              <p className="text-zinc-300 leading-relaxed text-[11px] pl-5">
+                {adviceText}
+              </p>
+            </div>
+
+            {/* Nutrition Tip Collapsible / Quick info */}
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-[11px]">
+              <div className="p-2 rounded-xl bg-zinc-950/50 border border-zinc-800/60">
+                <span className="text-zinc-400 block text-[10px]">1g Carb (Tinh bột)</span>
+                <span className="font-mono font-bold text-white">4 Calo</span>
+              </div>
+              <div className="p-2 rounded-xl bg-zinc-950/50 border border-zinc-800/60">
+                <span className="text-zinc-400 block text-[10px]">1g Protein (Đạm)</span>
+                <span className="font-mono font-bold text-emerald-400">4 Calo</span>
+              </div>
+              <div className="p-2 rounded-xl bg-zinc-950/50 border border-zinc-800/60">
+                <span className="text-zinc-400 block text-[10px]">1g Fat (Chất béo)</span>
+                <span className="font-mono font-bold text-rose-400">9 Calo</span>
+              </div>
+              <div className="p-2 rounded-xl bg-zinc-950/50 border border-zinc-800/60">
+                <span className="text-zinc-400 block text-[10px]">Đốt 1 kg Mỡ</span>
+                <span className="font-mono font-bold text-cyan-400">~7.700 Calo</span>
+              </div>
+            </div>
+          </div>
+        );
+      })()}
 
       {/* Weight Trend Chart */}
       <div className="bg-zinc-900/90 border border-zinc-800 rounded-3xl p-5 shadow-xl">
