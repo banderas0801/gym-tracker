@@ -17,7 +17,7 @@ interface RoutineListProps {
 
 export default function RoutineList({ onStartSession }: RoutineListProps) {
   const [routines, setRoutines] = useState<RoutineTemplate[]>(() => getRoutines());
-  const [routineFilter, setRoutineFilter] = useState<'all' | 'thol' | 'newbie' | 'intermediate'>('all');
+  const [routineFilter, setRoutineFilter] = useState<'all' | 'thol' | 'thol-tang1' | 'thol-tang2' | 'thol-tang3' | 'newbie' | 'intermediate'>('all');
   const [isGymPhoModalOpen, setIsGymPhoModalOpen] = useState(false);
   const [isAdvisorModalOpen, setIsAdvisorModalOpen] = useState(false);
   const [isCreatingRoutine, setIsCreatingRoutine] = useState(false);
@@ -123,8 +123,11 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
 
   const filteredRoutines = routines.filter((r) => {
     if (routineFilter === 'thol') return r.id.startsWith('thol-');
+    if (routineFilter === 'thol-tang1') return r.id.startsWith('thol-tang1');
+    if (routineFilter === 'thol-tang2') return r.id.startsWith('thol-tang2');
+    if (routineFilter === 'thol-tang3') return r.id.startsWith('thol-tang3');
     if (routineFilter === 'newbie') return r.level === 'Newbie' && !r.id.startsWith('thol-');
-    if (routineFilter === 'intermediate') return r.level === 'Intermediate';
+    if (routineFilter === 'intermediate') return r.level === 'Intermediate' && !r.id.startsWith('thol-');
     return true;
   });
 
@@ -275,14 +278,38 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
 
           <button
             type="button"
-            onClick={() => setRoutineFilter('thol')}
+            onClick={() => setRoutineFilter('thol-tang1')}
             className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
-              routineFilter === 'thol'
+              routineFilter === 'thol-tang1'
                 ? 'bg-emerald-500 text-black font-black shadow-sm'
                 : 'bg-zinc-900 border border-zinc-800 text-emerald-400 hover:text-emerald-300'
             }`}
           >
-            <span>🎓 Gym Phổ THOL ({routines.filter(r => r.id.startsWith('thol-')).length})</span>
+            <span>🎓 Tầng 1 ({routines.filter(r => r.id.startsWith('thol-tang1')).length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setRoutineFilter('thol-tang2')}
+            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
+              routineFilter === 'thol-tang2'
+                ? 'bg-teal-400 text-black font-black shadow-sm'
+                : 'bg-zinc-900 border border-zinc-800 text-teal-300 hover:text-teal-200'
+            }`}
+          >
+            <span>⚙️ Tầng 2 Robot ({routines.filter(r => r.id.startsWith('thol-tang2')).length})</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setRoutineFilter('thol-tang3')}
+            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
+              routineFilter === 'thol-tang3'
+                ? 'bg-amber-400 text-black font-black shadow-sm'
+                : 'bg-zinc-900 border border-zinc-800 text-amber-300 hover:text-amber-200'
+            }`}
+          >
+            <span>🏋️ Tầng 3 Free Weight ({routines.filter(r => r.id.startsWith('thol-tang3')).length})</span>
           </button>
 
           <button
@@ -306,7 +333,7 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
                 : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
             }`}
           >
-            🔥 Phân Hóa PPL ({routines.filter(r => r.level === 'Intermediate').length})
+            🔥 Phân Hóa PPL ({routines.filter(r => r.level === 'Intermediate' && !r.id.startsWith('thol-')).length})
           </button>
         </div>
       </div>
@@ -317,7 +344,13 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
           <div
             key={routine.id}
             className={`border rounded-3xl p-5 hover:border-zinc-700 transition shadow-lg space-y-3 group ${
-              routine.level === 'Newbie'
+              routine.id.startsWith('thol-tang1')
+                ? 'bg-gradient-to-br from-emerald-950/30 to-zinc-900 border-emerald-500/40 shadow-emerald-950/20'
+                : routine.id.startsWith('thol-tang2')
+                ? 'bg-gradient-to-br from-teal-950/30 to-zinc-900 border-teal-500/40 shadow-teal-950/20'
+                : routine.id.startsWith('thol-tang3')
+                ? 'bg-gradient-to-br from-amber-950/25 to-zinc-900 border-amber-500/40 shadow-amber-950/20'
+                : routine.level === 'Newbie'
                 ? 'bg-gradient-to-br from-emerald-950/30 to-zinc-900 border-emerald-500/40 shadow-emerald-950/20'
                 : 'bg-zinc-900 border-zinc-800'
             }`}
@@ -325,9 +358,19 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1.5 min-w-0">
                 <div className="flex flex-wrap items-center gap-1.5">
-                  {routine.id.startsWith('thol-') && (
+                  {routine.id.startsWith('thol-tang1') && (
                     <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-500 text-black shadow-sm font-mono">
-                      🎓 GYM PHỔ TẦNG 1 (THOL)
+                      🎓 GYM PHỔ TẦNG 1 (TẠ KHỐI)
+                    </span>
+                  )}
+                  {routine.id.startsWith('thol-tang2') && (
+                    <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-teal-400 text-black shadow-sm font-mono">
+                      ⚙️ GYM PHỔ TẦNG 2 (ROBOT ĐÒN BẨY)
+                    </span>
+                  )}
+                  {routine.id.startsWith('thol-tang3') && (
+                    <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-400 text-black shadow-sm font-mono">
+                      🏋️ GYM PHỔ TẦNG 3 (FREE WEIGHT)
                     </span>
                   )}
                   {routine.level === 'Newbie' && !routine.id.startsWith('thol-') && (
@@ -335,7 +378,7 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
                       ⭐ DÀNH CHO NGƯỜI MỚI (NEWBIE)
                     </span>
                   )}
-                  {routine.level === 'Intermediate' && (
+                  {routine.level === 'Intermediate' && !routine.id.startsWith('thol-') && (
                     <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
                       🔥 PHÂN HÓA PPL
                     </span>

@@ -141,6 +141,155 @@ export const DEFAULT_ROUTINES: RoutineTemplate[] = [
       { exerciseId: 'Recumbent_Bike', exerciseName: 'Đạp xe tại chỗ đốt mỡ (Stationary Bike)', defaultSets: 1, defaultReps: 20, suggestedWeightKg: 0 },
       { exerciseId: 'Walking_Treadmill', exerciseName: 'Đi bộ dốc máy chạy bộ (Incline Treadmill Walk)', defaultSets: 1, defaultReps: 20, suggestedWeightKg: 0 }
     ]
+  },
+
+  // --- GYM PHỔ TẦNG 2 (DUY NGUYỄN THOL - TUẦN 4-8: LEVERAGE MÁY ROBOT) ---
+  {
+    id: 'thol-tang2-day1',
+    name: 'Gym Phổ Tầng 2: Day 1 - Chân Mông Đùi (Leg Day)',
+    targetFocus: 'Đùi trước, đùi sau, mông, bắp chân (Leverage Robot & Tạ Khối)',
+    level: 'Newbie',
+    description: 'Giáo án Gym Phổ Tầng 2 (Duy Nguyễn THOL - Tuần 4-8). Phát triển đùi mông săn chắc với máy robot đòn bẩy Plate-loaded và tạ khối cô lập.',
+    exercises: [
+      { exerciseId: 'Leg_Press', exerciseName: 'Đạp đùi máy robot (Leverage Leg Press)', defaultSets: 4, defaultReps: 10, suggestedWeightKg: 60 },
+      { exerciseId: 'Leg_Press', exerciseName: 'Đạp đùi đòn xéo máy robot (Linear Leg Press)', defaultSets: 2, defaultReps: 10, suggestedWeightKg: 50 },
+      { exerciseId: 'Dumbbell_Lunges', exerciseName: 'Bước đổi chân với tạ chuông/tạ đơn (Lunge)', defaultSets: 4, defaultReps: 10, suggestedWeightKg: 10 },
+      { exerciseId: 'Lying_Leg_Curls', exerciseName: 'Nằm móc đùi sau tạ khối (Selectorized Leg Curl)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 20 },
+      { exerciseId: 'Calf_Press_On_The_Leg_Press_Machine', exerciseName: 'Đạp bắp chân máy robot (Calf Press)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 40 },
+      { exerciseId: 'Adductor', exerciseName: 'Ép đùi trong tạ khối (Inner Thigh Machine)', defaultSets: 2, defaultReps: 12, suggestedWeightKg: 25 },
+      { exerciseId: 'Thigh_Abductor', exerciseName: 'Ép hông mông ngoài tạ khối (Outer Thigh Machine)', defaultSets: 2, defaultReps: 12, suggestedWeightKg: 25 },
+      { exerciseId: 'Recumbent_Bike', exerciseName: 'Cardio đạp xe nhẹ đốt mỡ & phục hồi (Spinning Bike)', defaultSets: 1, defaultReps: 15, suggestedWeightKg: 0 }
+    ]
+  },
+  {
+    id: 'thol-tang2-day2',
+    name: 'Gym Phổ Tầng 2: Day 2 - Ngực & Cơ Bụng (Chest & Abs)',
+    targetFocus: 'Ngực trên, rãnh ngực, cạnh ngực, cơ bụng trên & bụng dưới',
+    level: 'Newbie',
+    description: 'Giáo án Gym Phổ Tầng 2 (Duy Nguyễn THOL). Tăng tải ngực với máy robot độc lập 2 bên đòn bẩy, siết cơ bụng sắc nét.',
+    exercises: [
+      { exerciseId: 'Leverage_Chest_Press', exerciseName: 'Đẩy ngực rộng máy robot (Leverage Wide Chest Press)', defaultSets: 2, defaultReps: 10, suggestedWeightKg: 30 },
+      { exerciseId: 'Leverage_Chest_Press', exerciseName: 'Đẩy ngực máy robot đòn bẩy (Leverage Chest Press)', defaultSets: 2, defaultReps: 10, suggestedWeightKg: 30 },
+      { exerciseId: 'Leverage_Incline_Chest_Press', exerciseName: 'Đẩy ngực trên máy robot (Leverage Incline Press)', defaultSets: 2, defaultReps: 10, suggestedWeightKg: 25 },
+      { exerciseId: 'Dips_-_Chest_Version', exerciseName: 'Chống đẩy ngực máy robot (Leverage Seated Dips)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 20 },
+      { exerciseId: 'Butterfly', exerciseName: 'Ép ngực trong cánh bướm hoàng hôn (Butterfly)', defaultSets: 2, defaultReps: 12, suggestedWeightKg: 25 },
+      { exerciseId: 'Crunches', exerciseName: 'Gập bụng ghế dốc lên (Incline Crunch)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 0 },
+      { exerciseId: 'Decline_Crunch', exerciseName: 'Nâng chân tập bụng dưới ghế dốc (Decline Crunch)', defaultSets: 2, defaultReps: 15, suggestedWeightKg: 0 },
+      { exerciseId: 'Recumbent_Bike', exerciseName: 'Cardio đạp xe nhẹ đốt mỡ (Recumbent Bike)', defaultSets: 1, defaultReps: 15, suggestedWeightKg: 0 }
+    ]
+  },
+  {
+    id: 'thol-tang2-day3',
+    name: 'Gym Phổ Tầng 2: Day 3 - Lưng & Xô (Back & Lat)',
+    targetFocus: 'Lưng dày, xô chữ V, lưng giữa, phục hồi cột sống',
+    level: 'Newbie',
+    description: 'Giáo án Gym Phổ Tầng 2 (Duy Nguyễn THOL). Máy đòn bẩy Leverage Row tác động sâu vào từng thớ cơ lưng xô mà không mỏi lưng dưới.',
+    exercises: [
+      { exerciseId: 'Leverage_Iso_Row', exerciseName: 'Kéo lưng xô đòn bẩy robot (Leverage Row)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 30 },
+      { exerciseId: 'Seated_Cable_Rows', exerciseName: 'Ngồi kéo lưng tạ khối (Leverage Low Row)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 30 },
+      { exerciseId: 'Wide-Grip_Lat_Pulldown', exerciseName: 'Kéo xô máy đòn bẩy robot (Leverage Lat Pulldown)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 30 },
+      { exerciseId: 'Recumbent_Bike', exerciseName: 'Cardio đạp xe nhẹ phục hồi (Upright Bike)', defaultSets: 1, defaultReps: 15, suggestedWeightKg: 0 }
+    ]
+  },
+  {
+    id: 'thol-tang2-day4',
+    name: 'Gym Phổ Tầng 2: Day 4 - Vai, Tay & Bụng (Shoulder, Arm & Abs)',
+    targetFocus: 'Cầu vai robot, bắp tay trước EZ, tay sau ghế, liên sườn & cơ lõi',
+    level: 'Newbie',
+    description: 'Giáo án Gym Phổ Tầng 2 (Duy Nguyễn THOL). Hoàn thiện cầu vai vuông đòn bẩy, tay săn chắc và con lăn bụng bùng nổ.',
+    exercises: [
+      { exerciseId: 'Leverage_Shoulder_Press', exerciseName: 'Đẩy vai máy robot đòn bẩy (Leverage Shoulder Press)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 20 },
+      { exerciseId: 'Bench_Dips', exerciseName: 'Chống đẩy tay sau với ghế (Bench Dip)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 0 },
+      { exerciseId: 'EZ-Bar_Curl', exerciseName: 'Cuốn bắp tay trước đòn cong (EZ Barbell Curl)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 12 },
+      { exerciseId: 'Ab_Roller', exerciseName: 'Đẩy bụng tình yêu con lăn (Ab Roller)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 0 },
+      { exerciseId: 'Dumbbell_Side_Bend', exerciseName: 'Gập bụng xiên với tạ chuông/tạ đơn (Side Bend)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 8 },
+      { exerciseId: 'Plank', exerciseName: 'Giảm mỡ bụng bền cơ lưng (Yoga Plank)', defaultSets: 2, defaultReps: 60, suggestedWeightKg: 0 },
+      { exerciseId: 'Elliptical_Trainer', exerciseName: 'Cardio trượt tuyết nhẹ (Elliptical Trainer)', defaultSets: 1, defaultReps: 15, suggestedWeightKg: 0 }
+    ]
+  },
+  {
+    id: 'thol-tang2-day5',
+    name: 'Gym Phổ Tầng 2: Day 5 - Chuyên Cardio Đốt Mỡ (Cardio Day)',
+    targetFocus: 'Hệ tim mạch, tăng Testosterone, đốt sạch mỡ thừa, tăng sức chịu đựng',
+    level: 'Newbie',
+    description: 'Giáo án Gym Phổ Tầng 2 (Duy Nguyễn THOL). Đốt mỡ bứt phá và nâng cao dung tích phổi với Treadmill chạy và đi bộ dốc.',
+    exercises: [
+      { exerciseId: 'Jogging_Treadmill', exerciseName: 'Chạy bộ máy chạy đốt mỡ tăng thể lực (Treadmill Run)', defaultSets: 1, defaultReps: 20, suggestedWeightKg: 0 },
+      { exerciseId: 'Walking_Treadmill', exerciseName: 'Đi bộ nhanh dốc máy chạy tăng sức mạnh (Treadmill Walk)', defaultSets: 1, defaultReps: 20, suggestedWeightKg: 0 }
+    ]
+  },
+
+  // --- GYM PHỔ TẦNG 3 (DUY NGUYỄN THOL - TUẦN 8-12: FREE WEIGHT & MÁY SMITH) ---
+  {
+    id: 'thol-tang3-day1',
+    name: 'Gym Phổ Tầng 3: Day 1 - Chân Mông Đùi (Leg Day)',
+    targetFocus: 'Gánh đùi Squat Smith, Lunge đùi, Romanian Deadlift mông đùi sau, bắp chân',
+    level: 'Intermediate',
+    description: 'Giáo án Gym Phổ Tầng 3 (Duy Nguyễn THOL - Tuần 8-12). Chuyển sang máy Smith và Free Weight, kích hoạt cơ thăng bằng và sức mạnh bộc phát.',
+    exercises: [
+      { exerciseId: 'Smith_Machine_Squat', exerciseName: 'Gánh đùi máy Smith (Regular Smith Machine Squats)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 40 },
+      { exerciseId: 'Dumbbell_Lunges', exerciseName: 'Gánh đùi đổi chân máy Smith / Tạ đơn (Smith Lunge)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 20 },
+      { exerciseId: 'Romanian_Deadlift', exerciseName: 'Tập cơ đùi sau với tạ chuông/đòn (Romanian Deadlift)', defaultSets: 4, defaultReps: 8, suggestedWeightKg: 30 },
+      { exerciseId: 'Calf_Press_On_The_Leg_Press_Machine', exerciseName: 'Tập cơ bắp chân máy Smith (Smith Calf Raise)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 40 },
+      { exerciseId: 'Recumbent_Bike', exerciseName: 'Cardio đạp xe nhẹ đốt mỡ & phục hồi (Spinning Bike)', defaultSets: 1, defaultReps: 15, suggestedWeightKg: 0 }
+    ]
+  },
+  {
+    id: 'thol-tang3-day2',
+    name: 'Gym Phổ Tầng 3: Day 2 - Ngực & Cơ Bụng (Chest & Abs)',
+    targetFocus: 'Ngực trên dốc Smith, ngực bằng Smith, chống đẩy ngực robot, rãnh ngực cáp, bụng',
+    level: 'Intermediate',
+    description: 'Giáo án Gym Phổ Tầng 3 (Duy Nguyễn THOL). Đẩy ngực Smith Machine Incline & Flat kết hợp dây cáp cô lập rãnh ngực sắc nét.',
+    exercises: [
+      { exerciseId: 'Smith_Machine_Incline_Bench_Press', exerciseName: 'Đẩy ngực trên máy Smith (Incline Smith Bench Press)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 35 },
+      { exerciseId: 'Smith_Machine_Bench_Press', exerciseName: 'Đẩy ngực dưới/ngang máy Smith (Smith Bench Press)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 40 },
+      { exerciseId: 'Dips_-_Chest_Version', exerciseName: 'Chống đẩy ngực máy robot (Leverage Seated Dips)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 25 },
+      { exerciseId: 'Cable_Crossover', exerciseName: 'Ép ngực trong với cáp (Cable Fly)', defaultSets: 2, defaultReps: 12, suggestedWeightKg: 15 },
+      { exerciseId: 'Cable_Crunch', exerciseName: 'Gập bụng trên với cáp quỳ (Cable Crunch)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 25 },
+      { exerciseId: 'Hanging_Leg_Raise', exerciseName: 'Nâng gối tập bụng dưới (Vertical Knee Raise)', defaultSets: 2, defaultReps: 15, suggestedWeightKg: 0 },
+      { exerciseId: 'Recumbent_Bike', exerciseName: 'Cardio đạp xe nhẹ đốt mỡ (Recumbent Bike)', defaultSets: 1, defaultReps: 15, suggestedWeightKg: 0 }
+    ]
+  },
+  {
+    id: 'thol-tang3-day3',
+    name: 'Gym Phổ Tầng 3: Day 3 - Lưng & Xô (Back & Lat)',
+    targetFocus: 'Chèo lưng Smith Row, lưng dưới Good Morning, cầu vai Smith Shrugs, kéo xô',
+    level: 'Intermediate',
+    description: 'Giáo án Gym Phổ Tầng 3 (Duy Nguyễn THOL). Xây dựng lưng vĩ đại với chèo lưng đòn Smith, gập lưng Good Morning và cầu vai săn chắc.',
+    exercises: [
+      { exerciseId: 'Smith_Machine_Bent_Over_Row', exerciseName: 'Tập lưng với máy Smith (Smith Machine Bent Over Row)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 35 },
+      { exerciseId: 'Good_Morning', exerciseName: 'Gập lưng dưới với tạ đòn (Good Morning)', defaultSets: 2, defaultReps: 10, suggestedWeightKg: 20 },
+      { exerciseId: 'Smith_Machine_Behind_the_Back_Shrug', exerciseName: 'Tập cầu vai với máy Smith (Smith Machine Shrugs)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 40 },
+      { exerciseId: 'Wide-Grip_Lat_Pulldown', exerciseName: 'Kéo xô máy đòn bẩy robot (Leverage Lat Pulldown)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 35 },
+      { exerciseId: 'Recumbent_Bike', exerciseName: 'Cardio đạp xe nhẹ phục hồi (Upright Bike)', defaultSets: 1, defaultReps: 15, suggestedWeightKg: 0 }
+    ]
+  },
+  {
+    id: 'thol-tang3-day4',
+    name: 'Gym Phổ Tầng 3: Day 4 - Vai, Tay & Bụng (Shoulder, Arm & Abs)',
+    targetFocus: 'Đẩy vai Smith, duỗi tay sau cáp, cuốn tay trước EZ, con lăn bụng, xoay eo',
+    level: 'Intermediate',
+    description: 'Giáo án Gym Phổ Tầng 3 (Duy Nguyễn THOL). Đẩy vai tạ đòn Smith chuẩn form, tay săn cuồn cuộn và cơ lõi thép.',
+    exercises: [
+      { exerciseId: 'Smith_Machine_Overhead_Shoulder_Press', exerciseName: 'Đẩy vai với máy Smith (Smith Shoulder Press)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 25 },
+      { exerciseId: 'Triceps_Pushdown', exerciseName: 'Tập tay sau với cáp (Triceps Pushdown)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 20 },
+      { exerciseId: 'EZ-Bar_Curl', exerciseName: 'Cuốn tay trước đòn cong (EZ Barbell Curl)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 15 },
+      { exerciseId: 'Ab_Roller', exerciseName: 'Đẩy bụng tình yêu con lăn (Ab Roller)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 0 },
+      { exerciseId: 'Cable_Russian_Twists', exerciseName: 'Xoay eo bụng với tạ khối / cáp (Rotary Torso)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 20 },
+      { exerciseId: 'Plank', exerciseName: 'Giảm mỡ bụng bền cơ lưng (Yoga Plank)', defaultSets: 2, defaultReps: 60, suggestedWeightKg: 0 },
+      { exerciseId: 'Elliptical_Trainer', exerciseName: 'Cardio nhẹ máy trượt tuyết (Elliptical Trainer)', defaultSets: 1, defaultReps: 15, suggestedWeightKg: 0 }
+    ]
+  },
+  {
+    id: 'thol-tang3-day5',
+    name: 'Gym Phổ Tầng 3: Day 5 - Chuyên Cardio Đốt Mỡ (Cardio Day)',
+    targetFocus: 'Hệ tim mạch, tăng Testosterone, đốt sạch mỡ thừa, tăng sức chịu đựng',
+    level: 'Intermediate',
+    description: 'Giáo án Gym Phổ Tầng 3 (Duy Nguyễn THOL). Chạy bộ máy Treadmill tăng cường thể lực đỉnh cao và sức bền bỉ kiên cường.',
+    exercises: [
+      { exerciseId: 'Jogging_Treadmill', exerciseName: 'Chạy bộ máy chạy đốt mỡ tăng thể lực (Treadmill Run)', defaultSets: 1, defaultReps: 20, suggestedWeightKg: 0 },
+      { exerciseId: 'Walking_Treadmill', exerciseName: 'Đi bộ nhanh dốc máy chạy tăng sức mạnh (Treadmill Walk)', defaultSets: 1, defaultReps: 20, suggestedWeightKg: 0 }
+    ]
   }
 ];
 

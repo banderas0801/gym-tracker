@@ -19,7 +19,7 @@ import { getLatestBodyLog, getBodyGoal } from '@/lib/bodyStorage';
 interface LevelAdvisorModalProps {
   isOpen: boolean;
   onClose: () => void;
-  onApplyLevel: (levelFilter: 'thol' | 'newbie' | 'intermediate') => void;
+  onApplyLevel: (levelFilter: 'all' | 'thol' | 'thol-tang1' | 'thol-tang2' | 'thol-tang3' | 'newbie' | 'intermediate') => void;
 }
 
 export type ExperienceLevel = 'newbie_0_1m' | 'intermediate_1_3m' | 'advanced_3_6m' | 'pro_6m_plus';
@@ -47,7 +47,7 @@ export default function LevelAdvisorModal({ isOpen, onClose, onApplyLevel }: Lev
   // Thuật toán chẩn đoán Level chuẩn giáo án THOL Duy Nguyễn
   let recommendedLevelTitle = '';
   let recommendedLevelSub = '';
-  let recommendedFilter: 'thol' | 'newbie' | 'intermediate' = 'thol';
+  let recommendedFilter: 'all' | 'thol' | 'thol-tang1' | 'thol-tang2' | 'thol-tang3' | 'newbie' | 'intermediate' = 'thol-tang1';
   let recommendedReason = '';
   let supplementAdvice = '';
   let badgeColor = '';
@@ -55,20 +55,20 @@ export default function LevelAdvisorModal({ isOpen, onClose, onApplyLevel }: Lev
   if (experience === 'newbie_0_1m' || jointHealth === 'sensitive') {
     recommendedLevelTitle = 'GYM PHỔ TẦNG 1 (Tuần 1 - 4)';
     recommendedLevelSub = 'Selectorized (Máy Tạ Khối) & Bodyweight (Thể Trọng)';
-    recommendedFilter = 'thol';
+    recommendedFilter = 'thol-tang1';
     recommendedReason = jointHealth === 'sensitive'
       ? 'Do bạn có tiền sử khớp nhạy cảm hoặc mỏi lưng/vai, máy tạ khối với quỹ đạo cố định là lựa chọn an toàn tuyệt đối để phục hồi và rèn luyện cơ bắp mà không sợ chấn thương.'
       : 'Bạn mới tập dưới 1 tháng. Giai đoạn này quan trọng nhất là tạo thói quen, xây dựng liên kết não - cơ (mind-muscle connection) và học thuần thục nhịp thở yếm khí chuẩn Duy Nguyễn.';
   } else if (experience === 'intermediate_1_3m') {
-    recommendedLevelTitle = 'GYM PHỔ TẦNG 1 & 2 (Tuần 4 - 8)';
-    recommendedLevelSub = 'Leverage (Máy Robot Đòn Bẩy) & Selectorized Nâng Cao';
-    recommendedFilter = 'thol';
-    recommendedReason = 'Bạn đã có nền tảng thể lực cơ bản và khớp đã dẻo dai. Tiếp tục hoàn thiện Tầng 1 và sẵn sàng bước sang máy Robot đòn bẩy để tăng tải trọng cơ bắp an toàn, khắc phục lệch cơ trái/phải.';
+    recommendedLevelTitle = 'GYM PHỔ TẦNG 2 (Tuần 4 - 8)';
+    recommendedLevelSub = 'Leverage (Máy Robot Đòn Bẩy Plate-loaded)';
+    recommendedFilter = 'thol-tang2';
+    recommendedReason = 'Bạn đã có nền tảng thể lực cơ bản và khớp đã dẻo dai. Đây là thời điểm vàng để chuyển sang máy Robot đòn bẩy Leverage, tăng tải trọng cơ bắp an toàn, khắc phục triệt để lệch cơ trái/phải.';
   } else if (experience === 'advanced_3_6m') {
-    recommendedLevelTitle = 'GYM PHỔ TẦNG 3 (Tuần 9 - 12) & FULL BODY';
-    recommendedLevelSub = 'Free Weight (Tạ Tự Do) & Cáp Đa Hướng';
-    recommendedFilter = 'newbie';
-    recommendedReason = 'Cơ thể bạn đã sẵn sàng cho tạ tự do (Free Weight). Cơ lõi và cơ thăng bằng sẽ được kích hoạt tối đa để xây dựng mật độ cơ bắp dày dặn và sức mạnh bộc phát.';
+    recommendedLevelTitle = 'GYM PHỔ TẦNG 3 (Tuần 8 - 12)';
+    recommendedLevelSub = 'Free Weight & Máy Smith (Tạ Tự Do Chuẩn Form)';
+    recommendedFilter = 'thol-tang3';
+    recommendedReason = 'Cơ thể bạn đã sẵn sàng cho Tầng 3 Free Weight và máy Smith. Toàn bộ cơ thăng bằng và cơ lõi (core) sẽ được kích hoạt tối đa để xây dựng mật độ cơ bắp dày dặn, tạo form thể hình chuẩn Duy Nguyễn.';
   } else {
     recommendedLevelTitle = 'PHÂN HÓA ĐẨY - KÉO - CHÂN (PPL NÂNG CAO)';
     recommendedLevelSub = 'Heavy Compound & Hypertrophy Split';
