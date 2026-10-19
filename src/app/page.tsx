@@ -1,17 +1,18 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Dumbbell, Calendar, Trophy, Flame, BookOpen, Scale } from 'lucide-react';
+import { Dumbbell, Calendar, Trophy, Flame, BookOpen, Scale, GraduationCap } from 'lucide-react';
 import { WorkoutSession } from '@/types/workout';
 import ActiveWorkoutView from '@/components/ActiveWorkoutView';
 import RoutineList from '@/components/RoutineList';
 import ExerciseBrowser from '@/components/ExerciseBrowser';
 import HistoryAnalytics from '@/components/HistoryAnalytics';
 import BodyTracker from '@/components/BodyTracker';
+import GymPhoCurriculum from '@/components/GymPhoCurriculum';
 import ErrorBoundary from '@/components/ErrorBoundary';
 import PWAManager from '@/components/PWAManager';
 
-type Tab = 'routines' | 'exercises' | 'history' | 'body';
+type Tab = 'routines' | 'gympho' | 'body' | 'exercises' | 'history';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>('routines');
@@ -140,7 +141,22 @@ export default function Home() {
               }`}
             >
               <Calendar className="w-4 h-4 text-emerald-400" />
-              <span>Tập Luyện & Giáo Án</span>
+              <span>Tập Luyện</span>
+            </button>
+
+            <button
+              onClick={() => setActiveTab('gympho')}
+              className={`px-3.5 py-2 rounded-xl font-bold transition flex items-center space-x-1.5 whitespace-nowrap active:scale-95 ${
+                activeTab === 'gympho'
+                  ? 'bg-emerald-500/15 text-emerald-300 shadow-sm border border-emerald-500/50'
+                  : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
+              }`}
+            >
+              <GraduationCap className="w-4 h-4 text-emerald-400" />
+              <span>Gym Phổ (Duy Nguyễn)</span>
+              <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono font-bold">
+                TẦNG 1
+              </span>
             </button>
 
             <button
@@ -176,7 +192,7 @@ export default function Home() {
               }`}
             >
               <Trophy className="w-4 h-4 text-amber-400" />
-              <span>Lịch Sử & Kỷ Lục PRs</span>
+              <span>Lịch Sử & PRs</span>
             </button>
           </div>
         )}
@@ -197,6 +213,11 @@ export default function Home() {
             {activeTab === 'routines' && (
               <ErrorBoundary fallbackTitle="Không thể tải giáo án">
                 <RoutineList onStartSession={(sess) => setActiveSession(sess)} />
+              </ErrorBoundary>
+            )}
+            {activeTab === 'gympho' && (
+              <ErrorBoundary fallbackTitle="Không thể tải giáo án Gym Phổ">
+                <GymPhoCurriculum onStartSession={(sess) => setActiveSession(sess)} />
               </ErrorBoundary>
             )}
             {activeTab === 'body' && (
@@ -220,45 +241,55 @@ export default function Home() {
 
       {/* Bottom Sticky Tab Bar for Mobile with Safe Area */}
       {!activeSession && (
-        <nav className={`${isMobileDevice ? 'flex' : 'md:hidden'} fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-800 backdrop-blur-2xl px-3 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] items-center justify-around shadow-2xl`}>
+        <nav className={`${isMobileDevice ? 'flex' : 'md:hidden'} fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-800 backdrop-blur-2xl px-2 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] items-center justify-around shadow-2xl`}>
           <button
             onClick={() => setActiveTab('routines')}
-            className={`flex flex-col items-center py-1 px-3 rounded-xl transition active:scale-95 ${
+            className={`flex flex-col items-center py-1 px-2 rounded-xl transition active:scale-95 ${
               activeTab === 'routines' ? 'text-emerald-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             <Calendar className="w-5 h-5 mb-0.5" />
-            <span className="text-[11px]">Tập Luyện</span>
+            <span className="text-[10px]">Tập Luyện</span>
+          </button>
+
+          <button
+            onClick={() => setActiveTab('gympho')}
+            className={`flex flex-col items-center py-1 px-2 rounded-xl transition active:scale-95 ${
+              activeTab === 'gympho' ? 'text-emerald-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+          >
+            <GraduationCap className="w-5 h-5 mb-0.5" />
+            <span className="text-[10px]">Gym Phổ</span>
           </button>
 
           <button
             onClick={() => setActiveTab('body')}
-            className={`flex flex-col items-center py-1 px-3 rounded-xl transition active:scale-95 ${
+            className={`flex flex-col items-center py-1 px-2 rounded-xl transition active:scale-95 ${
               activeTab === 'body' ? 'text-teal-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             <Scale className="w-5 h-5 mb-0.5" />
-            <span className="text-[11px]">Hình Thể</span>
+            <span className="text-[10px]">Hình Thể</span>
           </button>
 
           <button
             onClick={() => setActiveTab('exercises')}
-            className={`flex flex-col items-center py-1 px-3 rounded-xl transition active:scale-95 ${
+            className={`flex flex-col items-center py-1 px-2 rounded-xl transition active:scale-95 ${
               activeTab === 'exercises' ? 'text-emerald-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             <BookOpen className="w-5 h-5 mb-0.5" />
-            <span className="text-[11px]">Bài Tập</span>
+            <span className="text-[10px]">Bài Tập</span>
           </button>
 
           <button
             onClick={() => setActiveTab('history')}
-            className={`flex flex-col items-center py-1 px-3 rounded-xl transition active:scale-95 ${
+            className={`flex flex-col items-center py-1 px-2 rounded-xl transition active:scale-95 ${
               activeTab === 'history' ? 'text-amber-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
             }`}
           >
             <Trophy className="w-5 h-5 mb-0.5" />
-            <span className="text-[11px]">Kỷ Lục</span>
+            <span className="text-[10px]">Kỷ Lục</span>
           </button>
         </nav>
       )}

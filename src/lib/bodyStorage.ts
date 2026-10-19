@@ -140,6 +140,11 @@ export function deleteBodyLog(id: string): void {
   }
 }
 
+export function getLatestBodyLog(): BodyMetricLog | null {
+  const logs = getBodyLogs();
+  return logs.length > 0 ? logs[0] : null;
+}
+
 export function getBodyGoal(): BodyGoal {
   if (typeof window === 'undefined') return DEFAULT_GOAL;
   try {

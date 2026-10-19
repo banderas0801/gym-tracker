@@ -74,6 +74,73 @@ export const DEFAULT_ROUTINES: RoutineTemplate[] = [
       { exerciseId: 'Standing_Calf_Raises', exerciseName: 'Standing Calf Raises', defaultSets: 4, defaultReps: 15, suggestedWeightKg: 30 },
       { exerciseId: 'Hanging_Leg_Raise', exerciseName: 'Hanging Leg Raise', defaultSets: 3, defaultReps: 12 }
     ]
+  },
+  {
+    id: 'thol-tang1-day1',
+    name: 'Gym Phổ Tầng 1: Day 1 - Chân Mông Đùi (Leg Day)',
+    targetFocus: 'Đùi trước, đùi sau, mông, bắp chân (Selectorized)',
+    level: 'Newbie',
+    description: 'Giáo án Gym Phổ Tầng 1 (Duy Nguyễn THOL - Tuần 1-4). Kích hoạt nhóm cơ chân đùi an toàn với tạ khối, thuần thục nhịp thở yếm khí.',
+    exercises: [
+      { exerciseId: 'Leg_Press', exerciseName: 'Đạp đùi tạ khối (Leg Press)', defaultSets: 4, defaultReps: 10, suggestedWeightKg: 40 },
+      { exerciseId: 'Leg_Extensions', exerciseName: 'Đá đùi trước (Leg Extension)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 20 },
+      { exerciseId: 'Lying_Leg_Curls', exerciseName: 'Nằm móc đùi sau (Lying Leg Curl)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 15 },
+      { exerciseId: 'Calf_Press_On_The_Leg_Press_Machine', exerciseName: 'Đạp bắp chân tạ khối (Calf Press)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 30 },
+      { exerciseId: 'Adductor', exerciseName: 'Ép đùi trong (Inner Thigh Machine)', defaultSets: 2, defaultReps: 15, suggestedWeightKg: 20 },
+      { exerciseId: 'Thigh_Abductor', exerciseName: 'Ép hông mông ngoài (Outer Thigh Machine)', defaultSets: 2, defaultReps: 15, suggestedWeightKg: 20 }
+    ]
+  },
+  {
+    id: 'thol-tang1-day2',
+    name: 'Gym Phổ Tầng 1: Day 2 - Ngực & Cơ Bụng (Chest & Abs)',
+    targetFocus: 'Ngực lớn, ngực dưới, rãnh ngực, cơ bụng thẳng & liên sườn',
+    level: 'Newbie',
+    description: 'Giáo án Gym Phổ Tầng 1 (Duy Nguyễn THOL). Tạ khối & Bodyweight giúp xây dựng khuôn ngực dày dặn và siết múi bụng sắc nét.',
+    exercises: [
+      { exerciseId: 'Cable_Chest_Press', exerciseName: 'Đẩy ngực tạ khối (Chest Press)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 25 },
+      { exerciseId: 'Pushups', exerciseName: 'Hít đất chuẩn form (Push-ups)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 0 },
+      { exerciseId: 'Dips_-_Chest_Version', exerciseName: 'Chống xà kép trợ lực (Dips Assistant)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 0 },
+      { exerciseId: 'Butterfly', exerciseName: 'Ép ngực trong tạ khối (Pec Deck Fly)', defaultSets: 2, defaultReps: 12, suggestedWeightKg: 20 },
+      { exerciseId: 'Ab_Crunch_Machine', exerciseName: 'Gập bụng tạ khối (Abdominal Crunch)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 25 },
+      { exerciseId: 'Torso_Rotation', exerciseName: 'Xoay eo bụng tạ khối (Rotary Torso)', defaultSets: 2, defaultReps: 15, suggestedWeightKg: 15 }
+    ]
+  },
+  {
+    id: 'thol-tang1-day3',
+    name: 'Gym Phổ Tầng 1: Day 3 - Lưng & Xô (Back & Lat)',
+    targetFocus: 'Lưng xô chữ V, lưng giữa, dày lưng',
+    level: 'Newbie',
+    description: 'Giáo án Gym Phổ Tầng 1 (Duy Nguyễn THOL). Mở rộng độ rộng xô chữ V và độ dày cơ lưng an toàn cột sống.',
+    exercises: [
+      { exerciseId: 'Seated_Cable_Rows', exerciseName: 'Ngồi chèo thuyền kéo cáp (Seated Cable Row)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 25 },
+      { exerciseId: 'Close-Grip_Front_Lat_Pulldown', exerciseName: 'Kéo cáp hẹp tay (Close-Grip Pulldown)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 25 },
+      { exerciseId: 'Wide-Grip_Lat_Pulldown', exerciseName: 'Kéo xô rộng tay (Lat Pulldown)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 25 }
+    ]
+  },
+  {
+    id: 'thol-tang1-day4',
+    name: 'Gym Phổ Tầng 1: Day 4 - Vai, Tay & Bụng (Shoulder, Arm & Abs)',
+    targetFocus: 'Vai trước/giữa, bắp tay trước, cơ tay sau, bụng trên/dưới',
+    level: 'Newbie',
+    description: 'Giáo án Gym Phổ Tầng 1 (Duy Nguyễn THOL). Hoàn thiện cầu vai vuông, bắp tay săn chắc và phẳng bụng.',
+    exercises: [
+      { exerciseId: 'Dumbbell_Shoulder_Press', exerciseName: 'Đẩy vai tạ khối / robot (Shoulder Press)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 8 },
+      { exerciseId: 'Triceps_Pushdown', exerciseName: 'Duỗi tay sau với cáp (Triceps Pushdown)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 15 },
+      { exerciseId: 'Barbell_Curl', exerciseName: 'Cuộn bắp tay trước đòn tạ (Barbell Curl)', defaultSets: 3, defaultReps: 10, suggestedWeightKg: 10 },
+      { exerciseId: 'Crunches', exerciseName: 'Gập bụng trên thảm (Floor Crunches)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 0 },
+      { exerciseId: 'Flat_Bench_Lying_Leg_Raise', exerciseName: 'Nằm nâng chân tập bụng dưới (Lying Leg Raise)', defaultSets: 3, defaultReps: 12, suggestedWeightKg: 0 }
+    ]
+  },
+  {
+    id: 'thol-tang1-day5',
+    name: 'Gym Phổ Tầng 1: Day 5 - Chuyên Cardio Đốt Mỡ (Cardio Day)',
+    targetFocus: 'Hệ tim mạch, đốt mỡ toàn thân, hồi phục cơ',
+    level: 'Newbie',
+    description: 'Giáo án Gym Phổ Tầng 1 (Duy Nguyễn THOL). Đạp xe và đi bộ dốc đốt sạch mỡ thừa, tăng cường sức bền tim mạch.',
+    exercises: [
+      { exerciseId: 'Recumbent_Bike', exerciseName: 'Đạp xe tại chỗ đốt mỡ (Stationary Bike)', defaultSets: 1, defaultReps: 20, suggestedWeightKg: 0 },
+      { exerciseId: 'Walking_Treadmill', exerciseName: 'Đi bộ dốc máy chạy bộ (Incline Treadmill Walk)', defaultSets: 1, defaultReps: 20, suggestedWeightKg: 0 }
+    ]
   }
 ];
 
@@ -127,7 +194,14 @@ export function getRoutines(): RoutineTemplate[] {
       localStorage.setItem(ROUTINES_KEY, JSON.stringify(DEFAULT_ROUTINES));
       return DEFAULT_ROUTINES;
     }
-    return JSON.parse(raw);
+    const parsed: RoutineTemplate[] = JSON.parse(raw);
+    const missingDefaults = DEFAULT_ROUTINES.filter(d => !parsed.some(p => p.id === d.id));
+    if (missingDefaults.length > 0) {
+      const merged = [...parsed, ...missingDefaults];
+      localStorage.setItem(ROUTINES_KEY, JSON.stringify(merged));
+      return merged;
+    }
+    return parsed;
   } catch {
     return DEFAULT_ROUTINES;
   }

@@ -221,7 +221,12 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
             <div className="flex items-start justify-between gap-3">
               <div className="space-y-1.5 min-w-0">
                 <div className="flex flex-wrap items-center gap-1.5">
-                  {routine.level === 'Newbie' && (
+                  {routine.id.startsWith('thol-') && (
+                    <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-500 text-black shadow-sm font-mono">
+                      🎓 GYM PHỔ TẦNG 1 (THOL)
+                    </span>
+                  )}
+                  {routine.level === 'Newbie' && !routine.id.startsWith('thol-') && (
                     <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
                       ⭐ DÀNH CHO NGƯỜI MỚI (NEWBIE)
                     </span>
