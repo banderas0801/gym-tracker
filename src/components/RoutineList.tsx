@@ -9,6 +9,7 @@ import { getTodayRecommendation } from '@/lib/workoutGenerator';
 import ExerciseSelectorModal from './ExerciseSelectorModal';
 import SmartWorkoutModal from './SmartWorkoutModal';
 import ExerciseQuickViewModal from './ExerciseQuickViewModal';
+import LevelAdvisorModal from './LevelAdvisorModal';
 
 interface RoutineListProps {
   onStartSession: (session: WorkoutSession) => void;
@@ -18,6 +19,7 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
   const [routines, setRoutines] = useState<RoutineTemplate[]>(() => getRoutines());
   const [routineFilter, setRoutineFilter] = useState<'all' | 'thol' | 'newbie' | 'intermediate'>('all');
   const [isGymPhoModalOpen, setIsGymPhoModalOpen] = useState(false);
+  const [isAdvisorModalOpen, setIsAdvisorModalOpen] = useState(false);
   const [isCreatingRoutine, setIsCreatingRoutine] = useState(false);
   const [newRoutineName, setNewRoutineName] = useState('');
   const [newRoutineFocus, setNewRoutineFocus] = useState('');
@@ -224,14 +226,25 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
           </div>
         </div>
 
-        <button
-          type="button"
-          onClick={() => setIsGymPhoModalOpen(true)}
-          className="px-4 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-emerald-400 hover:text-emerald-300 border border-zinc-700 font-bold text-xs flex items-center justify-center space-x-1.5 transition active:scale-95 shrink-0 shadow-sm"
-        >
-          <Wind className="w-3.5 h-3.5" />
-          <span>Đọc Kỹ Thuật Hít Thở & Lộ Trình</span>
-        </button>
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          <button
+            type="button"
+            onClick={() => setIsAdvisorModalOpen(true)}
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-zinc-950 font-black text-xs flex items-center justify-center space-x-1.5 transition active:scale-95 shadow-md shadow-emerald-500/20"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-zinc-950 fill-zinc-950" />
+            <span>Gợi Ý Level Phù Hợp</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setIsGymPhoModalOpen(true)}
+            className="px-3.5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white border border-zinc-700 font-bold text-xs flex items-center justify-center space-x-1.5 transition active:scale-95 shadow-sm"
+          >
+            <Wind className="w-3.5 h-3.5 text-cyan-400" />
+            <span>Kỹ Thuật Hít Thở</span>
+          </button>
+        </div>
       </div>
 
       {/* Routine Templates Header & Filters */}
@@ -689,6 +702,15 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
           </div>
         </div>
       )}
+
+      {/* Modal Trợ Lý Tư Vấn Level Phù Hợp */}
+      <LevelAdvisorModal
+        isOpen={isAdvisorModalOpen}
+        onClose={() => setIsAdvisorModalOpen(false)}
+        onApplyLevel={(filter) => {
+          setRoutineFilter(filter);
+        }}
+      />
     </div>
   );
 }
