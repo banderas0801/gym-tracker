@@ -428,34 +428,95 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
     setCompletedDays(getCompletedDays());
   };
 
-  // Nhập từ đồng hồ Mibro / Máy chạy bộ modal
-  const [inputSource, setInputSource] = useState<'mibro' | 'treadmill'>('mibro');
+  // Nhập từ đồng hồ Mibro / Máy chạy bộ / Nhập cứng thủ công
+  const [inputSource, setInputSource] = useState<'treadmill' | 'mibro' | 'outdoor'>('treadmill');
+  const [manualInputMethod, setManualInputMethod] = useState<'by_speed' | 'by_distance'>('by_speed');
+  const [manualSpeedKmh, setManualSpeedKmh] = useState('10.0'); // km/h
   const [mibroKm, setMibroKm] = useState('5.0');
   const [mibroMin, setMibroMin] = useState('30');
-  const [mibroSec, setMibroSec] = useState('00');
-  const [mibroHr, setMibroHr] = useState('145');
-  const [mibroCadence, setMibroCadence] = useState('176');
-  const [treadmillIncline, setTreadmillIncline] = useState('1.0');
+  const [mibroSec, setMibroSec] = useState('0');
+  const [mibroHr, setMibroHr] = useState('');
+  const [mibroCadence, setMibroCadence] = useState('');
+  const [treadmillIncline, setTreadmillIncline] = useState('0'); // Không ghi thì mặc định = 0!
   const [selectedPlanDayKey, setSelectedPlanDayKey] = useState<string>('');
 
   // Tính toán nhanh Live Preview trong Modal
-  const previewKm = parseFloat(mibroKm) || 0;
-  const previewSec = (parseInt(mibroMin, 10) || 0) * 60 + (parseInt(mibroSec, 10) || 0);
-  const previewPace = previewKm > 0 && previewSec > 0 ? formatPace(previewSec / previewKm) : '--:--';
-  const previewSpeed = previewKm > 0 && previewSec > 0 ? Math.round(((previewKm * 3600) / previewSec) * 10) / 10 : 0;
-  const previewCalo = Math.round(previewKm * 65);
+  const inputDurationSec = (parseInt(mibroMin, 10) || 0) * 60 + (parseInt(mibroSec, 10) || 0);
+  const inputIncline = parseFloat(treadmillIncline) || 0; // Mặc định = 0 nếu không điền
+
+  let previewKm = 0;
+  let previewSpeed = 0;
+  let previewPace = '--:--';
+
+  if (manualInputMethod === 'by_speed') {
+    const spd = parseFloat(manualSpeedKmh) || 0;
+    previewSpeed = spd;
+    if (spd > 0 && inputDurationSec > 0) {
+      previewKm = Math.round(((spd * inputDurationSec) / 3600) * 100) / 100;
+      previewPace = formatPace(3600 / spd);
+    }
+  } else {
+    previewKm = parseFloat(mibroKm) || 0;
+    if (previewKm > 0 && inputDurationSec > 0) {
+      previewSpeed = Math.round(((previewKm * 3600) / inputDurationSec) * 10) / 10;
+      previewPace = formatPace(inputDurationSec / previewKm);
+    }
+  }
+
+  // Tự động đồng bộ 2 chiều (Two-way auto conversion) giữa Tốc độ và Cự ly
+  const handleSpeedChange = (spdVal: string) => {
+    setManualSpeedKmh(spdVal);
+    const spd = parseFloat(spdVal) || 0;
+    if (spd > 0 && inputDurationSec > 0) {
+      const calcKm = Math.round(((spd * inputDurationSec) / 3600) * 100) / 100;
+      setMibroKm(calcKm.toString());
+    }
+  };
+
+  const handleDistanceChange = (distVal: string) => {
+    setMibroKm(distVal);
+    const km = parseFloat(distVal) || 0;
+    if (km > 0 && inputDurationSec > 0) {
+      const calcSpeed = Math.round(((km * 3600) / inputDurationSec) * 10) / 10;
+      setManualSpeedKmh(calcSpeed.toString());
+    }
+  };
+
+  const handleMinutesChange = (minVal: string) => {
+    setMibroMin(minVal);
+    const durSec = (parseInt(minVal, 10) || 0) * 60 + (parseInt(mibroSec, 10) || 0);
+    if (durSec > 0) {
+      if (manualInputMethod === 'by_speed') {
+        const spd = parseFloat(manualSpeedKmh) || 0;
+        if (spd > 0) {
+          const calcKm = Math.round(((spd * durSec) / 3600) * 100) / 100;
+          setMibroKm(calcKm.toString());
+        }
+      } else {
+        const km = parseFloat(mibroKm) || 0;
+        if (km > 0) {
+          const calcSpeed = Math.round(((km * 3600) / durSec) * 10) / 10;
+          setManualSpeedKmh(calcSpeed.toString());
+        }
+      }
+    }
+  };
+
+  // Calo có tính thêm hệ số độ dốc (mỗi 1% dốc tiêu hao thêm ~4% năng lượng)
+  const previewCalo = Math.round(previewKm * 65 * (1 + (inputIncline * 0.04)));
 
   const handleSaveMibroRun = () => {
-    const km = parseFloat(mibroKm) || 0;
-    const durSec = (parseInt(mibroMin, 10) || 0) * 60 + (parseInt(mibroSec, 10) || 0);
+    const km = previewKm;
+    const durSec = inputDurationSec;
+    const speed = previewSpeed;
+    const pace = previewPace;
+    const incline = inputIncline;
+
     if (km <= 0 || durSec <= 0) {
-      alert('Vui lòng nhập cự ly và thời gian hợp lệ');
+      alert('Vui lòng nhập tốc độ (km/h) hoặc cự ly (km) và số phút hợp lệ lớn hơn 0!');
       return;
     }
 
-    const avgPace = formatPace(durSec / km);
-    const speed = Math.round(((km * 3600) / durSec) * 10) / 10;
-    
     // Tách week & day nếu người dùng chọn gắn vào giáo án
     let weekNum: number | undefined;
     let dayOfWeek: number | undefined;
@@ -465,19 +526,25 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
       dayOfWeek = parseInt(parts[1], 10);
     }
 
+    const titlePrefix = inputSource === 'treadmill'
+      ? (incline > 0 
+          ? `Máy Chạy Treadmill ${speed} km/h (Dốc ${incline}%)` 
+          : `Máy Chạy Treadmill ${speed} km/h (Dốc 0%)`)
+      : inputSource === 'mibro'
+      ? `Chạy Đồng Hồ Mibro (${km} km)`
+      : `Chạy Ngoài Trời Nhập Cứng (${km} km)`;
+
     const session: RunSession = {
       id: `run-input-${Date.now()}`,
       date: new Date().toISOString(),
-      title: inputSource === 'mibro' 
-        ? `Chạy Đồng Hồ Mibro (${km} km)` 
-        : `Máy Chạy Treadmill dốc ${treadmillIncline}% (${km} km)`,
-      mode: inputSource === 'mibro' ? 'manual_mibro' : 'treadmill',
+      title: titlePrefix,
+      mode: inputSource === 'treadmill' ? 'treadmill' : inputSource === 'mibro' ? 'manual_mibro' : 'outdoor_gps',
       distanceKm: km,
       durationSeconds: durSec,
-      avgPace,
+      avgPace: pace,
       avgSpeedKmh: speed,
       calories: previewCalo,
-      inclinePercent: inputSource === 'treadmill' ? parseFloat(treadmillIncline) || 0 : undefined,
+      inclinePercent: incline,
       avgHeartRate: parseInt(mibroHr, 10) || undefined,
       cadence: parseInt(mibroCadence, 10) || undefined,
       targetSub,
@@ -1216,6 +1283,31 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                     <span>Biến Tốc Interval</span>
                   </button>
                 </div>
+
+                {/* Lựa chọn Nhập Cứng nếu đã chạy xong hoặc không muốn bấm nút bắt đầu */}
+                <div className="pt-1 flex items-center justify-between gap-2 p-2.5 rounded-xl bg-zinc-950/80 border border-amber-500/20">
+                  <div className="min-w-0">
+                    <span className="text-xs font-bold text-amber-300 block truncate flex items-center space-x-1">
+                      <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                      <span>Đã chạy xong máy mà không bật bấm giờ?</span>
+                    </span>
+                    <span className="text-[10px] text-zinc-400 block truncate">
+                      Nhập cứng Tốc độ (km/h) + Số phút + Độ dốc (mặc định 0%)
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setInputSource('treadmill');
+                      setManualInputMethod('by_speed');
+                      setIsMibroModalOpen(true);
+                    }}
+                    className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs shrink-0 transition active:scale-95 shadow-sm flex items-center space-x-1"
+                  >
+                    <Sliders className="w-3.5 h-3.5" />
+                    <span>Nhập Cứng</span>
+                  </button>
+                </div>
               </div>
             )}
 
@@ -1724,118 +1816,336 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
         </div>
       )}
 
-      {/* MODAL 2: NHẬP TỪ ĐỒNG HỒ MIBRO / MÁY CHẠY BỘ */}
+      {/* MODAL 2: NHẬP TỪ ĐỒNG HỒ MIBRO / MÁY CHẠY BỘ / NHẬP CỨNG */}
       {isMibroModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
           <div className="bg-zinc-950 border border-zinc-800 rounded-3xl max-w-lg w-full max-h-[92vh] overflow-y-auto p-5 sm:p-6 space-y-4 shadow-2xl">
             <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
               <div className="flex items-center space-x-2">
                 <Watch className="w-5 h-5 text-amber-400" />
-                <h3 className="text-base font-black text-white">NHẬP KẾT QUẢ TẬP LUYỆN</h3>
+                <h3 className="text-base font-black text-white">NHẬP CỨNG KẾT QUẢ CHẠY</h3>
               </div>
               <button onClick={() => setIsMibroModalOpen(false)} className="text-zinc-400 hover:text-white">✕</button>
             </div>
 
-            {/* Toggle Nguồn tập: Đồng hồ Mibro vs Máy Chạy Bộ */}
-            <div className="grid grid-cols-2 gap-1.5 p-1 bg-zinc-900 rounded-2xl border border-zinc-800">
-              <button
-                type="button"
-                onClick={() => setInputSource('mibro')}
-                className={`py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 ${
-                  inputSource === 'mibro'
-                    ? 'bg-amber-500 text-black font-black shadow-md'
-                    : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                <Watch className="w-4 h-4" />
-                <span>Đồng Hồ Mibro</span>
-              </button>
-
+            {/* Toggle Nguồn tập: Máy Chạy Bộ vs Đồng Hồ Mibro vs Ngoài Trời */}
+            <div className="grid grid-cols-3 gap-1.5 p-1 bg-zinc-900 rounded-2xl border border-zinc-800">
               <button
                 type="button"
                 onClick={() => setInputSource('treadmill')}
-                className={`py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1.5 ${
+                className={`py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 ${
                   inputSource === 'treadmill'
                     ? 'bg-amber-500 text-black font-black shadow-md'
                     : 'text-zinc-400 hover:text-white'
                 }`}
               >
-                <Activity className="w-4 h-4" />
-                <span>Máy Chạy Treadmill</span>
+                <Activity className="w-3.5 h-3.5" />
+                <span>Máy Treadmill</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setInputSource('mibro')}
+                className={`py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 ${
+                  inputSource === 'mibro'
+                    ? 'bg-amber-500 text-black font-black shadow-md'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                <Watch className="w-3.5 h-3.5" />
+                <span>Đồng Hồ Mibro</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setInputSource('outdoor')}
+                className={`py-2 rounded-xl text-xs font-bold transition flex items-center justify-center space-x-1 ${
+                  inputSource === 'outdoor'
+                    ? 'bg-amber-500 text-black font-black shadow-md'
+                    : 'text-zinc-400 hover:text-white'
+                }`}
+              >
+                <Compass className="w-3.5 h-3.5" />
+                <span>Ngoài Trời</span>
+              </button>
+            </div>
+
+            {/* Chọn Cách Nhập: Theo Tốc Độ (km/h) vs Theo Quãng Đường (km) */}
+            <div className="flex rounded-xl bg-zinc-900/90 border border-zinc-800 p-1 text-xs">
+              <button
+                type="button"
+                onClick={() => setManualInputMethod('by_speed')}
+                className={`flex-1 py-1.5 rounded-lg font-bold transition flex items-center justify-center space-x-1 ${
+                  manualInputMethod === 'by_speed'
+                    ? 'bg-zinc-800 text-amber-400 shadow-sm border border-zinc-700'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                <span>Nhập Tốc Độ (km/h) & Số Phút</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => setManualInputMethod('by_distance')}
+                className={`flex-1 py-1.5 rounded-lg font-bold transition flex items-center justify-center space-x-1 ${
+                  manualInputMethod === 'by_distance'
+                    ? 'bg-zinc-800 text-amber-400 shadow-sm border border-zinc-700'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                <Footprints className="w-3.5 h-3.5 text-amber-400" />
+                <span>Nhập Quãng Đường (km) & Số Phút</span>
               </button>
             </div>
 
             {/* Live Calculation Preview Banner */}
-            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 border border-amber-500/30 flex items-center justify-around text-center">
+            <div className="p-3.5 rounded-2xl bg-gradient-to-r from-amber-500/10 via-zinc-900 to-zinc-900 border border-amber-500/30 grid grid-cols-4 gap-2 text-center">
               <div>
-                <span className="text-[10px] uppercase font-bold text-zinc-400 block">Pace Tính Toán</span>
+                <span className="text-[10px] uppercase font-bold text-zinc-400 block font-mono">Quãng Đường</span>
+                <span className="text-base font-black text-amber-400 font-mono mt-0.5 block">{previewKm} km</span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase font-bold text-zinc-400 block font-mono">Tốc Độ</span>
+                <span className="text-base font-black text-white font-mono mt-0.5 block">{previewSpeed} km/h</span>
+              </div>
+              <div>
+                <span className="text-[10px] uppercase font-bold text-zinc-400 block font-mono">Pace TB</span>
                 <span className="text-base font-black text-emerald-400 font-mono mt-0.5 block">{previewPace}/km</span>
               </div>
-              <div className="h-7 w-px bg-zinc-800" />
               <div>
-                <span className="text-[10px] uppercase font-bold text-zinc-400 block">Tốc Độ</span>
-                <span className="text-base font-black text-amber-400 font-mono mt-0.5 block">{previewSpeed} km/h</span>
-              </div>
-              <div className="h-7 w-px bg-zinc-800" />
-              <div>
-                <span className="text-[10px] uppercase font-bold text-zinc-400 block">Calo Đốt Cháy</span>
+                <span className="text-[10px] uppercase font-bold text-zinc-400 block font-mono">Calo</span>
                 <span className="text-base font-black text-orange-400 font-mono mt-0.5 block">{previewCalo} kcal</span>
               </div>
             </div>
 
-            <div className="space-y-3">
-              {/* Cự ly & Thời gian */}
-              <div className="grid grid-cols-3 gap-2">
-                <div className="col-span-1">
-                  <label className="text-xs text-zinc-400 font-medium block">Quãng đường (km):</label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    placeholder="VD: 5.0"
-                    value={mibroKm}
-                    onChange={(e) => setMibroKm(e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-bold font-mono mt-1"
-                  />
-                </div>
+            <div className="space-y-3.5">
+              {/* CHẾ ĐỘ 1: NHẬP THEO TỐC ĐỘ (KM/H) & SỐ PHÚT */}
+              {manualInputMethod === 'by_speed' ? (
+                <div className="space-y-3">
+                  <div>
+                    <div className="flex items-center justify-between">
+                      <label className="text-xs text-zinc-300 font-bold block">
+                        Tốc độ chạy máy (km/h):
+                      </label>
+                      <span className="text-[11px] text-amber-400 font-mono font-bold">
+                        {previewSpeed > 0 ? `Tương đương Pace ${previewPace}/km` : ''}
+                      </span>
+                    </div>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <input
+                        type="number"
+                        step="0.1"
+                        placeholder="VD: 10.0"
+                        value={manualSpeedKmh}
+                        onChange={(e) => handleSpeedChange(e.target.value)}
+                        className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
+                      />
+                      <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">km/h</span>
+                    </div>
 
-                <div className="col-span-1">
-                  <label className="text-xs text-zinc-400 font-medium block">Số Phút:</label>
-                  <input
-                    type="number"
-                    value={mibroMin}
-                    onChange={(e) => setMibroMin(e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-bold font-mono mt-1"
-                  />
-                </div>
+                    {/* Nút chọn nhanh tốc độ */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
+                      <span className="text-[10px] text-zinc-500 font-mono">Chọn nhanh:</span>
+                      {['8.0', '9.0', '10.0', '10.5', '11.0', '12.0', '13.0'].map((spd) => (
+                        <button
+                          key={spd}
+                          type="button"
+                          onClick={() => handleSpeedChange(spd)}
+                          className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold border transition ${
+                            manualSpeedKmh === spd
+                              ? 'bg-amber-500 text-black border-amber-400 font-black'
+                              : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:border-zinc-700'
+                          }`}
+                        >
+                          {spd}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
 
-                <div className="col-span-1">
-                  <label className="text-xs text-zinc-400 font-medium block">Số Giây:</label>
-                  <input
-                    type="number"
-                    value={mibroSec}
-                    onChange={(e) => setMibroSec(e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-bold font-mono mt-1"
-                  />
-                </div>
-              </div>
+                  {/* Thời gian: Số Phút & Số Giây */}
+                  <div>
+                    <label className="text-xs text-zinc-300 font-bold block">
+                      Thời gian chạy:
+                    </label>
+                    <div className="grid grid-cols-2 gap-2 mt-1">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="number"
+                          placeholder="30"
+                          value={mibroMin}
+                          onChange={(e) => handleMinutesChange(e.target.value)}
+                          className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
+                        />
+                        <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">phút</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="number"
+                          placeholder="0"
+                          value={mibroSec}
+                          onChange={(e) => setMibroSec(e.target.value)}
+                          className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
+                        />
+                        <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">giây</span>
+                      </div>
+                    </div>
 
-              {/* Thông số riêng theo nguồn */}
-              {inputSource === 'treadmill' ? (
-                <div>
-                  <label className="text-xs text-zinc-400 font-medium block">Độ dốc máy chạy bộ (% Incline):</label>
+                    {/* Nút chọn nhanh thời gian */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
+                      <span className="text-[10px] text-zinc-500 font-mono">Chọn phút:</span>
+                      {['15', '20', '30', '40', '45', '60'].map((mins) => (
+                        <button
+                          key={mins}
+                          type="button"
+                          onClick={() => {
+                            setMibroSec('0');
+                            handleMinutesChange(mins);
+                          }}
+                          className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold border transition ${
+                            mibroMin === mins && (mibroSec === '0' || mibroSec === '00' || !mibroSec)
+                              ? 'bg-amber-500 text-black border-amber-400 font-black'
+                              : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:border-zinc-700'
+                          }`}
+                        >
+                          {mins}p
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* CHẾ ĐỘ 2: NHẬP THEO QUÃNG ĐƯỜNG (KM) & THỜI GIAN */
+                <div className="space-y-3">
+                  <div>
+                    <label className="text-xs text-zinc-300 font-bold block">Quãng đường (km):</label>
+                    <div className="flex items-center space-x-2 mt-1">
+                      <input
+                        type="number"
+                        step="0.01"
+                        placeholder="VD: 5.0"
+                        value={mibroKm}
+                        onChange={(e) => handleDistanceChange(e.target.value)}
+                        className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
+                      />
+                      <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">km</span>
+                    </div>
+
+                    {/* Nút chọn nhanh cự ly */}
+                    <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
+                      <span className="text-[10px] text-zinc-500 font-mono">Chọn nhanh:</span>
+                      {['3.0', '5.0', '7.0', '10.0', '15.0', '21.1'].map((k) => (
+                        <button
+                          key={k}
+                          type="button"
+                          onClick={() => handleDistanceChange(k)}
+                          className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold border transition ${
+                            mibroKm === k
+                              ? 'bg-amber-500 text-black border-amber-400 font-black'
+                              : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:border-zinc-700'
+                          }`}
+                        >
+                          {k}km
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="text-xs text-zinc-300 font-bold block">Thời gian chạy:</label>
+                    <div className="grid grid-cols-2 gap-2 mt-1">
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="number"
+                          placeholder="30"
+                          value={mibroMin}
+                          onChange={(e) => handleMinutesChange(e.target.value)}
+                          className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
+                        />
+                        <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">phút</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="number"
+                          placeholder="0"
+                          value={mibroSec}
+                          onChange={(e) => setMibroSec(e.target.value)}
+                          className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
+                        />
+                        <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">giây</span>
+                      </div>
+                    </div>
+                          className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
+                        />
+                        <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">phút</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <input
+                          type="number"
+                          placeholder="0"
+                          value={mibroSec}
+                          onChange={(e) => setMibroSec(e.target.value)}
+                          className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
+                        />
+                        <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">giây</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              {/* ĐỘ DỐC MÁY CHẠY BỘ (% INCLINE) - MẶC ĐỊNH BẰNG 0 NẾU KHÔNG GHI */}
+              <div className="pt-1">
+                <div className="flex items-center justify-between">
+                  <label className="text-xs text-zinc-300 font-bold block">
+                    Độ dốc máy chạy bộ (% Incline):
+                  </label>
+                  <span className="text-[10px] text-zinc-400 font-mono">
+                    (Không ghi thì mặc định = <strong>0%</strong>)
+                  </span>
+                </div>
+                <div className="flex items-center space-x-2 mt-1">
                   <input
                     type="number"
                     step="0.5"
+                    placeholder="0"
                     value={treadmillIncline}
                     onChange={(e) => setTreadmillIncline(e.target.value)}
-                    className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-bold font-mono mt-1"
+                    className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
                   />
-                  <span className="text-[10px] text-zinc-400 mt-1 block">
-                    Độ dốc 1.0% - 1.5% trên máy chạy giúp bù trừ lực cản gió tương đương khi chạy ngoài đường thực tế.
-                  </span>
+                  <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">%</span>
                 </div>
-              ) : (
-                <div className="grid grid-cols-2 gap-2">
+
+                {/* Nút chọn nhanh độ dốc */}
+                <div className="flex flex-wrap items-center gap-1.5 pt-1.5">
+                  <span className="text-[10px] text-zinc-500 font-mono">Chọn nhanh:</span>
+                  {[
+                    { val: '0', label: '0% (Mặc định)' },
+                    { val: '1.0', label: '1.0% (Chuẩn ngoài trời)' },
+                    { val: '1.5', label: '1.5%' },
+                    { val: '2.0', label: '2.0%' },
+                    { val: '3.0', label: '3.0%' }
+                  ].map((inc) => (
+                    <button
+                      key={inc.val}
+                      type="button"
+                      onClick={() => setTreadmillIncline(inc.val)}
+                      className={`px-2 py-0.5 rounded-lg text-[10px] font-mono font-bold border transition ${
+                        treadmillIncline === inc.val || (treadmillIncline === '' && inc.val === '0')
+                          ? 'bg-amber-500 text-black border-amber-400 font-black'
+                          : 'bg-zinc-900 text-zinc-300 border-zinc-800 hover:border-zinc-700'
+                      }`}
+                    >
+                      {inc.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Thông số Nhịp tim & Cadence (Tùy chọn) */}
+              {inputSource === 'mibro' && (
+                <div className="grid grid-cols-2 gap-2 pt-1">
                   <div>
                     <label className="text-xs text-zinc-400 font-medium block">Nhịp tim TB (BPM):</label>
                     <input
@@ -1850,7 +2160,7 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                   <div>
                     <div className="flex items-center justify-between">
                       <label className="text-xs text-zinc-400 font-medium">Cadence (SPM):</label>
-                      <span className="text-[10px] text-amber-400 font-bold" title="Số bước chân / phút">175-185 tối ưu</span>
+                      <span className="text-[10px] text-amber-400 font-bold">175-185 tối ưu</span>
                     </div>
                     <input
                       type="number"
@@ -1866,14 +2176,14 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
               {/* Gắn vào giáo án 8 tuần để tự động tích hoàn thành */}
               <div className="pt-1">
                 <label className="text-xs text-zinc-400 font-medium block">
-                  Đánh dấu hoàn thành cho bài tập trong giáo án:
+                  Đánh dấu hoàn thành cho bài tập trong giáo án (Tùy chọn):
                 </label>
                 <select
                   value={selectedPlanDayKey}
                   onChange={(e) => setSelectedPlanDayKey(e.target.value)}
                   className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-xs text-white font-medium mt-1 focus:outline-none focus:border-amber-500"
                 >
-                  <option value="">-- Không gắn (Chỉ lưu vào nhật ký) --</option>
+                  <option value="">-- Không gắn (Chỉ lưu vào nhật ký & tích luỹ) --</option>
                   {HM_TRAINING_PLAN.map((week) => (
                     <optgroup key={week.weekNumber} label={`Tuần ${week.weekNumber}: ${week.title}`}>
                       {week.days.filter(d => (runningGroup === 'groupA' ? d.groupA.type : d.groupB.type) !== 'rest').map((d) => (
@@ -1886,20 +2196,14 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                 </select>
               </div>
 
-              {/* Hướng dẫn nhanh về Cadence */}
-              <div className="p-3 rounded-2xl bg-zinc-900/80 border border-zinc-800 text-[11px] text-zinc-300 space-y-1">
-                <span className="font-bold text-amber-400 block">💡 Cadence là gì?</span>
-                <p>
-                  Cadence là <strong>số bước chân trong 1 phút</strong> (cả 2 chân). Chuẩn vàng của Jack Daniels là <strong>175 – 185 SPM</strong> giúp bước chân ngắn lại, tiếp đất êm ái và giảm 30-40% áp lực va đập dội lên khớp gối!
-                </p>
-              </div>
-
+              {/* Nút Submit Lưu Buổi Tập */}
               <button
+                type="button"
                 onClick={handleSaveMibroRun}
                 className="w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-400 hover:from-amber-400 hover:to-orange-300 text-black font-black text-xs transition shadow-lg shadow-amber-500/20 active:scale-95 flex items-center justify-center space-x-1.5"
               >
                 <CheckCircle2 className="w-4 h-4" />
-                <span>LƯU BUỔI TẬP VÀO APP & TÍCH LUỸ KM</span>
+                <span>LƯU BUỔI CHẠY VÀO APP ({previewKm} KM • {previewPace}/KM)</span>
               </button>
             </div>
           </div>

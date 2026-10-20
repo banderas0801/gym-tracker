@@ -10,7 +10,7 @@ cd /d C:\Users\Admin\gym-tracker
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "feat: add weekly accumulation analytics and WoW relative progression for running and gym"
+git commit -m "feat: smart two-way auto conversion for manual treadmill entry"
 git push origin master
 
 echo.
