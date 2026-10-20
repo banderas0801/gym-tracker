@@ -1,16 +1,16 @@
 @echo off
 chcp 65001 > nul
-title CAP NHAT PHAN HE CHAY BO - ANH MINH HOA DONG TAC BO TRO RUNNER
+title CAP NHAT GYM TRACKER - FIX TYPESCRIPT BUILD
 color 0A
 echo ========================================================
-echo   CAP NHAT GYM TRACKER: ANH MINH HOA DONG TAC BO TRO
+echo   CAP NHAT GYM TRACKER: SUA TYPE BUILD NEXT.JS
 echo ========================================================
 cd /d C:\Users\Admin\gym-tracker
 
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "feat: tich hop anh minh hoa tu the 1 va tu the 2 cho toan bo bai tap bo tro runner"
+git commit -m "fix: explicit types for supplementary exercises and instructions map"
 git push origin master
 
 echo.

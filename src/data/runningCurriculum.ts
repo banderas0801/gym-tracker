@@ -1,5 +1,7 @@
 import { SubPaceDetail, TargetSub, WeekTrainingPlan, DayTrainingPlan, SupplementaryExercise } from '@/types/running';
 
+export type { SupplementaryExercise };
+
 // BÀI TẬP BỔ TRỢ CHUYÊN BIỆT CHO RUNNER (Strength & Conditioning for Half Marathon)
 export const RUNNER_SUPPLEMENTARY_LOWER: SupplementaryExercise[] = [
   {

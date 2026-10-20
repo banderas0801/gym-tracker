@@ -47,7 +47,8 @@ import {
   RunningPRs, 
   StravaProfile,
   DayTrainingPlan,
-  WeekTrainingPlan
+  WeekTrainingPlan,
+  SupplementaryExercise
 } from '@/types/running';
 import { 
   SUB_PACE_TABLE, 
@@ -57,8 +58,7 @@ import {
   suggestSubFromVDOT,
   formatSecondsToTime,
   formatPace,
-  getSupplementaryExercises,
-  SupplementaryExercise
+  getSupplementaryExercises
 } from '@/data/runningCurriculum';
 import { 
   getTargetSub, 
@@ -2188,7 +2188,7 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                             Hướng dẫn động tác:
                           </span>
                           <ol className="list-decimal list-inside space-y-0.5 text-[11px] text-zinc-300">
-                            {ex.instructions.map((step, sIdx) => (
+                            {ex.instructions.map((step: string, sIdx: number) => (
                               <li key={sIdx} className="leading-relaxed">{step}</li>
                             ))}
                           </ol>
