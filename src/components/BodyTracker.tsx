@@ -239,11 +239,15 @@ export default function BodyTracker() {
           </div>
           <div className="mt-2">
             <div className="flex items-baseline space-x-1.5">
-              <span className="text-2xl sm:text-3xl font-black text-white">{currentWeight.toFixed(1)}</span>
+              <span className="text-2xl sm:text-3xl font-black text-white">
+                {latestLog ? currentWeight.toFixed(1) : '--'}
+              </span>
               <span className="text-xs text-zinc-400 font-bold">kg</span>
             </div>
             <div className="mt-1 flex items-center space-x-1 text-[11px]">
-              {weightChangeRecent === 0 ? (
+              {!latestLog ? (
+                <span className="text-zinc-500 font-medium">Chưa có bản ghi nào</span>
+              ) : weightChangeRecent === 0 ? (
                 <span className="text-zinc-500 font-medium">Bằng lần đo trước</span>
               ) : weightChangeRecent < 0 ? (
                 <span className="text-emerald-400 font-bold flex items-center">
@@ -256,7 +260,7 @@ export default function BodyTracker() {
                   +{weightChangeRecent.toFixed(1)} kg
                 </span>
               )}
-              <span className="text-zinc-600 text-[10px]">so với lần trước</span>
+              {latestLog && <span className="text-zinc-600 text-[10px]">so với lần trước</span>}
             </div>
           </div>
         </div>
@@ -600,7 +604,16 @@ export default function BodyTracker() {
         </div>
 
         <div className="space-y-2">
-          {logs.map((item, index) => {
+          {logs.length === 0 ? (
+            <div className="p-8 text-center text-zinc-500 text-xs border border-dashed border-zinc-800 rounded-2xl space-y-1">
+              <Scale className="w-6 h-6 mx-auto text-zinc-600 mb-1" />
+              <p className="font-bold text-zinc-400">Chưa có bản ghi cân nặng nào</p>
+              <p className="text-[11px] text-zinc-500">
+                Bấm nút <strong className="text-emerald-400">&quot;Ghi Chỉ Số Mới&quot;</strong> ở góc trên để bắt đầu theo dõi số cân và số đo cơ thể thực tế của bạn.
+              </p>
+            </div>
+          ) : (
+            logs.map((item, index) => {
             const nextItem = logs[index + 1];
             const delta = nextItem ? item.weightKg - nextItem.weightKg : 0;
 
@@ -650,7 +663,8 @@ export default function BodyTracker() {
                 </div>
               </div>
             );
-          })}
+          })
+        )}
         </div>
       </div>
 
