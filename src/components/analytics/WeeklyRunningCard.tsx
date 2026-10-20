@@ -16,7 +16,8 @@ import {
   Info
 } from 'lucide-react';
 import { RunSession } from '@/types/running';
-import { calculateWeeklyRunningAnalytics, formatSecondsToTime } from '@/lib/weeklyAnalytics';
+import { calculateWeeklyRunningAnalytics } from '@/lib/weeklyAnalytics';
+import { formatSecondsToTime } from '@/data/runningCurriculum';
 
 interface WeeklyRunningCardProps {
   sessions: RunSession[];

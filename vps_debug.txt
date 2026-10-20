@@ -1,4 +1,4 @@
-=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-10-20T06:59:02.268Z ===
+=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-10-20T08:07:50.662Z ===
 Đang kết nối máy chủ VPS 103.77.209.87...
 ✅ Đã kết nối VPS thành công!
 
@@ -8,33 +8,33 @@
 ┌────┬───────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
 │ id │ name              │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
 ├────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 16 │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 27h    │ 1    │ online    │ 0%       │ 11.5mb   │ root     │ disabled │
-│ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 27h    │ 1    │ online    │ 0%       │ 13.1mb   │ root     │ disabled │
-│ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 27h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
-│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 23h    │ 6    │ online    │ 0%       │ 23.7mb   │ root     │ disabled │
-│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 22h    │ 0    │ online    │ 0%       │ 47.6mb   │ root     │ disabled │
-│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 27h    │ 0    │ online    │ 0%       │ 14.6mb   │ root     │ disabled │
-│ 22 │ gym-tracker       │ default     │ N/A     │ fork    │ 611132   │ 2h     │ 0    │ online    │ 0%       │ 57.6mb   │ root     │ disabled │
-│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 673896   │ 2m     │ 24   │ online    │ 0%       │ 64.4mb   │ root     │ disabled │
-│ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 27h    │ 16   │ online    │ 0%       │ 10.8mb   │ root     │ disabled │
-│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 27h    │ 0    │ online    │ 0%       │ 48.7mb   │ root     │ disabled │
-│ 4  │ ta-ao-reader      │ default     │ 0.1.0   │ fork    │ 674147   │ 2m     │ 8    │ online    │ 0%       │ 97.3mb   │ root     │ disabled │
-│ 8  │ taxcouncil-web    │ default     │ N/A     │ fork    │ 675070   │ 0      │ 1694 │ waiting … │ 0%       │ 0b       │ root     │ disabled │
-│ 5  │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 2D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
+│ 16 │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 28h    │ 1    │ online    │ 0%       │ 11.5mb   │ root     │ disabled │
+│ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 28h    │ 1    │ online    │ 0%       │ 13.1mb   │ root     │ disabled │
+│ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 28h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
+│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 25h    │ 6    │ online    │ 0%       │ 23.7mb   │ root     │ disabled │
+│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 23h    │ 0    │ online    │ 0%       │ 47.6mb   │ root     │ disabled │
+│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 28h    │ 0    │ online    │ 0%       │ 14.6mb   │ root     │ disabled │
+│ 23 │ gym-tracker       │ default     │ N/A     │ fork    │ 675403   │ 68m    │ 0    │ online    │ 0%       │ 57.1mb   │ root     │ disabled │
+│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 693764   │ 19m    │ 26   │ online    │ 0%       │ 78.5mb   │ root     │ disabled │
+│ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 28h    │ 16   │ online    │ 0%       │ 10.8mb   │ root     │ disabled │
+│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 28h    │ 0    │ online    │ 0%       │ 49.7mb   │ root     │ disabled │
+│ 4  │ ta-ao-reader      │ default     │ 0.1.0   │ fork    │ 674147   │ 71m    │ 8    │ online    │ 0%       │ 97.5mb   │ root     │ disabled │
+│ 8  │ taxcouncil-web    │ default     │ N/A     │ fork    │ 701247   │ 0      │ 2358 │ waiting … │ 0%       │ 0b       │ root     │ disabled │
+│ 5  │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 3D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
 └────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 16% | ram usage: 38.8% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.03mb/s ⇑ 0.002mb/s drop 40/min | disk: ⇓ 0mb/s ⇑ 0.017mb/s
-tcp   LISTEN 0      511                *:3008             *:*    users:(("next-server (v1",pid=611145,fd=18))                                        
+host metrics | cpu: 21% | ram usage: 38.3% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.049mb/s ⇑ 0.003mb/s drop 44/min | disk: ⇓ 0mb/s ⇑ 0.061mb/s
+tcp   LISTEN 0      511                *:3008             *:*    users:(("next-server (v1",pid=675422,fd=18))                                        
 
 --- BƯỚC 2: Kéo commit mới nhất từ GitHub ---
 
 >>> [VPS] cd /var/www/gym-tracker && git fetch origin master && git reset --hard origin/master && git log -n 3 --oneline
 From https://github.com/banderas0801/gym-tracker
  * branch            master     -> FETCH_HEAD
-   191d5c8..308b6d7  master     -> origin/master
-HEAD is now at 308b6d7 fix: explicit types for supplementary exercises and instructions map
+   308b6d7..d855559  master     -> origin/master
+HEAD is now at d855559 fix: explicit types for supplementary exercises and instructions map
+d855559 fix: explicit types for supplementary exercises and instructions map
 308b6d7 fix: explicit types for supplementary exercises and instructions map
 191d5c8 fix: explicit types for supplementary exercises and instructions map
-efef8b5 feat: tich hop anh minh hoa tu the 1 va tu the 2 cho toan bo bai tap bo tro runner
 
 --- BƯỚC 3: Kiểm tra và đảm bảo các file mã nguồn mới nhất trên VPS ---
 
@@ -44,11 +44,20 @@ efef8b5 feat: tich hop anh minh hoa tu the 1 va tu the 2 cho toan bo bai tap bo 
 [SFTP] Đồng bộ file: runningCurriculum.ts -> /var/www/gym-tracker/src/data/runningCurriculum.ts
 ✅ SFTP hoàn tất: runningCurriculum.ts
 
-[SFTP] Đồng bộ file: package.json -> /var/www/gym-tracker/package.json
-✅ SFTP hoàn tất: package.json
+[SFTP] Đồng bộ file: weeklyAnalytics.ts -> /var/www/gym-tracker/src/lib/weeklyAnalytics.ts
+✅ SFTP hoàn tất: weeklyAnalytics.ts
+
+[SFTP] Đồng bộ file: WeeklyRunningCard.tsx -> /var/www/gym-tracker/src/components/analytics/WeeklyRunningCard.tsx
+✅ SFTP hoàn tất: WeeklyRunningCard.tsx
+
+[SFTP] Đồng bộ file: WeeklyGymCard.tsx -> /var/www/gym-tracker/src/components/analytics/WeeklyGymCard.tsx
+✅ SFTP hoàn tất: WeeklyGymCard.tsx
 
 [SFTP] Đồng bộ file: RunningTracker.tsx -> /var/www/gym-tracker/src/components/RunningTracker.tsx
 ✅ SFTP hoàn tất: RunningTracker.tsx
+
+[SFTP] Đồng bộ file: HistoryAnalytics.tsx -> /var/www/gym-tracker/src/components/HistoryAnalytics.tsx
+✅ SFTP hoàn tất: HistoryAnalytics.tsx
 
 [SFTP] Đồng bộ file: BodyTracker.tsx -> /var/www/gym-tracker/src/components/BodyTracker.tsx
 ✅ SFTP hoàn tất: BodyTracker.tsx
@@ -59,6 +68,9 @@ efef8b5 feat: tich hop anh minh hoa tu the 1 va tu the 2 cho toan bo bai tap bo 
 [SFTP] Đồng bộ file: page.tsx -> /var/www/gym-tracker/src/app/page.tsx
 ✅ SFTP hoàn tất: page.tsx
 
+[SFTP] Đồng bộ file: package.json -> /var/www/gym-tracker/package.json
+✅ SFTP hoàn tất: package.json
+
 --- BƯỚC 4: Build Next.js Production trên VPS ---
 
 >>> [VPS] cd /var/www/gym-tracker && npm run build
@@ -67,144 +79,70 @@ efef8b5 feat: tich hop anh minh hoa tu the 1 va tu the 2 cho toan bo bai tap bo 
 > next build
 
 ▲ Next.js 16.4.2 (Turbopack)
-✓ Running next.config.ts took 139ms
+✓ Running next.config.ts took 202ms
 - Cache Components enabled
 - Partial Prefetching enabled
 
   Creating an optimized production build ...
-✓ Compiled successfully in 2.8s
-  Running TypeScript ...
-  Finished TypeScript in 11.3s ...
-  Collecting page data using 1 worker ...
-  Generating static pages using 1 worker (0/5) ...
-  Generating static pages using 1 worker (1/5) 
-  Generating static pages using 1 worker (2/5) 
-  Generating static pages using 1 worker (3/5) 
-✓ Generating static pages using 1 worker (5/5) in 1604ms
-  Finalizing page optimization ...
 
-Route (app)
-┌ ○ /
-├ ○ /_not-found
-└ ○ /manifest.webmanifest
+> Build error occurred
+Error: Turbopack build failed with 2 errors:
+./src/components/analytics/WeeklyRunningCard.tsx:19:1
+Error: Export formatSecondsToTime doesn't exist in target module
+  [90m17 |[0m } [36mfrom[0m [32m'lucide-react'[0m;
+  [90m18 |[0m [36mimport[0m { [33mRunSession[0m } [36mfrom[0m [32m'@/types/running'[0m;
+[31m[1m>[0m [90m19 |[0m [36mimport[0m { calculateWeeklyRunningAnalytics, formatSecondsToTime } [36mfrom[0m [32m'@/lib/weeklyAnalytics'[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m20 |[0m
+  [90m21 |[0m [36minterface[0m [33mWeeklyRunningCardProps[0m {
+  [90m22 |[0m   sessions: [33mRunSession[0m[];
 
+The export formatSecondsToTime was not found in module [project]/src/lib/weeklyAnalytics.ts [app-client] (ecmascript).
+Did you mean to import formatWeekSpan?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
 
-○  (Static)  prerendered as static content
+Import traces:
+  Client Component Browser:
+    ./src/components/analytics/WeeklyRunningCard.tsx [Client Component Browser]
+    ./src/components/RunningTracker.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
 
-
-✅ Build Next.js thành công 100%!
-
---- BƯỚC 5: Khởi động lại PM2 trên cổng 3008 ---
-
->>> [VPS] pm2 delete gym-tracker 2>/dev/null || true
-[PM2] Applying action deleteProcessId on app [gym-tracker](ids: [ 22 ])
-[PM2] [gym-tracker](22) ✓
-┌────┬───────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
-│ id │ name              │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
-├────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 16 │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 27h    │ 1    │ online    │ 0%       │ 11.5mb   │ root     │ disabled │
-│ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 27h    │ 1    │ online    │ 0%       │ 13.1mb   │ root     │ disabled │
-│ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 27h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
-│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 23h    │ 6    │ online    │ 0%       │ 23.7mb   │ root     │ disabled │
-│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 22h    │ 0    │ online    │ 0%       │ 47.6mb   │ root     │ disabled │
-│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 27h    │ 0    │ online    │ 0%       │ 14.6mb   │ root     │ disabled │
-│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 673896   │ 3m     │ 24   │ online    │ 0%       │ 64.5mb   │ root     │ disabled │
-│ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 27h    │ 16   │ online    │ 0%       │ 10.8mb   │ root     │ disabled │
-│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 27h    │ 0    │ online    │ 0%       │ 49.2mb   │ root     │ disabled │
-│ 4  │ ta-ao-reader      │ default     │ 0.1.0   │ fork    │ 674147   │ 2m     │ 8    │ online    │ 0%       │ 97.3mb   │ root     │ disabled │
-│ 8  │ taxcouncil-web    │ default     │ N/A     │ fork    │ 675356   │ 0      │ 1698 │ waiting … │ 0%       │ 0b       │ root     │ disabled │
-│ 5  │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 2D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
-└────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 16% | ram usage: 38.8% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.03mb/s ⇑ 0.002mb/s drop 40/min | disk: ⇓ 0mb/s ⇑ 0.017mb/s
-
->>> [VPS] cd /var/www/gym-tracker && pm2 start npm --name "gym-tracker" -- run start
-[PM2] Starting /usr/bin/npm in fork_mode (1 instance)
-[PM2] Done.
-┌────┬───────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
-│ id │ name              │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
-├────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 16 │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 27h    │ 1    │ online    │ 0%       │ 11.5mb   │ root     │ disabled │
-│ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 27h    │ 1    │ online    │ 0%       │ 13.1mb   │ root     │ disabled │
-│ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 27h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
-│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 23h    │ 6    │ online    │ 0%       │ 23.7mb   │ root     │ disabled │
-│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 22h    │ 0    │ online    │ 0%       │ 47.6mb   │ root     │ disabled │
-│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 27h    │ 0    │ online    │ 0%       │ 14.6mb   │ root     │ disabled │
-│ 23 │ gym-tracker       │ default     │ N/A     │ fork    │ 675403   │ 0s     │ 0    │ online    │ 0%       │ 25.4mb   │ root     │ disabled │
-│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 673896   │ 3m     │ 24   │ online    │ 0%       │ 64.6mb   │ root     │ disabled │
-│ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 27h    │ 16   │ online    │ 0%       │ 10.8mb   │ root     │ disabled │
-│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 27h    │ 0    │ online    │ 0%       │ 48.7mb   │ root     │ disabled │
-│ 4  │ ta-ao-reader      │ default     │ 0.1.0   │ fork    │ 674147   │ 2m     │ 8    │ online    │ 0%       │ 97.4mb   │ root     │ disabled │
-│ 8  │ taxcouncil-web    │ default     │ N/A     │ fork    │ 675356   │ 0      │ 1698 │ waiting … │ 0%       │ 0b       │ root     │ disabled │
-│ 5  │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 2D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
-└────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 16% | ram usage: 38.8% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.03mb/s ⇑ 0.002mb/s drop 40/min | disk: ⇓ 0mb/s ⇑ 0.017mb/s
-
->>> [VPS] pm2 save
-[PM2] Saving current process list...
-[PM2] Successfully saved in /root/.pm2/dump.pm2
-
---- BƯỚC 6: Kiểm tra phản hồi ứng dụng & Nginx ---
-
->>> [VPS] sleep 4; pm2 list; curl -I http://127.0.0.1:3008; curl -I https://gym.makeno.space
-┌────┬───────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
-│ id │ name              │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
-├────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 16 │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 27h    │ 1    │ online    │ 0%       │ 11.5mb   │ root     │ disabled │
-│ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 27h    │ 1    │ online    │ 0%       │ 13.1mb   │ root     │ disabled │
-│ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 27h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
-│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 23h    │ 6    │ online    │ 0%       │ 23.7mb   │ root     │ disabled │
-│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 22h    │ 0    │ online    │ 0%       │ 47.6mb   │ root     │ disabled │
-│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 27h    │ 0    │ online    │ 0%       │ 14.6mb   │ root     │ disabled │
-│ 23 │ gym-tracker       │ default     │ N/A     │ fork    │ 675403   │ 5s     │ 0    │ online    │ 0%       │ 58.6mb   │ root     │ disabled │
-│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 673896   │ 3m     │ 24   │ online    │ 0%       │ 64.0mb   │ root     │ disabled │
-│ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 27h    │ 16   │ online    │ 0%       │ 10.8mb   │ root     │ disabled │
-│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 27h    │ 0    │ online    │ 0%       │ 49.1mb   │ root     │ disabled │
-│ 4  │ ta-ao-reader      │ default     │ 0.1.0   │ fork    │ 674147   │ 2m     │ 8    │ online    │ 0%       │ 96.8mb   │ root     │ disabled │
-│ 8  │ taxcouncil-web    │ default     │ N/A     │ fork    │ 675442   │ 0      │ 1699 │ waiting … │ 0%       │ 0b       │ root     │ disabled │
-│ 5  │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 2D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
-└────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 66.6% | ram usage: 38.7% | lo: ⇓ 0.004mb/s ⇑ 0.004mb/s | ens192: ⇓ 0.038mb/s ⇑ 0.004mb/s drop 16/min | disk: ⇓ 0.045mb/s ⇑ 0.393mb/s
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  242k    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-HTTP/1.1 200 OK
-Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
-x-nextjs-cache: HIT
-x-nextjs-prerender: 1
-x-nextjs-prerender: 1
-link: </_next/static/media/3c285486269019b7-s.p.2g-0we2o5_ngd.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/3eca85881bcfa204-s.p.0unco9n87mni8.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/53e45098eac42afb-s.p.1uklb5el4zgvl.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/5f841e19a104a2f1-s.p.1two88yljb5sr.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/625a092f804baad3-s.p.1zvg0ggiaivzo.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/6f42e0a3b0519c4d-s.p.13y-iz2lazqtb.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/8f46d218c8f79e34-s.p.2wu4yy186g04j.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/8ffc259da9d23054-s.p.10uaeld2xxvpt.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/9d978ba009f47915-s.p.1x4h7xumh6h0q.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/a3bcb02a0e9e5d11-s.p.25pbmqxk8u2s7.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/a4f4f75ad654963f-s.p.1hvvd1t-trplq.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/fcf129058e6e31f2-s.p.1ubek13yfcpkr.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2"
-x-nextjs-stale-time: 300
-X-Powered-By: Next.js
-Cache-Control: s-maxage=31536000
-ETag: "9u7iylqg358hd"
-Content-Type: text/html; charset=utf-8
-Content-Length: 248406
-Date: Tue, 20 Oct 2026 06:59:59 GMT
-Connection: keep-alive
-Keep-Alive: timeout=5
-
-  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
-                                 Dload  Upload   Total   Spent    Left  Speed
-  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0  242k    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
-HTTP/1.1 200 OK
-Server: nginx/1.24.0 (Ubuntu)
-Date: Tue, 20 Oct 2026 07:00:00 GMT
-Content-Type: text/html; charset=utf-8
-Content-Length: 248406
-Connection: keep-alive
-Vary: Accept-Encoding
-Vary: rsc, next-router-state-tree, next-router-prefetch, next-router-segment-prefetch, Accept-Encoding
-x-nextjs-cache: HIT
-x-nextjs-prerender: 1
-x-nextjs-prerender: 1
-link: </_next/static/media/3c285486269019b7-s.p.2g-0we2o5_ngd.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/3eca85881bcfa204-s.p.0unco9n87mni8.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/53e45098eac42afb-s.p.1uklb5el4zgvl.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/5f841e19a104a2f1-s.p.1two88yljb5sr.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/625a092f804baad3-s.p.1zvg0ggiaivzo.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/6f42e0a3b0519c4d-s.p.13y-iz2lazqtb.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/797e433ab948586e-s.p.0r6juujl39pe6.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/8f46d218c8f79e34-s.p.2wu4yy186g04j.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/8ffc259da9d23054-s.p.10uaeld2xxvpt.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/9d978ba009f47915-s.p.1x4h7xumh6h0q.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/a3bcb02a0e9e5d11-s.p.25pbmqxk8u2s7.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/a4f4f75ad654963f-s.p.1hvvd1t-trplq.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2", </_next/static/media/fcf129058e6e31f2-s.p.1ubek13yfcpkr.woff2>; rel=preload; as="font"; crossorigin=""; type="font/woff2"
-x-nextjs-stale-time: 300
-X-Powered-By: Next.js
-Cache-Control: s-maxage=31536000
-ETag: "9u7iylqg358hd"
+  Client Component SSR:
+    ./src/components/analytics/WeeklyRunningCard.tsx [Client Component SSR]
+    ./src/components/RunningTracker.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component]
 
 
-========================================================
-🎉 QUÁ TRÌNH SỬA LỖI & TRIỂN KHAI ĐÃ HOÀN TẤT THÀNH CÔNG!
-👉 Website hoạt động tại: https://gym.makeno.space
-========================================================
+./src/components/analytics/WeeklyRunningCard.tsx:19:1
+Error: Export formatSecondsToTime doesn't exist in target module
+  [90m17 |[0m } [36mfrom[0m [32m'lucide-react'[0m;
+  [90m18 |[0m [36mimport[0m { [33mRunSession[0m } [36mfrom[0m [32m'@/types/running'[0m;
+[31m[1m>[0m [90m19 |[0m [36mimport[0m { calculateWeeklyRunningAnalytics, formatSecondsToTime } [36mfrom[0m [32m'@/lib/weeklyAnalytics'[0m;
+  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
+  [90m20 |[0m
+  [90m21 |[0m [36minterface[0m [33mWeeklyRunningCardProps[0m {
+  [90m22 |[0m   sessions: [33mRunSession[0m[];
+
+The export formatSecondsToTime was not found in module [project]/src/lib/weeklyAnalytics.ts [app-ssr] (ecmascript).
+Did you mean to import formatWeekSpan?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/analytics/WeeklyRunningCard.tsx [Client Component Browser]
+    ./src/components/RunningTracker.tsx [Client Component Browser]
+    ./src/app/page.tsx [Client Component Browser]
+    ./src/app/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/analytics/WeeklyRunningCard.tsx [Client Component SSR]
+    ./src/components/RunningTracker.tsx [Client Component SSR]
+    ./src/app/page.tsx [Client Component SSR]
+    ./src/app/page.tsx [Server Component]
+
+
+    at ignore-listed frames
+
+❌ Build thất bại! Dừng quy trình.

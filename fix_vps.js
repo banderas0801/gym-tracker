@@ -73,6 +73,7 @@ async function main() {
 
   // 3. Đảm bảo các file cốt lõi không bị lệch type
   logOutput('\n--- BƯỚC 3: Kiểm tra và đảm bảo các file mã nguồn mới nhất trên VPS ---\n');
+  await runSSH(conn, 'mkdir -p /var/www/gym-tracker/src/components/analytics /var/www/gym-tracker/src/lib /var/www/gym-tracker/src/types /var/www/gym-tracker/src/data');
   const filesToVerify = [
     { local: path.join(__dirname, 'src/types/running.ts'), remote: '/var/www/gym-tracker/src/types/running.ts' },
     { local: path.join(__dirname, 'src/data/runningCurriculum.ts'), remote: '/var/www/gym-tracker/src/data/runningCurriculum.ts' },
