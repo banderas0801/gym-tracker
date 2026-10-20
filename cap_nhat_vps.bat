@@ -1,16 +1,16 @@
 @echo off
 chcp 65001 > nul
-title CAP NHAT GYM TRACKER - THEM NUT RESET VA BAM BAT DAU LIVE RUN
+title CAP NHAT PHAN HE CHAY BO - ANH MINH HOA DONG TAC BO TRO RUNNER
 color 0A
 echo ========================================================
-echo   CAP NHAT GYM TRACKER: THEM NUT RESET VA BAM BAT DAU
+echo   CAP NHAT GYM TRACKER: ANH MINH HOA DONG TAC BO TRO
 echo ========================================================
 cd /d C:\Users\Admin\gym-tracker
 
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "feat: add reset button and manual start to live run tracker"
+git commit -m "feat: tich hop anh minh hoa tu the 1 va tu the 2 cho toan bo bai tap bo tro runner"
 git push origin master
 
 echo.

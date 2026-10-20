@@ -35,6 +35,9 @@ import {
   ExternalLink,
   Sliders,
   ChevronDown,
+  ChevronUp,
+  CheckSquare,
+  Layers,
   Award
 } from 'lucide-react';
 import { 
@@ -53,7 +56,9 @@ import {
   calculateVDOT, 
   suggestSubFromVDOT,
   formatSecondsToTime,
-  formatPace
+  formatPace,
+  getSupplementaryExercises,
+  SupplementaryExercise
 } from '@/data/runningCurriculum';
 import { 
   getTargetSub, 
@@ -114,6 +119,12 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
   const [intervalCurrentSet, setIntervalCurrentSet] = useState(1);
   const [intervalTotalSets] = useState(8);
   const [intervalPhaseSecondsLeft, setIntervalPhaseSecondsLeft] = useState(60);
+
+  // Runner Supplementary Exercises State (Bổ trợ chuyên biệt chạy bộ)
+  const [expandedSuppDays, setExpandedSuppDays] = useState<Record<string, boolean>>({});
+  const [openSuppModalDay, setOpenSuppModalDay] = useState<{ weekNum: number; day: DayTrainingPlan; exercises: SupplementaryExercise[] } | null>(null);
+  const [suppCompletedItems, setSuppCompletedItems] = useState<Record<string, boolean>>({});
+  const [suppRestTimer, setSuppRestTimer] = useState<number | null>(null);
 
   // Refs
   const watchIdRef = useRef<number | null>(null);
@@ -207,6 +218,26 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
       if (timerIntervalRef.current) clearInterval(timerIntervalRef.current);
     };
   }, [isTrackingActive, isTrackingPaused, runMode, intervalPhase]);
+
+  // Bộ đếm thời gian nghỉ giữa hiệp bài bổ trợ runner (Rest Timer)
+  useEffect(() => {
+    if (suppRestTimer === null) return;
+    if (suppRestTimer <= 0) {
+      playBeep(880, 0.4);
+      setSuppRestTimer(null);
+      return;
+    }
+    const interval = setInterval(() => {
+      setSuppRestTimer((prev) => {
+        if (prev === null || prev <= 1) {
+          playBeep(880, 0.4);
+          return null;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [suppRestTimer]);
 
   // Haversine GPS Distance
   const calculateDistance = (lat1: number, lon1: number, lat2: number, lon2: number) => {
@@ -827,12 +858,113 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                             💡 Mẹo: {day.notes}
                           </p>
                         )}
+
+                        {/* Danh sách bài tập bổ trợ chuyên biệt cho runner */}
+                        {(() => {
+                          const suppExercises = getSupplementaryExercises(day);
+                          if (suppExercises.length === 0) return null;
+                          const dayKey = `w${currentWeekPlan.weekNumber}_d${day.dayOfWeek}`;
+                          const isExpanded = !!expandedSuppDays[dayKey];
+
+                          return (
+                            <div className="mt-2.5 pt-2.5 border-t border-zinc-800/80 space-y-1.5">
+                              <div className="flex flex-wrap items-center justify-between gap-1.5">
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setExpandedSuppDays((prev) => ({ ...prev, [dayKey]: !prev[dayKey] }));
+                                  }}
+                                  className="flex items-center space-x-1.5 text-xs font-black text-teal-400 hover:text-teal-300 transition"
+                                >
+                                  <Dumbbell className="w-3.5 h-3.5 text-teal-400" />
+                                  <span>
+                                    {suppExercises.length} Bài Bổ Trợ ({day.strengthFocus === 'lower' ? 'Thân Dưới' : day.strengthFocus === 'upper' ? 'Thân Trên & Core' : 'Khớp & Phục Hồi'})
+                                  </span>
+                                  {isExpanded ? <ChevronUp className="w-3.5 h-3.5 ml-0.5" /> : <ChevronDown className="w-3.5 h-3.5 ml-0.5" />}
+                                </button>
+
+                                <button
+                                  type="button"
+                                  onClick={() => setOpenSuppModalDay({ weekNum: currentWeekPlan.weekNumber, day, exercises: suppExercises })}
+                                  className="text-[10px] font-bold px-2 py-0.5 rounded-lg bg-teal-500/10 hover:bg-teal-500/20 text-teal-300 border border-teal-500/30 transition flex items-center space-x-1 active:scale-95"
+                                >
+                                  <Layers className="w-3 h-3 text-teal-400" />
+                                  <span>Mở đếm set & nghỉ</span>
+                                </button>
+                              </div>
+
+                              {isExpanded && (
+                                <div className="space-y-1.5 pt-1 animate-in fade-in duration-200">
+                                  {suppExercises.map((ex, exIdx) => {
+                                    const itemKey = `${dayKey}_${ex.id}`;
+                                    const isItemDone = !!suppCompletedItems[itemKey];
+
+                                    return (
+                                      <div
+                                        key={ex.id}
+                                        className={`p-2.5 rounded-xl border transition ${
+                                          isItemDone
+                                            ? 'bg-emerald-950/20 border-emerald-500/40 text-zinc-300'
+                                            : 'bg-zinc-950/80 border-zinc-800/80 text-white'
+                                        }`}
+                                      >
+                                        <div className="flex items-start justify-between gap-2">
+                                          <div className="flex items-start space-x-2">
+                                            <button
+                                              type="button"
+                                              onClick={() => {
+                                                setSuppCompletedItems((prev) => ({ ...prev, [itemKey]: !prev[itemKey] }));
+                                              }}
+                                              className="mt-0.5 text-zinc-400 hover:text-emerald-400 transition"
+                                              title={isItemDone ? 'Bỏ tích' : 'Tích đã hoàn thành'}
+                                            >
+                                              {isItemDone ? (
+                                                <CheckCircle2 className="w-4 h-4 text-emerald-400 fill-emerald-500/20" />
+                                              ) : (
+                                                <Circle className="w-4 h-4" />
+                                              )}
+                                            </button>
+
+                                            {ex.startImageUrl && (
+                                              <img
+                                                src={ex.startImageUrl}
+                                                alt={ex.name}
+                                                className="w-12 h-12 rounded-lg object-cover bg-zinc-900 border border-zinc-800 shrink-0 mt-0.5"
+                                                loading="lazy"
+                                              />
+                                            )}
+
+                                            <div className="space-y-0.5">
+                                              <span className={`text-xs font-bold ${isItemDone ? 'line-through text-zinc-400' : 'text-white'}`}>
+                                                {exIdx + 1}. {ex.name}
+                                              </span>
+                                              <p className="text-[11px] text-zinc-400">
+                                                🎯 <strong className="text-zinc-300">{ex.target}</strong>
+                                              </p>
+                                              <p className="text-[11px] text-teal-300/90 italic">
+                                                ✨ {ex.benefit}
+                                              </p>
+                                            </div>
+                                          </div>
+
+                                          <span className="text-[11px] font-mono font-bold text-amber-400 px-2 py-0.5 rounded bg-zinc-900 border border-zinc-800 shrink-0">
+                                            {ex.setsReps}
+                                          </span>
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              )}
+                            </div>
+                          );
+                        })()}
                       </div>
                     </div>
 
                     {/* Nút hành động */}
-                    {plan.type !== 'rest' && (
-                      <div className="shrink-0 flex flex-col space-y-1.5 items-end">
+                    <div className="shrink-0 flex flex-col space-y-1.5 items-end">
+                      {plan.type !== 'rest' && (
                         <button
                           onClick={() => {
                             handlePrepareRun(
@@ -845,19 +977,36 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                           <Play className="w-3 h-3 fill-black" />
                           <span>Vào bài chạy này</span>
                         </button>
+                      )}
 
-                        {day.strengthFocus && day.strengthFocus !== 'none' && onGoToGymWorkout && (
+                      {/* Nút Tập bổ trợ Runner */}
+                      {(() => {
+                        const suppExercises = getSupplementaryExercises(day);
+                        if (suppExercises.length === 0) return null;
+                        return (
                           <button
-                            onClick={onGoToGymWorkout}
-                            className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-[11px] font-medium flex items-center space-x-1 border border-zinc-700 transition"
-                            title="Mở tab bài tập Gym để tập bổ trợ"
+                            type="button"
+                            onClick={() => setOpenSuppModalDay({ weekNum: currentWeekPlan.weekNumber, day, exercises: suppExercises })}
+                            className="px-2.5 py-1.5 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 font-bold text-xs flex items-center space-x-1 border border-teal-500/40 shadow-sm transition active:scale-95"
+                            title="Mở bài tập bổ trợ chuyên biệt với đồng hồ đếm set"
                           >
                             <Dumbbell className="w-3 h-3 text-teal-400" />
-                            <span>Tập Gym</span>
+                            <span>Tập bổ trợ ({suppExercises.length})</span>
                           </button>
-                        )}
-                      </div>
-                    )}
+                        );
+                      })()}
+
+                      {day.strengthFocus && day.strengthFocus !== 'none' && onGoToGymWorkout && (
+                        <button
+                          onClick={onGoToGymWorkout}
+                          className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-[11px] font-medium flex items-center space-x-1 border border-zinc-700 transition"
+                          title="Mở tab bài tập Gym để tập bổ trợ"
+                        >
+                          <Dumbbell className="w-3 h-3 text-zinc-400" />
+                          <span>Tập Gym</span>
+                        </button>
+                      )}
+                    </div>
                   </div>
                 </div>
               );
@@ -1815,6 +1964,273 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                 className="w-full py-3 rounded-2xl bg-blue-600 hover:bg-blue-500 text-white font-black text-xs transition shadow-lg shadow-blue-600/20 active:scale-95"
               >
                 ĐÃ HIỂU HƯỚNG DẪN KẾT NỐI
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* MODAL 4: BÀI TẬP BỔ TRỢ CHUYÊN SÂU RUNNER (STRENGTH & CONDITIONING) */}
+      {openSuppModalDay && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/85 backdrop-blur-md animate-in fade-in">
+          <div className="bg-zinc-950 border border-zinc-800 rounded-3xl max-w-xl w-full max-h-[92vh] flex flex-col shadow-2xl overflow-hidden">
+            {/* Modal Header */}
+            <div className="p-4 sm:p-5 border-b border-zinc-800 flex items-center justify-between shrink-0">
+              <div className="flex items-center space-x-2.5">
+                <div className="w-9 h-9 rounded-xl bg-teal-500/20 border border-teal-500/30 flex items-center justify-center">
+                  <Dumbbell className="w-5 h-5 text-teal-400" />
+                </div>
+                <div>
+                  <h3 className="text-base font-black text-white">BÀI TẬP BỔ TRỢ RUNNER</h3>
+                  <p className="text-xs text-amber-400 font-mono">
+                    Tuần {openSuppModalDay.weekNum} - {openSuppModalDay.day.dayName}: {openSuppModalDay.day.groupA.title}
+                  </p>
+                </div>
+              </div>
+              <button
+                onClick={() => {
+                  setOpenSuppModalDay(null);
+                  setSuppRestTimer(null);
+                }}
+                className="p-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white transition"
+              >
+                ✕
+              </button>
+            </div>
+
+            {/* Modal Content */}
+            <div className="p-4 sm:p-5 overflow-y-auto space-y-4">
+              {/* Focus Banner */}
+              <div className="p-3.5 rounded-2xl bg-teal-950/30 border border-teal-500/30 space-y-1">
+                <span className="text-[10px] font-black uppercase tracking-wider text-teal-400 block font-mono">
+                  {openSuppModalDay.day.strengthFocus === 'lower'
+                    ? '🦵 BỔ TRỢ THÂN DƯỚI (LOWER BODY)'
+                    : openSuppModalDay.day.strengthFocus === 'upper'
+                    ? '💪 BỔ TRỢ THÂN TRÊN & CORE (UPPER & CORE)'
+                    : '🧘 GIÃN CƠ & LINH HOẠT KHỚP'}
+                </span>
+                <p className="text-xs text-zinc-300 leading-relaxed">
+                  {openSuppModalDay.day.strengthFocus === 'lower'
+                    ? 'Tăng sức mạnh đùi, mông, bắp chuối và cơ cẳng chân trước. Giúp bảo vệ khớp gối, chống đau ống đồng (Shin Splints) và tiếp đất đàn hồi.'
+                    : openSuppModalDay.day.strengthFocus === 'upper'
+                    ? 'Gia cố cơ trọng tâm (Core) và lưng xô. Giữ thân người thẳng đứng khi chạy kiệt sức ở nửa cuối cự ly 21km và duy trì nhịp đánh tay 180 SPM.'
+                    : 'Giải tỏa căng cơ, phục hồi dây chằng và mở rộng biên độ sải chân.'}
+                </p>
+              </div>
+
+              {/* Đồng hồ nghỉ thông minh (Rest Timer) */}
+              <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-zinc-300 flex items-center space-x-1.5">
+                    <Clock className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Đồng hồ nghỉ giữa hiệp (Rest Timer):</span>
+                  </span>
+                  {suppRestTimer !== null && (
+                    <button
+                      onClick={() => setSuppRestTimer(null)}
+                      className="text-[10px] text-rose-400 hover:underline"
+                    >
+                      Dừng hẹn giờ
+                    </button>
+                  )}
+                </div>
+
+                {suppRestTimer !== null ? (
+                  <div className="flex items-center justify-center space-x-3 py-2 bg-zinc-950 rounded-xl border border-amber-500/40 animate-pulse">
+                    <span className="text-xs text-zinc-400">Nghỉ ngơi thả lỏng:</span>
+                    <span className="text-3xl font-black text-amber-400 font-mono">
+                      {suppRestTimer}s
+                    </span>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-4 gap-2 pt-1">
+                    {[30, 45, 60, 90].map((sec) => (
+                      <button
+                        key={sec}
+                        onClick={() => setSuppRestTimer(sec)}
+                        className="py-1.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 border border-zinc-700 text-xs font-bold text-white transition active:scale-95"
+                      >
+                        {sec}s
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Danh sách bài tập bổ trợ chi tiết */}
+              <div className="space-y-3">
+                <div className="flex items-center justify-between text-xs text-zinc-400">
+                  <span className="font-bold uppercase tracking-wider text-[11px]">
+                    Danh sách {openSuppModalDay.exercises.length} bài tập:
+                  </span>
+                  <span>Chạm vào ô để đánh dấu đã tập</span>
+                </div>
+
+                {openSuppModalDay.exercises.map((ex, exIdx) => {
+                  const dayKey = `w${openSuppModalDay.weekNum}_d${openSuppModalDay.day.dayOfWeek}`;
+                  const itemKey = `${dayKey}_${ex.id}`;
+                  const isItemDone = !!suppCompletedItems[itemKey];
+
+                  return (
+                    <div
+                      key={ex.id}
+                      className={`p-4 rounded-2xl border transition space-y-2.5 ${
+                        isItemDone
+                          ? 'bg-emerald-950/20 border-emerald-500/40 text-zinc-300'
+                          : 'bg-zinc-900 border-zinc-800 text-white'
+                      }`}
+                    >
+                      {/* Tiêu đề bài tập */}
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-start space-x-2.5">
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setSuppCompletedItems((prev) => ({ ...prev, [itemKey]: !prev[itemKey] }));
+                            }}
+                            className="mt-0.5 text-zinc-400 hover:text-emerald-400 transition"
+                            title={isItemDone ? 'Bỏ hoàn thành' : 'Đánh dấu hoàn thành'}
+                          >
+                            {isItemDone ? (
+                              <CheckCircle2 className="w-5 h-5 text-emerald-400 fill-emerald-500/20" />
+                            ) : (
+                              <Circle className="w-5 h-5" />
+                            )}
+                          </button>
+
+                          <div>
+                            <h4 className={`text-sm font-bold ${isItemDone ? 'line-through text-zinc-400' : 'text-white'}`}>
+                              {exIdx + 1}. {ex.name}
+                            </h4>
+                            <p className="text-xs text-zinc-400 mt-0.5">
+                              🎯 <strong className="text-zinc-300">{ex.target}</strong>
+                            </p>
+                          </div>
+                        </div>
+
+                        <span className="text-xs font-mono font-black text-amber-400 px-2.5 py-1 rounded-xl bg-zinc-950 border border-zinc-800 shrink-0">
+                          {ex.setsReps}
+                        </span>
+                      </div>
+
+                      {/* Lợi ích đối với runner */}
+                      <div className="p-2.5 rounded-xl bg-zinc-950/60 border border-zinc-800/80 text-xs text-teal-300/90 leading-relaxed">
+                        ✨ <strong>Tác dụng:</strong> {ex.benefit}
+                      </div>
+
+                      {/* Ảnh minh họa động tác (Tư thế Bắt đầu & Kết thúc) */}
+                      {(ex.startImageUrl || ex.endImageUrl) && (
+                        <div className="grid grid-cols-2 gap-2 pt-1">
+                          {ex.startImageUrl && (
+                            <div className="relative rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800 aspect-video flex items-center justify-center group">
+                              <img
+                                src={ex.startImageUrl}
+                                alt={`${ex.name} - Tư thế bắt đầu`}
+                                className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                loading="lazy"
+                              />
+                              <div className="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-md bg-black/80 backdrop-blur-sm text-[10px] font-bold text-zinc-300">
+                                1. Tư thế bắt đầu
+                              </div>
+                            </div>
+                          )}
+
+                          {ex.endImageUrl && (
+                            <div className="relative rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800 aspect-video flex items-center justify-center group">
+                              <img
+                                src={ex.endImageUrl}
+                                alt={`${ex.name} - Đỉnh điểm siết cơ`}
+                                className="w-full h-full object-cover transition duration-300 group-hover:scale-105"
+                                loading="lazy"
+                              />
+                              <div className="absolute bottom-1.5 left-1.5 px-2 py-0.5 rounded-md bg-black/80 backdrop-blur-sm text-[10px] font-bold text-amber-300 border border-amber-500/30">
+                                2. Siết cơ đỉnh điểm
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* 3 Hiệp thực hiện (Set 1, Set 2, Set 3 checklist) */}
+                      <div className="flex items-center space-x-2 pt-1">
+                        <span className="text-[11px] text-zinc-400 font-medium">Đánh dấu hiệp:</span>
+                        {[1, 2, 3].map((setNum) => {
+                          const setKey = `${itemKey}_set_${setNum}`;
+                          const isSetDone = !!suppCompletedItems[setKey];
+
+                          return (
+                            <button
+                              key={setNum}
+                              type="button"
+                              onClick={() => {
+                                const nextState = !isSetDone;
+                                setSuppCompletedItems((prev) => ({ ...prev, [setKey]: nextState }));
+                                if (nextState && suppRestTimer === null) {
+                                  setSuppRestTimer(60); // Tự động bật nghỉ 60s sau mỗi hiệp
+                                }
+                              }}
+                              className={`px-3 py-1 rounded-xl text-xs font-mono font-bold transition border ${
+                                isSetDone
+                                  ? 'bg-emerald-500 text-black border-emerald-400 shadow-sm'
+                                  : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:text-white'
+                              }`}
+                            >
+                              Hiệp {setNum} {isSetDone ? '✓' : ''}
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      {/* Hướng dẫn kỹ thuật từng bước */}
+                      {ex.instructions && ex.instructions.length > 0 && (
+                        <div className="pt-1.5 border-t border-zinc-800/60 space-y-1">
+                          <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">
+                            Hướng dẫn động tác:
+                          </span>
+                          <ol className="list-decimal list-inside space-y-0.5 text-[11px] text-zinc-300">
+                            {ex.instructions.map((step, sIdx) => (
+                              <li key={sIdx} className="leading-relaxed">{step}</li>
+                            ))}
+                          </ol>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
+            {/* Modal Footer */}
+            <div className="p-4 border-t border-zinc-800 bg-zinc-950 flex items-center justify-between gap-3 shrink-0">
+              <button
+                type="button"
+                onClick={() => {
+                  const dayKey = `w${openSuppModalDay.weekNum}_d${openSuppModalDay.day.dayOfWeek}`;
+                  const allDone: Record<string, boolean> = { ...suppCompletedItems };
+                  openSuppModalDay.exercises.forEach((ex) => {
+                    allDone[`${dayKey}_${ex.id}`] = true;
+                    [1, 2, 3].forEach((s) => {
+                      allDone[`${dayKey}_${ex.id}_set_${s}`] = true;
+                    });
+                  });
+                  setSuppCompletedItems(allDone);
+                  setOpenSuppModalDay(null);
+                  setSuppRestTimer(null);
+                }}
+                className="flex-1 py-3 rounded-2xl bg-gradient-to-r from-teal-500 to-emerald-400 hover:from-teal-400 hover:to-emerald-300 text-zinc-950 font-black text-xs shadow-lg transition active:scale-95 text-center"
+              >
+                ✓ HOÀN THÀNH TẤT CẢ BÀI BỔ TRỢ HÔM NAY
+              </button>
+
+              <button
+                type="button"
+                onClick={() => {
+                  setOpenSuppModalDay(null);
+                  setSuppRestTimer(null);
+                }}
+                className="px-4 py-3 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-zinc-300 font-bold text-xs transition"
+              >
+                Đóng
               </button>
             </div>
           </div>

@@ -1,4 +1,265 @@
-import { SubPaceDetail, TargetSub, WeekTrainingPlan } from '@/types/running';
+import { SubPaceDetail, TargetSub, WeekTrainingPlan, DayTrainingPlan, SupplementaryExercise } from '@/types/running';
+
+// BÀI TẬP BỔ TRỢ CHUYÊN BIỆT CHO RUNNER (Strength & Conditioning for Half Marathon)
+export const RUNNER_SUPPLEMENTARY_LOWER: SupplementaryExercise[] = [
+  {
+    id: 'supp-squat',
+    name: 'Bodyweight Squat (Ngồi xổm đùi mông)',
+    target: 'Cơ tứ đầu đùi (Quads), cơ mông lớn & gân kheo',
+    setsReps: '3 hiệp × 15-20 lần',
+    benefit: 'Bảo vệ khớp gối, tăng độ ổn định xương bánh chè và sức mạnh leo dốc',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Squat/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Squat/1.jpg',
+    instructions: [
+      'Đứng hai chân rộng bằng vai, mũi chân hơi chếch ra ngoài 15-30 độ.',
+      'Hít sâu, đẩy hông về sau và hạ đùi xuống song song sàn nhà.',
+      'Đầu gối hướng theo mũi chân, ngực giữ thẳng.',
+      'Thở ra, nhấn gót chân đứng thẳng dậy, siết nhẹ mông ở đỉnh.'
+    ]
+  },
+  {
+    id: 'supp-lunges',
+    name: 'Walking Lunges (Bước chùng chân)',
+    target: 'Cơ đùi trước, cơ mông & thăng bằng đơn chân',
+    setsReps: '3 hiệp × 12 bước mỗi chân',
+    benefit: 'Tối ưu độ thăng bằng sải chân đơn lẻ (chạy bộ là chuỗi tiếp đất từng chân một)',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Walking_Lunge/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bodyweight_Walking_Lunge/1.jpg',
+    instructions: [
+      'Đứng thẳng, bước một chân dài về phía trước.',
+      'Hạ hông xuống cho đến khi hai đầu gối gập thành góc vuông 90 độ.',
+      'Gối trước không vượt quá mũi chân, gối sau gần chạm sàn.',
+      'Đạp mạnh chân trước đứng dậy và bước tiếp chân kia lên.'
+    ]
+  },
+  {
+    id: 'supp-calf-raise',
+    name: 'Calf Raises (Nhón gót bắp chuối đứng)',
+    target: 'Cơ bắp chuối (Gastrocnemius & Soleus), gân gót Achilles',
+    setsReps: '3 hiệp × 20-25 lần',
+    benefit: 'Tăng độ đàn hồi gân Achilles, giảm sốc tiếp đất và chống viêm gân gót',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/1.jpg',
+    instructions: [
+      'Đứng trên bậc thềm hoặc sàn phẳng, hai tay vịn nhẹ tường để giữ thăng bằng.',
+      'Nhấn mũi bàn chân, nhón gót chân lên cao nhất có thể.',
+      'Giữ 1 giây ở điểm cao nhất để cảm nhận bắp chuối siết chặt.',
+      'Hạ gót chân chậm rãi có kiểm soát xuống dưới mức thềm.'
+    ]
+  },
+  {
+    id: 'supp-tibialis',
+    name: 'Tibialis Raises (Nhấc mũi chân tựa tường)',
+    target: 'Cơ cẳng chân trước (Tibialis Anterior)',
+    setsReps: '3 hiệp × 15-20 lần',
+    benefit: 'BÀI TẬP VÀNG: Phòng ngừa & dứt điểm hội chứng đau ống đồng (Shin Splints)',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/1.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/0.jpg',
+    instructions: [
+      'Đứng tựa mông và lưng vào tường, hai chân đưa về phía trước cách tường 30-40cm.',
+      'Giữ gót chân chạm sàn, nhấc toàn bộ mũi bàn chân và các ngón chân lên cao nhất.',
+      'Cảm nhận cơ phía trước cẳng chân (ống đồng) siết căng.',
+      'Hạ mũi chân xuống nhưng không chạm hẳn đất rồi nhấc tiếp ngay.'
+    ]
+  },
+  {
+    id: 'supp-glute-bridge',
+    name: 'Glute Bridges (Nâng hông cây cầu)',
+    target: 'Cơ mông lớn (Gluteus Maximus) & đùi sau',
+    setsReps: '3 hiệp × 15 lần (giữ 2s)',
+    benefit: 'Kích hoạt cơ mông phát lực đẩy sải chân về sau thay vì để đùi trước chịu tải quá mức',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Glute_Bridge/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Glute_Bridge/1.jpg',
+    instructions: [
+      'Nằm ngửa trên thảm, co hai đầu gối, bàn chân đặt phẳng trên sàn gần mông.',
+      'Thở ra, nhấn gót chân và nâng hông lên cao cho đến khi đùi, hông và ngực tạo đường thẳng.',
+      'Siết chặt cơ mông 2 giây ở vị trí cao nhất.',
+      'Hít vào và hạ hông xuống từ từ.'
+    ]
+  },
+  {
+    id: 'supp-single-leg-rdl',
+    name: 'Single-Leg RDL (Deadlift 1 chân)',
+    target: 'Gân kheo (Hamstrings), cơ mông & thăng bằng cổ chân',
+    setsReps: '3 hiệp × 10 lần mỗi bên chân',
+    benefit: 'Chống chuột rút đùi sau ở nửa sau cự ly 21km và rèn cổ chân dẻo dai',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Deadlift/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Single_Leg_Deadlift/1.jpg',
+    instructions: [
+      'Đứng trên một chân, chân còn lại hơi nhấc khỏi mặt đất.',
+      'Hơi khuỵu gối chân trụ, cúi người về phía trước đồng thời đá chân sau thẳng ra sau.',
+      'Giữ lưng thẳng song song với sàn, cảm nhận căng cơ đùi sau chân trụ.',
+      'Dùng lực cơ mông và gân kheo kéo người đứng thẳng trở lại.'
+    ]
+  },
+  {
+    id: 'supp-clamshell',
+    name: 'Clamshells (Vỏ sò mở khớp háng)',
+    target: 'Cơ mông nhỡ (Gluteus Medius)',
+    setsReps: '3 hiệp × 15 lần mỗi bên',
+    benefit: 'Giữ xương đùi và gối thẳng trục, khắc phục triệt để lỗi sụm gối và đau dải chậu chày (IT Band)',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Bent_Leg_Groin/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Bent_Leg_Groin/1.jpg',
+    instructions: [
+      'Nằm nghiêng một bên, co hai đầu gối góc 90 độ, hai gót chân chụm sát nhau.',
+      'Giữ hai bàn chân dính chặt, từ từ mở gối chân trên lên cao nhất có thể.',
+      'Không để xương chậu bị lật ngửa ra sau.',
+      'Giữ 1 giây rồi hạ gối xuống chậm.'
+    ]
+  }
+];
+
+export const RUNNER_SUPPLEMENTARY_UPPER_CORE: SupplementaryExercise[] = [
+  {
+    id: 'supp-plank',
+    name: 'Forearm Plank (Đo sàn cẳng tay)',
+    target: 'Cơ trọng tâm toàn diện (Transverse Abdominis, cơ liên sườn)',
+    setsReps: '3 hiệp × 45-60 giây',
+    benefit: 'Giữ trục xương sống thẳng đứng, chống hiện tượng đổ gập người về trước khi kiệt sức',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Plank/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Front_Plank/1.jpg',
+    instructions: [
+      'Chống cẳng tay xuống sàn, khuỷu tay thẳng dưới vai, hai chân duỗi thẳng ra sau.',
+      'Siết chặt bụng, mông và đùi tạo thành một đường thẳng tắp từ đầu đến gót.',
+      'Không võng lưng, không nhổm mông lên cao.',
+      'Duy trì nhịp thở đều qua cơ hoành, không nín thở.'
+    ]
+  },
+  {
+    id: 'supp-side-plank',
+    name: 'Side Plank (Plank nghiêng sườn)',
+    target: 'Cơ liên sườn (Obliques) & cơ vuông thắt lưng',
+    setsReps: '3 hiệp × 30-40 giây mỗi bên',
+    benefit: 'Triệt tiêu lực rung lắc vặn vẹo hông sang hai bên, tiết kiệm năng lượng sải bước',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Plank/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Side_Plank/1.jpg',
+    instructions: [
+      'Nằm nghiêng, chống một bên cùi chỏ xuống sàn vuông góc với vai.',
+      'Nâng toàn bộ hông và chân lên khỏi mặt sàn thành đường thẳng nghiêng.',
+      'Tay còn lại chống hông hoặc giơ thẳng lên trần.',
+      'Giữ chặt tư thế và đổi bên.'
+    ]
+  },
+  {
+    id: 'supp-pushups',
+    name: 'Push-ups (Hít đất)',
+    target: 'Ngực, vai trước & cơ tam đầu tay sau (Triceps)',
+    setsReps: '3 hiệp × 12-15 lần',
+    benefit: 'Khỏe khớp vai và lưng trên giúp duy trì nhịp đánh tay 180 nhịp/phút bền bỉ',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pushups/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Pushups/1.jpg',
+    instructions: [
+      'Chống hai tay xuống sàn rộng hơn vai một chút, ngón tay hướng về phía trước.',
+      'Hạ ngực xuống gần chạm sàn, khuỷu tay mở góc 45 độ so với thân.',
+      'Đẩy người lên vị trí ban đầu và thở ra dứt khoát.'
+    ]
+  },
+  {
+    id: 'supp-row',
+    name: 'Resistance Band / Dumbbell Row (Chèo lưng xô)',
+    target: 'Cơ lưng xô (Lats) & cơ hình thoi giữa hai bả vai',
+    setsReps: '3 hiệp × 12-15 lần',
+    benefit: 'Mở rộng lồng ngực đón lượng oxy tối đa, chống gù vai cúi đầu khi mệt',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Two-Arm_Long_Bar_Row/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Bent_Over_Two-Arm_Long_Bar_Row/1.jpg',
+    instructions: [
+      'Dẫm dây kháng lực hoặc cầm tạ đơn, cúi người hông gập 45 độ, lưng thẳng.',
+      'Kéo cùi chỏ về phía sau sát sườn, ép chặt hai bả vai vào nhau ở đỉnh.',
+      'Hạ tạ xuống từ từ có kiểm soát.'
+    ]
+  },
+  {
+    id: 'supp-bird-dog',
+    name: 'Bird-Dog (Chim - Chó chéo tay chân)',
+    target: 'Cơ dựng sống thắt lưng & phối hợp chéo cơ thể',
+    setsReps: '3 hiệp × 12 lần mỗi bên',
+    benefit: 'Rèn luyện khả năng thăng bằng và liên kết vận động chéo tay nghịch chân tự nhiên của dáng chạy',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Birddog/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Birddog/1.jpg',
+    instructions: [
+      'Quỳ chống hai tay và hai đầu gối vuông góc với sàn.',
+      'Đồng thời vươn tay phải thẳng về trước và đá chân trái thẳng ra sau.',
+      'Giữ lưng thẳng song song sàn trong 2 giây rồi thu về đổi bên.'
+    ]
+  },
+  {
+    id: 'supp-dead-bug',
+    name: 'Dead Bug (Bọ chết siết bụng)',
+    target: 'Cơ bụng sâu & phối hợp nhịp thở cơ hoành',
+    setsReps: '3 hiệp × 12 lần mỗi bên',
+    benefit: 'Bảo vệ thắt lưng và rèn kỹ năng thở sâu bằng bụng khi cơ bụng đang gồng',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dead_Bug/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Dead_Bug/1.jpg',
+    instructions: [
+      'Nằm ngửa, giơ hai tay thẳng lên trần, hai chân co gối 90 độ lơ lửng.',
+      'Dán chặt phần lưng dưới chạm sát sàn.',
+      'Từ từ hạ tay phải qua đầu và duỗi chân trái thẳng ra gần sát sàn.',
+      'Kéo về vị trí ban đầu rồi đổi bên đối diện.'
+    ]
+  }
+];
+
+export const RUNNER_SUPPLEMENTARY_MOBILITY: SupplementaryExercise[] = [
+  {
+    id: 'supp-hip-flexor',
+    name: 'Hip Flexor Kneeling Stretch (Ép giãn cơ gập hông)',
+    target: 'Cơ thắt lưng chậu (Iliopsoas & Rectus Femoris)',
+    setsReps: '3 hiệp × 30 giây mỗi chân',
+    benefit: 'Giải phóng khớp háng, mở rộng biên độ sải chân dài hơn mà không cần tốn thêm sức',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/90_90_Hamstring/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/90_90_Hamstring/1.jpg',
+    instructions: [
+      'Quỳ một chân trên thảm, chân kia bước lên phía trước tạo góc 90 độ.',
+      'Đẩy nhẹ hông về phía trước, giữ lưng thẳng cho đến khi thấy căng phía trước hông chân sau.',
+      'Giữ yên 30 giây hít thở sâu rồi đổi chân.'
+    ]
+  },
+  {
+    id: 'supp-pigeon-pose',
+    name: 'Pigeon Pose (Tư thế chim bồ câu giãn mông)',
+    target: 'Cơ hình lê (Piriformis) & cơ mông sâu',
+    setsReps: '3 hiệp × 30 giây mỗi bên',
+    benefit: 'Phòng ngừa chèn ép dây thần kinh tọa và giải tỏa căng cứng khớp háng sau chạy',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Bent_Leg_Groin/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Lying_Bent_Leg_Groin/1.jpg',
+    instructions: [
+      'Bắt đầu ở tư thế chống tay, đưa gối phải về trước đặt sau cổ tay phải, cẳng chân hướng chéo.',
+      'Duỗi thẳng chân trái ra sau, úp đùi trái xuống sàn.',
+      'Từ từ hạ thân người về phía trước, cảm nhận căng sâu cơ mông phải.'
+    ]
+  },
+  {
+    id: 'supp-ankle-dorsiflexion',
+    name: 'Ankle Mobility Against Wall (Gập cổ chân trên tường)',
+    target: 'Khớp cổ chân & gân gót Achilles',
+    setsReps: '3 hiệp × 15 lần gập mỗi chân',
+    benefit: 'Tăng biên độ gập cổ chân giúp tiếp đất mượt mà bằng gan bàn chân (Midfoot strike)',
+    startImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/0.jpg',
+    endImageUrl: 'https://raw.githubusercontent.com/yuhonas/free-exercise-db/main/exercises/Standing_Calf_Raises/1.jpg',
+    instructions: [
+      'Đứng đối diện tường, cách tường khoảng 1 bàn chân.',
+      'Đặt một chân lên trước, từ từ gập gối về phía trước chạm vào tường trong khi giữ gót chân dính chặt sàn.',
+      'Cảm nhận độ căng gập sâu của cổ chân.'
+    ]
+  }
+];
+
+// Hàm lấy danh sách bài bổ trợ theo cấu hình của ngày tập
+export function getSupplementaryExercises(day: DayTrainingPlan): SupplementaryExercise[] {
+  if (day.supplementaryExercises && day.supplementaryExercises.length > 0) {
+    return day.supplementaryExercises;
+  }
+  if (day.strengthFocus === 'lower') {
+    return RUNNER_SUPPLEMENTARY_LOWER;
+  }
+  if (day.strengthFocus === 'upper') {
+    return RUNNER_SUPPLEMENTARY_UPPER_CORE;
+  }
+  if (day.strengthFocus === 'mobility' || day.crossTraining) {
+    return RUNNER_SUPPLEMENTARY_MOBILITY;
+  }
+  return [];
+}
 
 // 1. BẢNG SUB HM THEO MỤC TIÊU CÁ NHÂN (Chuẩn Jack Daniels & Giang Mê Chạy)
 export const SUB_PACE_TABLE: Record<TargetSub, SubPaceDetail> = {

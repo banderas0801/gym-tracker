@@ -31,6 +31,17 @@ export type WorkoutDayType =
   | 'cross' 
   | 'recovery';
 
+export interface SupplementaryExercise {
+  id: string;
+  name: string;
+  target: string;
+  setsReps: string;
+  benefit: string;
+  instructions: string[];
+  startImageUrl?: string;
+  endImageUrl?: string;
+}
+
 export interface DayTrainingPlan {
   dayOfWeek: number; // 2=Thứ 2 ... 7=Thứ 7, 8=Chủ Nhật
   dayName: string;
@@ -48,6 +59,7 @@ export interface DayTrainingPlan {
   };
   crossTraining?: string;
   strengthFocus?: 'upper' | 'lower' | 'mobility' | 'none';
+  supplementaryExercises?: SupplementaryExercise[];
   notes?: string;
 }
 
