@@ -1577,7 +1577,7 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
           </div>
 
           {/* PHÂN TÍCH TÍCH LŨY CHẠY BỘ HÀNG TUẦN & QUY TẮC 10% */}
-          <WeeklyRunningCard sessions={sessions} targetWeeklyKm={currentWeekPlan.totalDistanceKm || 24} />
+          <WeeklyRunningCard sessions={sessions} targetWeeklyKm={currentWeekPlan.totalKmA || 24} />
 
           {/* Run Sessions List */}
           <div className="space-y-3">

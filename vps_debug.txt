@@ -1,4 +1,4 @@
-=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-10-20T08:07:50.662Z ===
+=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-10-20T09:29:13.964Z ===
 Đang kết nối máy chủ VPS 103.77.209.87...
 ✅ Đã kết nối VPS thành công!
 
@@ -8,21 +8,21 @@
 ┌────┬───────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
 │ id │ name              │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
 ├────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 16 │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 28h    │ 1    │ online    │ 0%       │ 11.5mb   │ root     │ disabled │
-│ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 28h    │ 1    │ online    │ 0%       │ 13.1mb   │ root     │ disabled │
-│ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 28h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
-│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 25h    │ 6    │ online    │ 0%       │ 23.7mb   │ root     │ disabled │
-│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 23h    │ 0    │ online    │ 0%       │ 47.6mb   │ root     │ disabled │
-│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 28h    │ 0    │ online    │ 0%       │ 14.6mb   │ root     │ disabled │
-│ 23 │ gym-tracker       │ default     │ N/A     │ fork    │ 675403   │ 68m    │ 0    │ online    │ 0%       │ 57.1mb   │ root     │ disabled │
-│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 693764   │ 19m    │ 26   │ online    │ 0%       │ 78.5mb   │ root     │ disabled │
-│ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 28h    │ 16   │ online    │ 0%       │ 10.8mb   │ root     │ disabled │
-│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 28h    │ 0    │ online    │ 0%       │ 49.7mb   │ root     │ disabled │
-│ 4  │ ta-ao-reader      │ default     │ 0.1.0   │ fork    │ 674147   │ 71m    │ 8    │ online    │ 0%       │ 97.5mb   │ root     │ disabled │
-│ 8  │ taxcouncil-web    │ default     │ N/A     │ fork    │ 701247   │ 0      │ 2358 │ waiting … │ 0%       │ 0b       │ root     │ disabled │
+│ 16 │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 29h    │ 1    │ online    │ 0%       │ 11.5mb   │ root     │ disabled │
+│ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 29h    │ 1    │ online    │ 0%       │ 13.1mb   │ root     │ disabled │
+│ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 29h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
+│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 26h    │ 6    │ online    │ 0%       │ 23.7mb   │ root     │ disabled │
+│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 24h    │ 0    │ online    │ 0%       │ 39.2mb   │ root     │ disabled │
+│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 30h    │ 0    │ online    │ 0%       │ 14.6mb   │ root     │ disabled │
+│ 23 │ gym-tracker       │ default     │ N/A     │ fork    │ 675403   │ 2h     │ 0    │ online    │ 0%       │ 58.4mb   │ root     │ disabled │
+│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 759357   │ 2m     │ 29   │ online    │ 0%       │ 64.4mb   │ root     │ disabled │
+│ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 29h    │ 16   │ online    │ 0%       │ 10.7mb   │ root     │ disabled │
+│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 30h    │ 0    │ online    │ 0%       │ 50.3mb   │ root     │ disabled │
+│ 26 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 759318   │ 2m     │ 0    │ online    │ 0%       │ 54.9mb   │ root     │ disabled │
+│ 8  │ taxcouncil-web    │ default     │ N/A     │ fork    │ 760430   │ 0s     │ 3157 │ online    │ 0%       │ 59.3mb   │ root     │ disabled │
 │ 5  │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 3D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
 └────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 21% | ram usage: 38.3% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.049mb/s ⇑ 0.003mb/s drop 44/min | disk: ⇓ 0mb/s ⇑ 0.061mb/s
+host metrics | cpu: 13.8% | ram usage: 38.2% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.049mb/s ⇑ 0.002mb/s drop 32/min | disk: ⇓ 0mb/s ⇑ 0.035mb/s
 tcp   LISTEN 0      511                *:3008             *:*    users:(("next-server (v1",pid=675422,fd=18))                                        
 
 --- BƯỚC 2: Kéo commit mới nhất từ GitHub ---
@@ -30,13 +30,15 @@ tcp   LISTEN 0      511                *:3008             *:*    users:(("next-s
 >>> [VPS] cd /var/www/gym-tracker && git fetch origin master && git reset --hard origin/master && git log -n 3 --oneline
 From https://github.com/banderas0801/gym-tracker
  * branch            master     -> FETCH_HEAD
-   308b6d7..d855559  master     -> origin/master
-HEAD is now at d855559 fix: explicit types for supplementary exercises and instructions map
+   d855559..4ef8b29  master     -> origin/master
+HEAD is now at 4ef8b29 feat: add weekly accumulation analytics and WoW relative progression for running and gym
+4ef8b29 feat: add weekly accumulation analytics and WoW relative progression for running and gym
 d855559 fix: explicit types for supplementary exercises and instructions map
 308b6d7 fix: explicit types for supplementary exercises and instructions map
-191d5c8 fix: explicit types for supplementary exercises and instructions map
 
 --- BƯỚC 3: Kiểm tra và đảm bảo các file mã nguồn mới nhất trên VPS ---
+
+>>> [VPS] mkdir -p /var/www/gym-tracker/src/components/analytics /var/www/gym-tracker/src/lib /var/www/gym-tracker/src/types /var/www/gym-tracker/src/data
 
 [SFTP] Đồng bộ file: running.ts -> /var/www/gym-tracker/src/types/running.ts
 ✅ SFTP hoàn tất: running.ts
@@ -79,70 +81,15 @@ d855559 fix: explicit types for supplementary exercises and instructions map
 > next build
 
 ▲ Next.js 16.4.2 (Turbopack)
-✓ Running next.config.ts took 202ms
+✓ Running next.config.ts took 198ms
 - Cache Components enabled
 - Partial Prefetching enabled
 
   Creating an optimized production build ...
+✓ Compiled successfully in 11.2s
+  Running TypeScript ...
+src/components/RunningTracker.tsx(1580,82): error TS2339: Property 'totalDistanceKm' does not exist on type 'WeekTrainingPlan'.
+Failed to type check.
 
-> Build error occurred
-Error: Turbopack build failed with 2 errors:
-./src/components/analytics/WeeklyRunningCard.tsx:19:1
-Error: Export formatSecondsToTime doesn't exist in target module
-  [90m17 |[0m } [36mfrom[0m [32m'lucide-react'[0m;
-  [90m18 |[0m [36mimport[0m { [33mRunSession[0m } [36mfrom[0m [32m'@/types/running'[0m;
-[31m[1m>[0m [90m19 |[0m [36mimport[0m { calculateWeeklyRunningAnalytics, formatSecondsToTime } [36mfrom[0m [32m'@/lib/weeklyAnalytics'[0m;
-  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-  [90m20 |[0m
-  [90m21 |[0m [36minterface[0m [33mWeeklyRunningCardProps[0m {
-  [90m22 |[0m   sessions: [33mRunSession[0m[];
-
-The export formatSecondsToTime was not found in module [project]/src/lib/weeklyAnalytics.ts [app-client] (ecmascript).
-Did you mean to import formatWeekSpan?
-All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-
-Import traces:
-  Client Component Browser:
-    ./src/components/analytics/WeeklyRunningCard.tsx [Client Component Browser]
-    ./src/components/RunningTracker.tsx [Client Component Browser]
-    ./src/app/page.tsx [Client Component Browser]
-    ./src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/components/analytics/WeeklyRunningCard.tsx [Client Component SSR]
-    ./src/components/RunningTracker.tsx [Client Component SSR]
-    ./src/app/page.tsx [Client Component SSR]
-    ./src/app/page.tsx [Server Component]
-
-
-./src/components/analytics/WeeklyRunningCard.tsx:19:1
-Error: Export formatSecondsToTime doesn't exist in target module
-  [90m17 |[0m } [36mfrom[0m [32m'lucide-react'[0m;
-  [90m18 |[0m [36mimport[0m { [33mRunSession[0m } [36mfrom[0m [32m'@/types/running'[0m;
-[31m[1m>[0m [90m19 |[0m [36mimport[0m { calculateWeeklyRunningAnalytics, formatSecondsToTime } [36mfrom[0m [32m'@/lib/weeklyAnalytics'[0m;
-  [90m   |[0m [31m[1m^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^[0m
-  [90m20 |[0m
-  [90m21 |[0m [36minterface[0m [33mWeeklyRunningCardProps[0m {
-  [90m22 |[0m   sessions: [33mRunSession[0m[];
-
-The export formatSecondsToTime was not found in module [project]/src/lib/weeklyAnalytics.ts [app-ssr] (ecmascript).
-Did you mean to import formatWeekSpan?
-All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
-
-Import traces:
-  Client Component Browser:
-    ./src/components/analytics/WeeklyRunningCard.tsx [Client Component Browser]
-    ./src/components/RunningTracker.tsx [Client Component Browser]
-    ./src/app/page.tsx [Client Component Browser]
-    ./src/app/page.tsx [Server Component]
-
-  Client Component SSR:
-    ./src/components/analytics/WeeklyRunningCard.tsx [Client Component SSR]
-    ./src/components/RunningTracker.tsx [Client Component SSR]
-    ./src/app/page.tsx [Client Component SSR]
-    ./src/app/page.tsx [Server Component]
-
-
-    at ignore-listed frames
 
 ❌ Build thất bại! Dừng quy trình.

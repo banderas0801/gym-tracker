@@ -70,6 +70,7 @@ export interface WeekTrainingPlan {
   focus: string;
   quote: string;
   totalKmA: number;
+  totalDistanceKm?: number;
   days: DayTrainingPlan[];
 }
 
