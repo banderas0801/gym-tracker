@@ -10,7 +10,7 @@ cd /d C:\Users\Admin\gym-tracker
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "feat: smart two-way auto conversion for manual treadmill entry"
+git commit -m "fix: clean JSX syntax in manual treadmill runner modal"
 git push origin master
 
 echo.

@@ -2076,21 +2076,6 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                         <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">giây</span>
                       </div>
                     </div>
-                          className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
-                        />
-                        <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">phút</span>
-                      </div>
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="number"
-                          placeholder="0"
-                          value={mibroSec}
-                          onChange={(e) => setMibroSec(e.target.value)}
-                          className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-base text-white font-bold font-mono focus:border-amber-500 focus:outline-none"
-                        />
-                        <span className="text-xs font-bold text-zinc-400 font-mono shrink-0">giây</span>
-                      </div>
-                    </div>
                   </div>
                 </div>
               )}
