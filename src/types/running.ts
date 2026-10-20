@@ -77,6 +77,7 @@ export interface RunSession {
   maxHeartRate?: number;
   cadence?: number; // SPM (Steps Per Minute)
   elevationGainM?: number;
+  inclinePercent?: number; // Độ dốc máy chạy bộ (%)
   targetSub?: TargetSub;
   weekNumber?: number;
   dayOfWeek?: number;
