@@ -22,6 +22,7 @@ import ProgressCharts from './analytics/ProgressCharts';
 import AICoachCard from './analytics/AICoachCard';
 import WorkoutShareModal from './analytics/WorkoutShareModal';
 import BackupSyncModal from './analytics/BackupSyncModal';
+import WeeklyGymCard from './analytics/WeeklyGymCard';
 
 export default function HistoryAnalytics() {
   const [history, setHistory] = useState<WorkoutSession[]>([]);
@@ -167,6 +168,9 @@ export default function HistoryAnalytics() {
           <div className="text-[10px] sm:text-[11px] text-zinc-500 font-medium">Kỷ Lục (PRs)</div>
         </div>
       </div>
+
+      {/* 🏋️ PHÂN TÍCH TÍCH LŨY KHỐI LƯỢNG TẠ (VOLUME LOAD) & BIẾN ĐỘNG KỶ LỤC HÀNG TUẦN */}
+      {history.length > 0 && <WeeklyGymCard history={history} />}
 
       {/* 🤖 AI Progressive Overload Coach Card */}
       {history.length > 0 && <AICoachCard summary={coachSummary} />}

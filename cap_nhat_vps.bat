@@ -10,7 +10,7 @@ cd /d C:\Users\Admin\gym-tracker
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "fix: explicit types for supplementary exercises and instructions map"
+git commit -m "feat: add weekly accumulation analytics and WoW relative progression for running and gym"
 git push origin master
 
 echo.

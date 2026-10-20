@@ -76,11 +76,15 @@ async function main() {
   const filesToVerify = [
     { local: path.join(__dirname, 'src/types/running.ts'), remote: '/var/www/gym-tracker/src/types/running.ts' },
     { local: path.join(__dirname, 'src/data/runningCurriculum.ts'), remote: '/var/www/gym-tracker/src/data/runningCurriculum.ts' },
-    { local: path.join(__dirname, 'package.json'), remote: '/var/www/gym-tracker/package.json' },
+    { local: path.join(__dirname, 'src/lib/weeklyAnalytics.ts'), remote: '/var/www/gym-tracker/src/lib/weeklyAnalytics.ts' },
+    { local: path.join(__dirname, 'src/components/analytics/WeeklyRunningCard.tsx'), remote: '/var/www/gym-tracker/src/components/analytics/WeeklyRunningCard.tsx' },
+    { local: path.join(__dirname, 'src/components/analytics/WeeklyGymCard.tsx'), remote: '/var/www/gym-tracker/src/components/analytics/WeeklyGymCard.tsx' },
     { local: path.join(__dirname, 'src/components/RunningTracker.tsx'), remote: '/var/www/gym-tracker/src/components/RunningTracker.tsx' },
+    { local: path.join(__dirname, 'src/components/HistoryAnalytics.tsx'), remote: '/var/www/gym-tracker/src/components/HistoryAnalytics.tsx' },
     { local: path.join(__dirname, 'src/components/BodyTracker.tsx'), remote: '/var/www/gym-tracker/src/components/BodyTracker.tsx' },
     { local: path.join(__dirname, 'src/lib/bodyStorage.ts'), remote: '/var/www/gym-tracker/src/lib/bodyStorage.ts' },
     { local: path.join(__dirname, 'src/app/page.tsx'), remote: '/var/www/gym-tracker/src/app/page.tsx' },
+    { local: path.join(__dirname, 'package.json'), remote: '/var/www/gym-tracker/package.json' },
   ];
 
   for (const f of filesToVerify) {

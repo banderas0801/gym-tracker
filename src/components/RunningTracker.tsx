@@ -77,6 +77,7 @@ import {
   saveStravaProfile,
   parseGPXFile
 } from '@/lib/runningStorage';
+import WeeklyRunningCard from './analytics/WeeklyRunningCard';
 
 interface RunningTrackerProps {
   onGoToGymWorkout?: () => void;
@@ -1574,6 +1575,9 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
               </button>
             </div>
           </div>
+
+          {/* PHÂN TÍCH TÍCH LŨY CHẠY BỘ HÀNG TUẦN & QUY TẮC 10% */}
+          <WeeklyRunningCard sessions={sessions} targetWeeklyKm={currentWeekPlan.totalDistanceKm || 24} />
 
           {/* Run Sessions List */}
           <div className="space-y-3">
