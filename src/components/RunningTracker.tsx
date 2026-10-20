@@ -266,19 +266,70 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
     );
   };
 
-  const handleStartRun = (mode: 'outdoor_gps' | 'treadmill' | 'interval') => {
+  // Chuẩn bị vào màn hình chạy Live (trạng thái Sẵn Sàng, KHÔNG tự chạy)
+  const handlePrepareRun = (
+    mode: 'outdoor_gps' | 'treadmill' | 'interval',
+    dayPlan?: { week: number; day: DayTrainingPlan } | null
+  ) => {
+    if (isTrackingActive && elapsedSeconds > 0) {
+      if (!confirm('Đang có một buổi chạy dở dang. Bạn có muốn đặt lại để chuyển sang bài mới không?')) {
+        setActiveSubTab('tracker');
+        return;
+      }
+      if (watchIdRef.current !== null) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+        watchIdRef.current = null;
+      }
+    }
     setRunMode(mode);
+    if (dayPlan !== undefined) {
+      setSelectedDayPlanForRun(dayPlan);
+    }
+    setIsTrackingActive(false);
+    setIsTrackingPaused(false);
     setElapsedSeconds(0);
     setDistanceKm(0);
     setCurrentPaceSec(0);
     setGpsCoordinates([]);
+    setManualDistanceInput('');
+    setIntervalPhase('sprint');
+    setIntervalCurrentSet(1);
+    setIntervalPhaseSecondsLeft(60);
+    setActiveSubTab('tracker');
+  };
+
+  // Người dùng chủ động ấn BẮT ĐẦU CHẠY
+  const handleStartTracking = () => {
     setIsTrackingActive(true);
     setIsTrackingPaused(false);
-    setActiveSubTab('tracker');
-
-    if (mode === 'outdoor_gps') {
+    if (runMode === 'outdoor_gps') {
       startGpsTracking();
     }
+    playBeep(880, 0.25);
+  };
+
+  // Đặt lại buổi chạy về 0 (Reset)
+  const handleResetRun = () => {
+    if (elapsedSeconds > 0 || distanceKm > 0) {
+      if (!confirm('Bạn có chắc muốn đặt lại buổi chạy về 0 không? Dữ liệu đang đếm sẽ bị xóa.')) {
+        return;
+      }
+    }
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+      watchIdRef.current = null;
+    }
+    setIsTrackingActive(false);
+    setIsTrackingPaused(false);
+    setElapsedSeconds(0);
+    setDistanceKm(0);
+    setCurrentPaceSec(0);
+    setGpsCoordinates([]);
+    setManualDistanceInput('');
+    setIntervalPhase('sprint');
+    setIntervalCurrentSet(1);
+    setIntervalPhaseSecondsLeft(60);
+    setIsMetronomeActive(false);
   };
 
   const handlePauseResume = () => {
@@ -332,6 +383,10 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
     setCompletedDays(getCompletedDays());
     setSelectedDayPlanForRun(null);
     setManualDistanceInput('');
+    setElapsedSeconds(0);
+    setDistanceKm(0);
+    setCurrentPaceSec(0);
+    setGpsCoordinates([]);
     setActiveSubTab('history');
   };
 
@@ -571,15 +626,15 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
           {/* Quick Action Start Run Bar */}
           <div className="pt-2 flex flex-wrap items-center gap-2">
             <button
-              onClick={() => handleStartRun('outdoor_gps')}
+              onClick={() => handlePrepareRun('outdoor_gps')}
               className="px-5 py-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-400 hover:from-amber-400 hover:to-orange-300 text-zinc-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/25 transition flex items-center space-x-2 active:scale-95"
             >
-              <Play className="w-4 h-4 fill-zinc-950" />
+              <Compass className="w-4 h-4 text-zinc-950" />
               <span>Chạy Ngoài Trời (GPS Live)</span>
             </button>
 
             <button
-              onClick={() => handleStartRun('treadmill')}
+              onClick={() => handlePrepareRun('treadmill')}
               className="px-4 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs sm:text-sm border border-zinc-700 transition flex items-center space-x-1.5 active:scale-95"
             >
               <Activity className="w-4 h-4 text-emerald-400" />
@@ -587,7 +642,7 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
             </button>
 
             <button
-              onClick={() => handleStartRun('interval')}
+              onClick={() => handlePrepareRun('interval')}
               className="px-4 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs sm:text-sm border border-zinc-700 transition flex items-center space-x-1.5 active:scale-95"
             >
               <Zap className="w-4 h-4 text-rose-400" />
@@ -780,13 +835,15 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                       <div className="shrink-0 flex flex-col space-y-1.5 items-end">
                         <button
                           onClick={() => {
-                            setSelectedDayPlanForRun({ week: currentWeekPlan.weekNumber, day });
-                            handleStartRun(plan.type === 'interval' ? 'interval' : 'outdoor_gps');
+                            handlePrepareRun(
+                              plan.type === 'interval' ? 'interval' : 'outdoor_gps',
+                              { week: currentWeekPlan.weekNumber, day }
+                            );
                           }}
                           className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs flex items-center space-x-1 shadow-md transition active:scale-95"
                         >
                           <Play className="w-3 h-3 fill-black" />
-                          <span>Chạy bài này</span>
+                          <span>Vào bài chạy này</span>
                         </button>
 
                         {day.strengthFocus && day.strengthFocus !== 'none' && onGoToGymWorkout && (
@@ -907,34 +964,110 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
       {activeSubTab === 'tracker' && (
         <div className="space-y-4">
           <div className="bg-zinc-950 border-2 border-amber-500/50 rounded-3xl p-5 sm:p-6 shadow-2xl space-y-5">
-            {/* Header Chế Độ */}
-            <div className="flex items-center justify-between border-b border-zinc-800 pb-3">
+            {/* Header Chế Độ & Trạng Thái */}
+            <div className="flex flex-wrap items-center justify-between gap-2 border-b border-zinc-800 pb-3">
               <div className="flex items-center space-x-2">
-                <span className="w-3 h-3 rounded-full bg-emerald-400 animate-pulse" />
+                <span className={`w-3 h-3 rounded-full ${
+                  isTrackingActive && !isTrackingPaused
+                    ? 'bg-emerald-400 animate-pulse'
+                    : isTrackingActive && isTrackingPaused
+                    ? 'bg-amber-400'
+                    : elapsedSeconds > 0
+                    ? 'bg-blue-400'
+                    : 'bg-zinc-500'
+                }`} />
                 <span className="text-xs font-black text-white uppercase font-mono">
-                  {runMode === 'outdoor_gps' ? 'GPS Ngoài Trời' : runMode === 'treadmill' ? 'Máy Chạy Bộ' : 'Biến Tốc Interval'}
+                  {isTrackingActive
+                    ? (isTrackingPaused ? 'TẠM DỪNG' : 'ĐANG CHẠY LIVE')
+                    : (elapsedSeconds > 0 ? 'TẠM DỪNG (CHƯA LƯU)' : 'SẴN SÀNG CHẠY')}
                 </span>
                 {selectedDayPlanForRun && (
-                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono">
-                    {selectedDayPlanForRun.day.dayName}
+                  <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 font-mono flex items-center space-x-1">
+                    <span>{selectedDayPlanForRun.day.dayName}: {selectedDayPlanForRun.day.groupA.title}</span>
+                    <button
+                      onClick={() => setSelectedDayPlanForRun(null)}
+                      className="ml-1 text-zinc-400 hover:text-white"
+                      title="Bỏ gắn bài tập"
+                    >
+                      ×
+                    </button>
                   </span>
                 )}
               </div>
 
-              {/* Metronome 180 SPM Button */}
-              <button
-                onClick={() => setIsMetronomeActive(!isMetronomeActive)}
-                className={`px-3 py-1 rounded-xl text-xs font-bold border transition flex items-center space-x-1.5 ${
-                  isMetronomeActive
-                    ? 'bg-amber-500 text-black border-amber-400 shadow-md animate-pulse'
-                    : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white'
-                }`}
-                title="Bật/Tắt gõ nhịp chân Cadence 180 SPM chuẩn Jack Daniels"
-              >
-                {isMetronomeActive ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
-                <span>180 SPM</span>
-              </button>
+              {/* Action Buttons: Metronome + Reset */}
+              <div className="flex items-center space-x-2">
+                {/* Nút Reset Đặt Lại */}
+                <button
+                  onClick={handleResetRun}
+                  className="px-3 py-1.5 rounded-xl text-xs font-bold border border-zinc-800 bg-zinc-900 text-zinc-400 hover:text-rose-400 hover:border-rose-500/50 transition flex items-center space-x-1 active:scale-95"
+                  title="Đặt lại mọi thông số về 0 (Reset)"
+                >
+                  <RotateCcw className="w-3.5 h-3.5" />
+                  <span>Đặt lại (Reset)</span>
+                </button>
+
+                {/* Metronome 180 SPM Button */}
+                <button
+                  onClick={() => setIsMetronomeActive(!isMetronomeActive)}
+                  className={`px-3 py-1.5 rounded-xl text-xs font-bold border transition flex items-center space-x-1.5 ${
+                    isMetronomeActive
+                      ? 'bg-amber-500 text-black border-amber-400 shadow-md animate-pulse'
+                      : 'bg-zinc-900 text-zinc-400 border-zinc-800 hover:text-white'
+                  }`}
+                  title="Bật/Tắt gõ nhịp chân Cadence 180 SPM chuẩn Jack Daniels"
+                >
+                  {isMetronomeActive ? <Volume2 className="w-3.5 h-3.5" /> : <VolumeX className="w-3.5 h-3.5" />}
+                  <span>180 SPM</span>
+                </button>
+              </div>
             </div>
+
+            {/* Chọn Chế Độ Chạy khi Chưa Bắt Đầu */}
+            {!isTrackingActive && (
+              <div className="p-3 rounded-2xl bg-zinc-900/80 border border-zinc-800 space-y-2">
+                <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider block">
+                  Chọn hình thức chạy:
+                </span>
+                <div className="grid grid-cols-3 gap-2">
+                  <button
+                    onClick={() => setRunMode('outdoor_gps')}
+                    className={`py-2 px-2 rounded-xl text-xs font-bold flex flex-col items-center justify-center space-y-1 transition border ${
+                      runMode === 'outdoor_gps'
+                        ? 'bg-amber-500 text-black border-amber-400 font-black shadow-md'
+                        : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:text-white'
+                    }`}
+                  >
+                    <Compass className="w-4 h-4" />
+                    <span>GPS Ngoài Trời</span>
+                  </button>
+
+                  <button
+                    onClick={() => setRunMode('treadmill')}
+                    className={`py-2 px-2 rounded-xl text-xs font-bold flex flex-col items-center justify-center space-y-1 transition border ${
+                      runMode === 'treadmill'
+                        ? 'bg-amber-500 text-black border-amber-400 font-black shadow-md'
+                        : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:text-white'
+                    }`}
+                  >
+                    <Activity className="w-4 h-4" />
+                    <span>Máy Treadmill</span>
+                  </button>
+
+                  <button
+                    onClick={() => setRunMode('interval')}
+                    className={`py-2 px-2 rounded-xl text-xs font-bold flex flex-col items-center justify-center space-y-1 transition border ${
+                      runMode === 'interval'
+                        ? 'bg-amber-500 text-black border-amber-400 font-black shadow-md'
+                        : 'bg-zinc-950 text-zinc-400 border-zinc-800 hover:text-white'
+                    }`}
+                  >
+                    <Zap className="w-4 h-4" />
+                    <span>Biến Tốc Interval</span>
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/* Interval Status if in Interval Mode */}
             {runMode === 'interval' && isTrackingActive && (
@@ -1047,17 +1180,45 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
             )}
 
             {/* Nút Điều Khiển Chạy */}
-            <div className="pt-2 flex items-center justify-center space-x-3">
+            <div className="pt-2">
               {!isTrackingActive ? (
-                <button
-                  onClick={() => handleStartRun(runMode)}
-                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-400 text-zinc-950 font-black text-base shadow-xl shadow-amber-500/25 transition active:scale-95 flex items-center justify-center space-x-2"
-                >
-                  <Play className="w-5 h-5 fill-zinc-950" />
-                  <span>BẮT ĐẦU BUỔI CHẠY</span>
-                </button>
+                elapsedSeconds === 0 ? (
+                  <button
+                    onClick={handleStartTracking}
+                    className="w-full py-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-400 hover:from-emerald-400 hover:to-teal-300 text-zinc-950 font-black text-base shadow-xl shadow-emerald-500/25 transition active:scale-95 flex items-center justify-center space-x-2"
+                  >
+                    <Play className="w-5 h-5 fill-zinc-950" />
+                    <span>BẮT ĐẦU BUỔI CHẠY</span>
+                  </button>
+                ) : (
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <button
+                      onClick={handleStartTracking}
+                      className="flex-1 py-3.5 rounded-2xl bg-emerald-500 hover:bg-emerald-400 text-black font-black text-sm transition flex items-center justify-center space-x-1.5 shadow-md active:scale-95"
+                    >
+                      <Play className="w-4 h-4 fill-black" />
+                      <span>TIẾP TỤC CHẠY</span>
+                    </button>
+
+                    <button
+                      onClick={handleFinishRun}
+                      className="flex-1 py-3.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-black font-black text-sm transition flex items-center justify-center space-x-1.5 shadow-md active:scale-95"
+                    >
+                      <Square className="w-4 h-4 fill-black" />
+                      <span>KẾT THÚC & LƯU</span>
+                    </button>
+
+                    <button
+                      onClick={handleResetRun}
+                      className="px-4 py-3.5 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-rose-400 font-bold text-sm transition flex items-center justify-center space-x-1 active:scale-95"
+                    >
+                      <RotateCcw className="w-4 h-4" />
+                      <span>ĐẶT LẠI (RESET)</span>
+                    </button>
+                  </div>
+                )
               ) : (
-                <>
+                <div className="flex flex-col sm:flex-row gap-2">
                   <button
                     onClick={handlePauseResume}
                     className={`flex-1 py-3.5 rounded-2xl font-black text-sm transition flex items-center justify-center space-x-1.5 shadow-md active:scale-95 ${
@@ -1077,7 +1238,16 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                     <Square className="w-4 h-4 fill-white" />
                     <span>KẾT THÚC & LƯU</span>
                   </button>
-                </>
+
+                  <button
+                    onClick={handleResetRun}
+                    className="px-4 py-3.5 rounded-2xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-700 text-rose-400 font-bold text-sm transition flex items-center justify-center space-x-1 active:scale-95"
+                    title="Hủy buổi tập và đặt lại về 0"
+                  >
+                    <RotateCcw className="w-4 h-4" />
+                    <span>ĐẶT LẠI</span>
+                  </button>
+                </div>
               )}
             </div>
           </div>
