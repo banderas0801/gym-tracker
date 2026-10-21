@@ -17,7 +17,9 @@ interface RoutineListProps {
 
 export default function RoutineList({ onStartSession }: RoutineListProps) {
   const [routines, setRoutines] = useState<RoutineTemplate[]>(() => getRoutines());
-  const [routineFilter, setRoutineFilter] = useState<'all' | 'thol' | 'thol-tang1' | 'thol-tang2' | 'thol-tang3' | 'newbie' | 'intermediate'>('all');
+  const [routineSystem, setRoutineSystem] = useState<'basic' | 'thol'>('basic');
+  const [basicFilter, setBasicFilter] = useState<'all' | 'newbie' | 'intermediate'>('all');
+  const [tholFilter, setTholFilter] = useState<'all' | 'tang1' | 'tang2' | 'tang3'>('all');
   const [isGymPhoModalOpen, setIsGymPhoModalOpen] = useState(false);
   const [isAdvisorModalOpen, setIsAdvisorModalOpen] = useState(false);
   const [isCreatingRoutine, setIsCreatingRoutine] = useState(false);
@@ -110,6 +112,7 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
       id: `routine-${Date.now()}`,
       name: newRoutineName.trim(),
       targetFocus: newRoutineFocus.trim() || 'Toàn thân',
+      category: 'basic',
       exercises: newRoutineExercises,
     };
 
@@ -122,14 +125,23 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
   };
 
   const filteredRoutines = routines.filter((r) => {
-    if (routineFilter === 'thol') return r.id.startsWith('thol-');
-    if (routineFilter === 'thol-tang1') return r.id.startsWith('thol-tang1');
-    if (routineFilter === 'thol-tang2') return r.id.startsWith('thol-tang2');
-    if (routineFilter === 'thol-tang3') return r.id.startsWith('thol-tang3');
-    if (routineFilter === 'newbie') return r.level === 'Newbie' && !r.id.startsWith('thol-');
-    if (routineFilter === 'intermediate') return r.level === 'Intermediate' && !r.id.startsWith('thol-');
-    return true;
+    const isThol = r.category === 'thol' || r.id.startsWith('thol-');
+    if (routineSystem === 'basic') {
+      if (isThol) return false;
+      if (basicFilter === 'newbie') return r.level === 'Newbie';
+      if (basicFilter === 'intermediate') return r.level === 'Intermediate';
+      return true;
+    } else {
+      if (!isThol) return false;
+      if (tholFilter === 'tang1') return r.id.startsWith('thol-tang1');
+      if (tholFilter === 'tang2') return r.id.startsWith('thol-tang2');
+      if (tholFilter === 'tang3') return r.id.startsWith('thol-tang3');
+      return true;
+    }
   });
+
+  const basicCount = routines.filter(r => r.category === 'basic' || (!r.id.startsWith('thol-') && r.category !== 'thol')).length;
+  const tholCount = routines.filter(r => r.category === 'thol' || r.id.startsWith('thol-')).length;
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
@@ -210,132 +222,209 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
         </button>
       </div>
 
-      {/* Cẩm Nang & Triết Lý Gym Phổ Banner */}
-      <div className="bg-gradient-to-r from-emerald-950/70 via-zinc-900 to-zinc-950 border border-emerald-500/30 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
-        <div className="flex items-center space-x-3">
-          <div className="w-10 h-10 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 shrink-0">
-            <BookOpen className="w-5 h-5" />
-          </div>
-          <div>
-            <div className="flex items-center space-x-2">
-              <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono">
-                THOL Duy Nguyễn
-              </span>
-              <span className="text-xs font-bold text-white">Cẩm Nang Gym Phổ</span>
-            </div>
-            <p className="text-xs text-zinc-300 mt-0.5 italic">
-              “Thể hình phục vụ cuộc sống chứ đừng để cuộc sống phục vụ thể hình.”
-            </p>
-          </div>
-        </div>
+      {/* ========================================================================= */}
+      {/* PHÂN ĐỊNH RÕ RÀNG: GIÁO ÁN KHOA HỌC CƠ BẢN vs CẨM NANG GYM PHỔ THOL       */}
+      {/* ========================================================================= */}
+      <div className="bg-zinc-900/90 p-1.5 rounded-2xl border border-zinc-800 grid grid-cols-2 gap-1.5 shadow-lg">
+        <button
+          type="button"
+          onClick={() => {
+            setRoutineSystem('basic');
+            setBasicFilter('all');
+          }}
+          className={`py-3 px-3 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-2 transition active:scale-98 ${
+            routineSystem === 'basic'
+              ? 'bg-emerald-500 text-zinc-950 shadow-md shadow-emerald-500/20'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-850'
+          }`}
+        >
+          <Sparkles className="w-4 h-4" />
+          <span>🌟 Giáo Án Cơ Bản ({basicCount})</span>
+        </button>
 
-        <div className="flex flex-wrap items-center gap-2 shrink-0">
-          <button
-            type="button"
-            onClick={() => setIsAdvisorModalOpen(true)}
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-zinc-950 font-black text-xs flex items-center justify-center space-x-1.5 transition active:scale-95 shadow-md shadow-emerald-500/20"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-zinc-950 fill-zinc-950" />
-            <span>Gợi Ý Level Phù Hợp</span>
-          </button>
-
-          <button
-            type="button"
-            onClick={() => setIsGymPhoModalOpen(true)}
-            className="px-3.5 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white border border-zinc-700 font-bold text-xs flex items-center justify-center space-x-1.5 transition active:scale-95 shadow-sm"
-          >
-            <Wind className="w-3.5 h-3.5 text-cyan-400" />
-            <span>Kỹ Thuật Hít Thở</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={() => {
+            setRoutineSystem('thol');
+            setTholFilter('all');
+          }}
+          className={`py-3 px-3 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-2 transition active:scale-98 ${
+            routineSystem === 'thol'
+              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-zinc-950 shadow-md shadow-amber-500/20'
+              : 'text-zinc-400 hover:text-white hover:bg-zinc-850'
+          }`}
+        >
+          <BookOpen className="w-4 h-4" />
+          <span>🏛️ Gym Phổ THOL ({tholCount})</span>
+        </button>
       </div>
 
-      {/* Routine Templates Header & Filters */}
-      <div className="space-y-3 pt-2">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
-              <Calendar className="w-4 h-4 text-emerald-400" />
-              <span>Giáo Án & Lịch Tập ({filteredRoutines.length})</span>
-            </h3>
-            <p className="text-xs text-zinc-400">Chọn một giáo án để bắt đầu theo kế hoạch chuẩn</p>
+      {/* 2A. GIAO DIỆN KHOA HỌC CƠ BẢN */}
+      {routineSystem === 'basic' && (
+        <div className="space-y-3 animate-in fade-in duration-200">
+          <div className="bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-zinc-950 border border-emerald-500/30 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-md">
+            <div className="space-y-0.5">
+              <div className="flex items-center space-x-2">
+                <span className="text-[10px] font-black uppercase px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-mono">
+                  Fitness Khoa Học
+                </span>
+                <span className="text-xs font-bold text-white">Giáo Án Chuẩn Hóa</span>
+              </div>
+              <p className="text-xs text-zinc-400 leading-relaxed">
+                Tân binh Full Body 3 buổi/tuần làm quen chuyển động & thần kinh cơ; sau đó nâng cấp lên Phân hóa Đẩy - Kéo - Chân (Push - Pull - Legs).
+              </p>
+            </div>
+          </div>
+
+          {/* Sub-filter Pills Cơ Bản */}
+          <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none text-xs">
+            <button
+              type="button"
+              onClick={() => setBasicFilter('all')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 ${
+                basicFilter === 'all'
+                  ? 'bg-zinc-700 text-white shadow-sm'
+                  : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
+              }`}
+            >
+              Tất Cả Cơ Bản ({basicCount})
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setBasicFilter('newbie')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
+                basicFilter === 'newbie'
+                  ? 'bg-emerald-500 text-black font-black shadow-sm'
+                  : 'bg-zinc-900 border border-zinc-800 text-emerald-400 hover:text-emerald-300'
+              }`}
+            >
+              <span>⭐ Tân Binh (Full Body 3 Buổi)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setBasicFilter('intermediate')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
+                basicFilter === 'intermediate'
+                  ? 'bg-blue-500 text-white font-black shadow-sm'
+                  : 'bg-zinc-900 border border-zinc-800 text-blue-400 hover:text-blue-300'
+              }`}
+            >
+              <span>🔥 Phân Hóa Đẩy - Kéo - Chân (PPL)</span>
+            </button>
           </div>
         </div>
+      )}
 
-        {/* Filter Pills */}
-        <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none text-xs">
-          <button
-            type="button"
-            onClick={() => setRoutineFilter('all')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 ${
-              routineFilter === 'all'
-                ? 'bg-zinc-700 text-white shadow-sm'
-                : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
-            }`}
-          >
-            Tất Cả ({routines.length})
-          </button>
+      {/* 2B. GIAO DIỆN CẨM NANG GYM PHỔ THOL */}
+      {routineSystem === 'thol' && (
+        <div className="space-y-3 animate-in fade-in duration-200">
+          <div className="bg-gradient-to-r from-amber-950/60 via-zinc-900 to-zinc-950 border border-amber-500/40 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 rounded-2xl bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400 shrink-0">
+                <BookOpen className="w-5 h-5" />
+              </div>
+              <div>
+                <div className="flex items-center space-x-2">
+                  <span className="text-[10px] font-extrabold uppercase px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-400 font-mono">
+                    THOL Duy Nguyễn
+                  </span>
+                  <span className="text-xs font-bold text-white">Cẩm Nang Gym Phổ</span>
+                </div>
+                <p className="text-xs text-zinc-300 mt-0.5 italic">
+                  “Thể hình phục vụ cuộc sống chứ đừng để cuộc sống phục vụ thể hình.”
+                </p>
+              </div>
+            </div>
 
-          <button
-            type="button"
-            onClick={() => setRoutineFilter('thol-tang1')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
-              routineFilter === 'thol-tang1'
-                ? 'bg-emerald-500 text-black font-black shadow-sm'
-                : 'bg-zinc-900 border border-zinc-800 text-emerald-400 hover:text-emerald-300'
-            }`}
-          >
-            <span>🎓 Tầng 1 ({routines.filter(r => r.id.startsWith('thol-tang1')).length})</span>
-          </button>
+            <div className="flex flex-wrap items-center gap-2 shrink-0">
+              <button
+                type="button"
+                onClick={() => setIsAdvisorModalOpen(true)}
+                className="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-500 hover:from-amber-300 hover:to-amber-400 text-zinc-950 font-black text-xs flex items-center justify-center space-x-1.5 transition active:scale-95 shadow-md shadow-amber-500/20"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-zinc-950 fill-zinc-950" />
+                <span>Gợi Ý Level Phù Hợp</span>
+              </button>
 
-          <button
-            type="button"
-            onClick={() => setRoutineFilter('thol-tang2')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
-              routineFilter === 'thol-tang2'
-                ? 'bg-teal-400 text-black font-black shadow-sm'
-                : 'bg-zinc-900 border border-zinc-800 text-teal-300 hover:text-teal-200'
-            }`}
-          >
-            <span>⚙️ Tầng 2 Robot ({routines.filter(r => r.id.startsWith('thol-tang2')).length})</span>
-          </button>
+              <button
+                type="button"
+                onClick={() => setIsGymPhoModalOpen(true)}
+                className="px-3.5 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 hover:text-white border border-zinc-700 font-bold text-xs flex items-center justify-center space-x-1.5 transition active:scale-95 shadow-sm"
+              >
+                <Wind className="w-3.5 h-3.5 text-cyan-400" />
+                <span>Kỹ Thuật Hít Thở</span>
+              </button>
+            </div>
+          </div>
 
-          <button
-            type="button"
-            onClick={() => setRoutineFilter('thol-tang3')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
-              routineFilter === 'thol-tang3'
-                ? 'bg-amber-400 text-black font-black shadow-sm'
-                : 'bg-zinc-900 border border-zinc-800 text-amber-300 hover:text-amber-200'
-            }`}
-          >
-            <span>🏋️ Tầng 3 Free Weight ({routines.filter(r => r.id.startsWith('thol-tang3')).length})</span>
-          </button>
+          {/* Sub-filter Pills Gym Phổ */}
+          <div className="flex items-center space-x-2 overflow-x-auto pb-1 scrollbar-none text-xs">
+            <button
+              type="button"
+              onClick={() => setTholFilter('all')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 ${
+                tholFilter === 'all'
+                  ? 'bg-zinc-700 text-white shadow-sm'
+                  : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
+              }`}
+            >
+              Tất Cả Gym Phổ ({tholCount})
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setRoutineFilter('newbie')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 ${
-              routineFilter === 'newbie'
-                ? 'bg-zinc-700 text-white shadow-sm'
-                : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
-            }`}
-          >
-            ⭐ Người Mới ({routines.filter(r => r.level === 'Newbie' && !r.id.startsWith('thol-')).length})
-          </button>
+            <button
+              type="button"
+              onClick={() => setTholFilter('tang1')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
+                tholFilter === 'tang1'
+                  ? 'bg-emerald-500 text-black font-black shadow-sm'
+                  : 'bg-zinc-900 border border-zinc-800 text-emerald-400 hover:text-emerald-300'
+              }`}
+            >
+              <span>🎓 Tầng 1: Tạ Khối (Tuần 1-4)</span>
+            </button>
 
-          <button
-            type="button"
-            onClick={() => setRoutineFilter('intermediate')}
-            className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 ${
-              routineFilter === 'intermediate'
-                ? 'bg-zinc-700 text-white shadow-sm'
-                : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
-            }`}
-          >
-            🔥 Phân Hóa PPL ({routines.filter(r => r.level === 'Intermediate' && !r.id.startsWith('thol-')).length})
-          </button>
+            <button
+              type="button"
+              onClick={() => setTholFilter('tang2')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
+                tholFilter === 'tang2'
+                  ? 'bg-teal-400 text-black font-black shadow-sm'
+                  : 'bg-zinc-900 border border-zinc-800 text-teal-300 hover:text-teal-200'
+              }`}
+            >
+              <span>⚙️ Tầng 2: Robot Đòn Bẩy (Tuần 4-8)</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setTholFilter('tang3')}
+              className={`px-3 py-1.5 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1 ${
+                tholFilter === 'tang3'
+                  ? 'bg-amber-400 text-black font-black shadow-sm'
+                  : 'bg-zinc-900 border border-zinc-800 text-amber-300 hover:text-amber-200'
+              }`}
+            >
+              <span>🏋️ Tầng 3: Smith & Free Weight (Tuần 8-12)</span>
+            </button>
+          </div>
         </div>
+      )}
+
+      {/* Routine Templates Header */}
+      <div className="space-y-1 pt-1">
+        <h3 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
+          <Calendar className="w-4 h-4 text-emerald-400" />
+          <span>
+            {routineSystem === 'basic' ? 'Danh Sách Giáo Án Cơ Bản' : 'Danh Sách Giáo Trình Gym Phổ'} ({filteredRoutines.length} Buổi Tập)
+          </span>
+        </h3>
+        <p className="text-xs text-zinc-400">
+          {routineSystem === 'basic'
+            ? 'Bấm "Bắt đầu" để nạp toàn bộ bài tập vào ca tập, hoặc chạm từng bài để xem ảnh và video tư thế chuẩn'
+            : 'Tuân thủ thứ tự từng tầng để xây dựng nền tảng khớp và hệ tuần hoàn khỏe mạnh trước khi nâng tạ nặng'}
+        </p>
       </div>
 
       {/* Routine Grid */}

@@ -53,6 +53,7 @@ export interface RoutineTemplate {
   name: string;
   targetFocus: string;
   level?: 'Newbie' | 'Intermediate' | 'Advanced';
+  category?: 'basic' | 'thol';
   description?: string;
   exercises: {
     exerciseId: string;

@@ -1,16 +1,16 @@
 @echo off
 chcp 65001 > nul
-title CAP NHAT GYM TRACKER - FIX TYPESCRIPT BUILD
+title CAP NHAT GYM TRACKER - KIEM TRA TOAN DIEN HINH ANH VA HUONG DAN TAP
 color 0A
 echo ========================================================
-echo   CAP NHAT GYM TRACKER: SUA TYPE BUILD NEXT.JS
+echo   CAP NHAT GYM TRACKER: TOAN DIEN HINH ANH & HUONG DAN TAP
 echo ========================================================
 cd /d C:\Users\Admin\gym-tracker
 
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "fix: clean JSX syntax in manual treadmill runner modal"
+git commit -m "feat: complete audit of exercise media & technique guides across all routines"
 git push origin master
 
 echo.

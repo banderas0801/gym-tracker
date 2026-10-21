@@ -76,8 +76,14 @@ async function main() {
   await runSSH(conn, 'mkdir -p /var/www/gym-tracker/src/components/analytics /var/www/gym-tracker/src/lib /var/www/gym-tracker/src/types /var/www/gym-tracker/src/data');
   const filesToVerify = [
     { local: path.join(__dirname, 'src/types/running.ts'), remote: '/var/www/gym-tracker/src/types/running.ts' },
+    { local: path.join(__dirname, 'src/types/workout.ts'), remote: '/var/www/gym-tracker/src/types/workout.ts' },
     { local: path.join(__dirname, 'src/data/runningCurriculum.ts'), remote: '/var/www/gym-tracker/src/data/runningCurriculum.ts' },
     { local: path.join(__dirname, 'src/lib/weeklyAnalytics.ts'), remote: '/var/www/gym-tracker/src/lib/weeklyAnalytics.ts' },
+    { local: path.join(__dirname, 'src/lib/exerciseMedia.ts'), remote: '/var/www/gym-tracker/src/lib/exerciseMedia.ts' },
+    { local: path.join(__dirname, 'src/lib/exerciseGuide.ts'), remote: '/var/www/gym-tracker/src/lib/exerciseGuide.ts' },
+    { local: path.join(__dirname, 'src/lib/storage.ts'), remote: '/var/www/gym-tracker/src/lib/storage.ts' },
+    { local: path.join(__dirname, 'src/components/RoutineList.tsx'), remote: '/var/www/gym-tracker/src/components/RoutineList.tsx' },
+    { local: path.join(__dirname, 'src/components/ExerciseQuickViewModal.tsx'), remote: '/var/www/gym-tracker/src/components/ExerciseQuickViewModal.tsx' },
     { local: path.join(__dirname, 'src/components/analytics/WeeklyRunningCard.tsx'), remote: '/var/www/gym-tracker/src/components/analytics/WeeklyRunningCard.tsx' },
     { local: path.join(__dirname, 'src/components/analytics/WeeklyGymCard.tsx'), remote: '/var/www/gym-tracker/src/components/analytics/WeeklyGymCard.tsx' },
     { local: path.join(__dirname, 'src/components/RunningTracker.tsx'), remote: '/var/www/gym-tracker/src/components/RunningTracker.tsx' },

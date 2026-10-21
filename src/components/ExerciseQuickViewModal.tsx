@@ -23,22 +23,38 @@ export default function ExerciseQuickViewModal({
 }: ExerciseQuickViewModalProps) {
   if (!exerciseId) return null;
 
+  const media = getExerciseMedia(exerciseId, exerciseName);
   const allExercises = exercisesData as unknown as Exercise[];
-  const exercise = allExercises.find((e) => e.id === exerciseId) || {
+  const idLower = exerciseId.toLowerCase();
+  const nameLower = (exerciseName || '').toLowerCase();
+
+  const foundExercise = allExercises.find(
+    (e) => e.id.toLowerCase() === idLower || 
+           (nameLower && e.name.toLowerCase() === nameLower) ||
+           e.id.toLowerCase().replace(/_/g, ' ') === idLower.replace(/_/g, ' ')
+  );
+
+  const exercise: Exercise = foundExercise || {
     id: exerciseId,
-    name: exerciseName || exerciseId,
-    primaryMuscles: ['chest'],
-    secondaryMuscles: [],
-    equipment: 'barbell',
-    instructions: [],
-    level: 'Newbie',
-    category: 'strength',
-    images: [],
+    name: exerciseName || media.name || exerciseId,
+    primaryMuscles: media.primaryMuscles.length > 0 ? media.primaryMuscles : ['chest'],
+    secondaryMuscles: media.secondaryMuscles || [],
+    equipment: media.equipment || 'machine',
+    instructions: media.instructions || [],
+    level: media.level || 'Mọi cấp độ',
+    category: media.category || 'strength',
+    images: media.images,
   };
 
-  const primaryMuscle = exercise.primaryMuscles?.[0] || 'chest';
-  const guide = getExerciseGuide(exerciseId, exercise.name, exercise.equipment, primaryMuscle);
-  const media = getExerciseMedia(exerciseId, exercise.name);
+  const primaryMuscle = (exercise.primaryMuscles && exercise.primaryMuscles.length > 0)
+    ? exercise.primaryMuscles[0]
+    : (media.primaryMuscles && media.primaryMuscles.length > 0)
+    ? media.primaryMuscles[0]
+    : 'chest';
+
+  const effectiveEquipment = exercise.equipment || media.equipment || 'machine';
+  const guide = getExerciseGuide(exerciseId, exerciseName || exercise.name, effectiveEquipment, primaryMuscle);
+  const titleDisplay = guide.vietnameseName || exerciseName || exercise.name;
 
   return (
     <div
@@ -54,17 +70,17 @@ export default function ExerciseQuickViewModal({
           <div>
             <div className="flex flex-wrap items-center gap-1.5 mb-1">
               <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[11px] font-bold capitalize">
-                {guide.vietnameseName || exercise.name}
+                {titleDisplay}
               </span>
               <span className="px-2 py-0.5 rounded-full bg-zinc-900 text-zinc-300 border border-zinc-800 text-[11px] font-medium capitalize">
-                {translateEquipment(exercise.equipment)}
+                {translateEquipment(effectiveEquipment)}
               </span>
             </div>
-            <h3 className="text-lg sm:text-xl font-black text-white">{guide.vietnameseName}</h3>
+            <h3 className="text-lg sm:text-xl font-black text-white">{titleDisplay}</h3>
             <p className="text-xs text-zinc-400 mt-0.5 flex flex-wrap items-center gap-1.5">
               <span>Tên quốc tế: <span className="text-zinc-300 font-mono">{exercise.name}</span></span>
               <span>•</span>
-              <span>Cơ chính: <strong className="text-emerald-400 capitalize">{exercise.primaryMuscles.map(translateMuscle).join(', ')}</strong></span>
+              <span>Cơ chính: <strong className="text-emerald-400 capitalize">{(exercise.primaryMuscles && exercise.primaryMuscles.length > 0 ? exercise.primaryMuscles : media.primaryMuscles).map(translateMuscle).join(', ')}</strong></span>
             </p>
           </div>
 
