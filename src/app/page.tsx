@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Dumbbell, Calendar, Trophy, Flame, BookOpen, Scale, Footprints } from 'lucide-react';
+import { Dumbbell, Calendar, Trophy, Flame, BookOpen, Scale, Footprints, ArrowLeft, Home as HomeIcon, ChevronRight } from 'lucide-react';
 import { WorkoutSession } from '@/types/workout';
 import ActiveWorkoutView from '@/components/ActiveWorkoutView';
 import RoutineList from '@/components/RoutineList';
@@ -17,6 +17,7 @@ type Tab = 'routines' | 'running' | 'body' | 'exercises' | 'history';
 export default function Home() {
   const [activeTab, setActiveTab] = useState<Tab>('routines');
   const [activeSession, setActiveSession] = useState<WorkoutSession | null>(null);
+  const [isSessionMinimized, setIsSessionMinimized] = useState<boolean>(false);
   const [zoomScale, setZoomScale] = useState<number>(1);
   const [isMobileDevice, setIsMobileDevice] = useState(false);
 
@@ -71,59 +72,93 @@ export default function Home() {
     document.documentElement.style.zoom = String(next);
   };
 
+  const handleGoHome = () => {
+    setActiveTab('routines');
+    if (activeSession) {
+      setIsSessionMinimized(true);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-black text-zinc-100 selection:bg-emerald-500 selection:text-black">
       {/* PWA: Service Worker, Offline Indicator, Install Prompt */}
       <PWAManager />
+
       {/* Top Navbar */}
-      <header className="sticky top-0 z-40 bg-zinc-950/85 backdrop-blur-xl border-b border-zinc-800/80">
-        <div className="max-w-4xl mx-auto px-4 h-16 flex items-center justify-between">
-          <div className="flex items-center space-x-2.5">
-            <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-zinc-950">
-              <Dumbbell className="w-5 h-5 stroke-[2.5]" />
-            </div>
-            <div>
-              <h1 className="text-base font-extrabold tracking-tight text-white flex items-center space-x-1.5">
-                <span>GYM TRACKER PRO</span>
-                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono font-semibold">
-                  LIVE
+      <header className="sticky top-0 z-40 bg-zinc-950/90 backdrop-blur-xl border-b border-zinc-800/80">
+        <div className="max-w-4xl mx-auto px-3 sm:px-4 h-16 flex items-center justify-between gap-2">
+          {/* Logo & Home Back Button */}
+          <div className="flex items-center space-x-2 min-w-0">
+            {/* Nút Back / Home xuất hiện khi không ở trang chủ hoặc khi đang có buổi tập mở rộng */}
+            {(activeTab !== 'routines' || (activeSession && !isSessionMinimized)) ? (
+              <button
+                type="button"
+                onClick={handleGoHome}
+                className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-500/15 border border-emerald-500/40 hover:bg-emerald-500/25 text-emerald-400 font-extrabold text-xs transition active:scale-95 shadow-sm flex items-center space-x-1.5 shrink-0"
+                title="Quay lại Trang Chủ (Giáo Án & Tập Gym)"
+              >
+                <ArrowLeft className="w-4 h-4 stroke-[3]" />
+                <span className="text-xs">Trang Chủ</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={handleGoHome}
+                className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-zinc-950 shrink-0"
+              >
+                <Dumbbell className="w-5 h-5 stroke-[2.5]" />
+              </button>
+            )}
+
+            <div className="min-w-0 truncate">
+              <h1 className="text-sm sm:text-base font-extrabold tracking-tight text-white flex items-center space-x-1.5 truncate">
+                <span className="truncate">GYM TRACKER</span>
+                <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-mono font-semibold shrink-0">
+                  PRO
                 </span>
               </h1>
-              <p className="text-[11px] text-zinc-400 font-medium">Theo dõi bài tập & Progressive Overload</p>
+              <p className="text-[10px] sm:text-[11px] text-zinc-400 font-medium truncate">
+                {activeTab === 'routines' && 'Giáo án & Tập gym'}
+                {activeTab === 'running' && 'Chạy bộ bán Marathon 21K'}
+                {activeTab === 'body' && 'Theo dõi chỉ số & body'}
+                {activeTab === 'exercises' && 'Thư viện 876 bài tập'}
+                {activeTab === 'history' && 'Lịch sử & Kỷ lục PRs'}
+              </p>
             </div>
           </div>
 
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
             {/* Quick Zoom Button */}
             <button
               type="button"
               onClick={handleToggleZoom}
-              className="px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500/50 text-xs font-bold transition active:scale-95 shadow-sm flex items-center space-x-1.5"
+              className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500/50 text-xs font-bold transition active:scale-95 shadow-sm flex items-center space-x-1"
               title="Nhấn để chuyển các mức phóng to: 100% -> 125% -> 150% -> 175% -> 200%"
             >
-              <span className="text-emerald-400 font-black text-sm">Aa</span>
-              <span className="text-[11px] text-zinc-300 font-mono font-semibold">
+              <span className="text-emerald-400 font-black text-xs sm:text-sm">Aa</span>
+              <span className="text-[10px] sm:text-[11px] text-zinc-300 font-mono font-semibold">
                 {zoomScale === 1
                   ? '100%'
                   : zoomScale === 1.25
-                  ? '125% To'
+                  ? '125%'
                   : zoomScale === 1.5
-                  ? '150% Lớn'
+                  ? '150%'
                   : zoomScale === 1.75
-                  ? '175% Siêu To'
-                  : '200% Cực Đại'}
+                  ? '175%'
+                  : '200%'}
               </span>
             </button>
 
             {/* Persistent Mini Session Banner if active */}
-            {activeSession && (
+            {activeSession && isSessionMinimized && (
               <button
-                onClick={() => setActiveTab('routines')}
-                className="px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold flex items-center space-x-1.5 hover:bg-emerald-500/20 transition active:scale-95 animate-pulse"
+                onClick={() => setIsSessionMinimized(false)}
+                className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center space-x-1.5 hover:bg-emerald-500/30 transition active:scale-95 animate-pulse"
+                title="Đang có buổi tập chạy ngầm - Nhấn để tiếp tục tập"
               >
-                <Flame className="w-3.5 h-3.5" />
-                <span className="hidden sm:inline">Buổi tập:</span>
-                <span className="truncate max-w-[90px] sm:max-w-none">{activeSession.title}</span>
+                <Flame className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
+                <span className="hidden sm:inline">Tiếp tục:</span>
+                <span className="truncate max-w-[80px] sm:max-w-[120px]">{activeSession.title}</span>
               </button>
             )}
           </div>
@@ -140,8 +175,8 @@ export default function Home() {
                   : 'text-zinc-400 hover:text-white hover:bg-zinc-900'
               }`}
             >
-              <Calendar className="w-4 h-4 text-emerald-400" />
-              <span>Tập Luyện & Giáo Án</span>
+              <HomeIcon className="w-4 h-4 text-emerald-400" />
+              <span>Trang Chủ & Giáo Án</span>
             </button>
 
             <button
@@ -196,25 +231,38 @@ export default function Home() {
       </header>
 
       {/* Main Container */}
-      <main className="pt-4 pb-28 md:pb-12">
-        {activeSession ? (
+      <main className="pt-3 pb-28 md:pb-12">
+        {activeSession && !isSessionMinimized ? (
           <ErrorBoundary fallbackTitle="Buổi tập gặp sự cố">
             <ActiveWorkoutView
               initialSession={activeSession}
-              onFinishWorkout={() => setActiveSession(null)}
-              onDiscardWorkout={() => setActiveSession(null)}
+              onFinishWorkout={() => {
+                setActiveSession(null);
+                setIsSessionMinimized(false);
+              }}
+              onDiscardWorkout={() => {
+                setActiveSession(null);
+                setIsSessionMinimized(false);
+              }}
+              onMinimize={() => {
+                setIsSessionMinimized(true);
+                setActiveTab('routines');
+              }}
             />
           </ErrorBoundary>
         ) : (
           <>
             {activeTab === 'routines' && (
               <ErrorBoundary fallbackTitle="Không thể tải giáo án">
-                <RoutineList onStartSession={(sess) => setActiveSession(sess)} />
+                <RoutineList onStartSession={(sess) => {
+                  setActiveSession(sess);
+                  setIsSessionMinimized(false);
+                }} />
               </ErrorBoundary>
             )}
             {activeTab === 'running' && (
               <ErrorBoundary fallbackTitle="Không thể tải phân hệ chạy bộ">
-                <RunningTracker onGoToGymWorkout={() => setActiveTab('routines')} />
+                <RunningTracker onGoToGymWorkout={handleGoHome} />
               </ErrorBoundary>
             )}
             {activeTab === 'body' && (
@@ -236,60 +284,90 @@ export default function Home() {
         )}
       </main>
 
-      {/* Bottom Sticky Tab Bar for Mobile with Safe Area */}
-      {!activeSession && (
-        <nav className={`${isMobileDevice ? 'flex' : 'md:hidden'} fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-800 backdrop-blur-2xl px-2 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] items-center justify-around shadow-2xl`}>
+      {/* Floating Active Workout Banner when Minimized */}
+      {activeSession && isSessionMinimized && (
+        <div className="fixed bottom-20 left-3 right-3 sm:left-auto sm:right-6 sm:w-96 z-40">
           <button
-            onClick={() => setActiveTab('routines')}
-            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition active:scale-95 ${
-              activeTab === 'routines' ? 'text-emerald-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
-            }`}
+            onClick={() => setIsSessionMinimized(false)}
+            className="w-full py-3 px-4 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-emerald-600 text-zinc-950 font-black text-xs sm:text-sm shadow-2xl shadow-emerald-500/30 flex items-center justify-between transition active:scale-95 animate-bounce"
           >
-            <Calendar className="w-5 h-5 mb-0.5" />
-            <span className="text-[10px]">Tập Gym</span>
+            <div className="flex items-center space-x-2 truncate">
+              <Flame className="w-4 h-4 fill-zinc-950 shrink-0" />
+              <span className="truncate">Đang tập: <strong>{activeSession.title}</strong></span>
+            </div>
+            <span className="flex items-center text-[11px] font-bold bg-zinc-950/20 px-2 py-0.5 rounded-lg shrink-0 ml-2">
+              Tiếp tục <ChevronRight className="w-3.5 h-3.5 ml-0.5" />
+            </span>
           </button>
-
-          <button
-            onClick={() => setActiveTab('running')}
-            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition active:scale-95 ${
-              activeTab === 'running' ? 'text-amber-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
-            }`}
-          >
-            <Footprints className="w-5 h-5 mb-0.5" />
-            <span className="text-[10px]">Chạy Bộ</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('body')}
-            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition active:scale-95 ${
-              activeTab === 'body' ? 'text-teal-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
-            }`}
-          >
-            <Scale className="w-5 h-5 mb-0.5" />
-            <span className="text-[10px]">Hình Thể</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('exercises')}
-            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition active:scale-95 ${
-              activeTab === 'exercises' ? 'text-emerald-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
-            }`}
-          >
-            <BookOpen className="w-5 h-5 mb-0.5" />
-            <span className="text-[10px]">Bài Tập</span>
-          </button>
-
-          <button
-            onClick={() => setActiveTab('history')}
-            className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition active:scale-95 ${
-              activeTab === 'history' ? 'text-amber-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
-            }`}
-          >
-            <Trophy className="w-5 h-5 mb-0.5" />
-            <span className="text-[10px]">Kỷ Lục</span>
-          </button>
-        </nav>
+        </div>
       )}
+
+      {/* Bottom Sticky Tab Bar for Mobile with Safe Area */}
+      <nav className={`${isMobileDevice ? 'flex' : 'md:hidden'} fixed bottom-0 left-0 right-0 z-40 bg-zinc-950/95 border-t border-zinc-800 backdrop-blur-2xl px-2 pt-2 pb-[max(0.75rem,env(safe-area-inset-bottom))] items-center justify-around shadow-2xl`}>
+        <button
+          onClick={handleGoHome}
+          className={`flex flex-col items-center py-1 px-2 rounded-xl transition active:scale-95 ${
+            activeTab === 'routines' && (!activeSession || isSessionMinimized)
+              ? 'text-emerald-400 font-bold'
+              : 'text-zinc-500 hover:text-zinc-300'
+          }`}
+        >
+          <HomeIcon className="w-5 h-5 mb-0.5 stroke-[2.2]" />
+          <span className="text-[10px]">Trang Chủ</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('running');
+            if (activeSession) setIsSessionMinimized(true);
+          }}
+          className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition active:scale-95 ${
+            activeTab === 'running' ? 'text-amber-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
+          }`}
+        >
+          <Footprints className="w-5 h-5 mb-0.5" />
+          <span className="text-[10px]">Chạy Bộ</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('body');
+            if (activeSession) setIsSessionMinimized(true);
+          }}
+          className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition active:scale-95 ${
+            activeTab === 'body' ? 'text-teal-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
+          }`}
+        >
+          <Scale className="w-5 h-5 mb-0.5" />
+          <span className="text-[10px]">Hình Thể</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('exercises');
+            if (activeSession) setIsSessionMinimized(true);
+          }}
+          className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition active:scale-95 ${
+            activeTab === 'exercises' ? 'text-emerald-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
+          }`}
+        >
+          <BookOpen className="w-5 h-5 mb-0.5" />
+          <span className="text-[10px]">Bài Tập</span>
+        </button>
+
+        <button
+          onClick={() => {
+            setActiveTab('history');
+            if (activeSession) setIsSessionMinimized(true);
+          }}
+          className={`flex flex-col items-center py-1 px-1.5 rounded-xl transition active:scale-95 ${
+            activeTab === 'history' ? 'text-amber-400 font-bold' : 'text-zinc-500 hover:text-zinc-300'
+          }`}
+        >
+          <Trophy className="w-5 h-5 mb-0.5" />
+          <span className="text-[10px]">Kỷ Lục</span>
+        </button>
+      </nav>
     </div>
   );
 }

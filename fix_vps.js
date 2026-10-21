@@ -73,7 +73,7 @@ async function main() {
 
   // 3. Đảm bảo các file cốt lõi không bị lệch type
   logOutput('\n--- BƯỚC 3: Kiểm tra và đảm bảo các file mã nguồn mới nhất trên VPS ---\n');
-  await runSSH(conn, 'mkdir -p /var/www/gym-tracker/src/components/analytics /var/www/gym-tracker/src/lib /var/www/gym-tracker/src/types /var/www/gym-tracker/src/data');
+  await runSSH(conn, 'mkdir -p /var/www/gym-tracker/src/components/analytics /var/www/gym-tracker/src/components/workout /var/www/gym-tracker/src/lib /var/www/gym-tracker/src/types /var/www/gym-tracker/src/data');
   const filesToVerify = [
     { local: path.join(__dirname, 'src/types/running.ts'), remote: '/var/www/gym-tracker/src/types/running.ts' },
     { local: path.join(__dirname, 'src/types/workout.ts'), remote: '/var/www/gym-tracker/src/types/workout.ts' },
@@ -84,6 +84,8 @@ async function main() {
     { local: path.join(__dirname, 'src/lib/storage.ts'), remote: '/var/www/gym-tracker/src/lib/storage.ts' },
     { local: path.join(__dirname, 'src/components/RoutineList.tsx'), remote: '/var/www/gym-tracker/src/components/RoutineList.tsx' },
     { local: path.join(__dirname, 'src/components/ExerciseQuickViewModal.tsx'), remote: '/var/www/gym-tracker/src/components/ExerciseQuickViewModal.tsx' },
+    { local: path.join(__dirname, 'src/components/ActiveWorkoutView.tsx'), remote: '/var/www/gym-tracker/src/components/ActiveWorkoutView.tsx' },
+    { local: path.join(__dirname, 'src/components/workout/WorkoutHeader.tsx'), remote: '/var/www/gym-tracker/src/components/workout/WorkoutHeader.tsx' },
     { local: path.join(__dirname, 'src/components/analytics/WeeklyRunningCard.tsx'), remote: '/var/www/gym-tracker/src/components/analytics/WeeklyRunningCard.tsx' },
     { local: path.join(__dirname, 'src/components/analytics/WeeklyGymCard.tsx'), remote: '/var/www/gym-tracker/src/components/analytics/WeeklyGymCard.tsx' },
     { local: path.join(__dirname, 'src/components/RunningTracker.tsx'), remote: '/var/www/gym-tracker/src/components/RunningTracker.tsx' },

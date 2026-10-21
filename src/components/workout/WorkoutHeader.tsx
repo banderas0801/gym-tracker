@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { Play, Pause, Check, Clock, Timer, Calculator } from 'lucide-react';
+import { Play, Pause, Check, Clock, Timer, Calculator, Home } from 'lucide-react';
 import { triggerHaptic } from '@/lib/haptics';
 
 interface WorkoutHeaderProps {
@@ -18,6 +18,7 @@ interface WorkoutHeaderProps {
   onOpenRestTimer: () => void;
   onOpenPlateCalculator: () => void;
   onFinish: () => void;
+  onMinimize?: () => void;
 }
 
 export default function WorkoutHeader({
@@ -34,6 +35,7 @@ export default function WorkoutHeader({
   onOpenRestTimer,
   onOpenPlateCalculator,
   onFinish,
+  onMinimize,
 }: WorkoutHeaderProps) {
   const formatTime = (totalSec: number) => {
     const hrs = Math.floor(totalSec / 3600);
@@ -79,6 +81,18 @@ export default function WorkoutHeader({
         </div>
 
         <div className="flex items-center space-x-1.5 sm:space-x-2 shrink-0">
+          {onMinimize && (
+            <button
+              type="button"
+              onClick={onMinimize}
+              className="p-2 sm:px-3 sm:py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition active:scale-90 flex items-center space-x-1 text-xs font-bold"
+              title="Thu nhỏ buổi tập và quay về Trang Chủ"
+            >
+              <Home className="w-4 h-4 text-emerald-400" />
+              <span className="hidden sm:inline">Trang Chủ</span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={handleToggle}

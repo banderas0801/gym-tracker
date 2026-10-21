@@ -1,16 +1,16 @@
 @echo off
 chcp 65001 > nul
-title CAP NHAT GYM TRACKER - KIEM TRA TOAN DIEN HINH ANH VA HUONG DAN TAP
+title CAP NHAT GYM TRACKER - FIX BUILD TYPESCRIPT & THEM NUT HOME / BACK MOBILE
 color 0A
 echo ========================================================
-echo   CAP NHAT GYM TRACKER: TOAN DIEN HINH ANH & HUONG DAN TAP
+echo   CAP NHAT GYM TRACKER: FIX BUILD & BO SUNG NUT HOME / BACK
 echo ========================================================
 cd /d C:\Users\Admin\gym-tracker
 
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "feat: complete audit of exercise media & technique guides across all routines"
+git commit -m "fix(build): resolve setRoutineFilter in RoutineList & add Mobile Home/Back navigation"
 git push origin master
 
 echo.

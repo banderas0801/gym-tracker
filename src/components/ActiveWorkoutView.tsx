@@ -36,12 +36,14 @@ interface ActiveWorkoutViewProps {
   initialSession: WorkoutSession;
   onFinishWorkout: () => void;
   onDiscardWorkout: () => void;
+  onMinimize?: () => void;
 }
 
 export default function ActiveWorkoutView({
   initialSession,
   onFinishWorkout,
   onDiscardWorkout,
+  onMinimize,
 }: ActiveWorkoutViewProps) {
   const [session, setSession] = useState<WorkoutSession>(initialSession);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
@@ -385,6 +387,7 @@ export default function ActiveWorkoutView({
           setIsPlateModalOpen(true);
         }}
         onFinish={handleFinish}
+        onMinimize={onMinimize}
       />
 
       {/* Exercise List */}

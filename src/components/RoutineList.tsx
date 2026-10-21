@@ -840,7 +840,8 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
         isOpen={isAdvisorModalOpen}
         onClose={() => setIsAdvisorModalOpen(false)}
         onApplyLevel={(filter) => {
-          setRoutineFilter(filter);
+          setRoutineSystem('thol');
+          setTholFilter(filter as 'all' | 'tang1' | 'tang2' | 'tang3');
         }}
       />
     </div>
