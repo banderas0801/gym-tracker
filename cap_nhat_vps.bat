@@ -1,16 +1,16 @@
 @echo off
 chcp 65001 > nul
-title CAP NHAT GYM TRACKER - BO SUNG NUT BACK & HOME TOAN DIEN CAC PHAN CHI TIET
+title CAP NHAT GYM TRACKER - TOI UU LAYOUT MOBILE & FIX ZOOM CACHE
 color 0A
 echo ========================================================
-echo   CAP NHAT: BO SUNG NUT BACK & HOME CHO TAT CA CAC PHAN
+echo   CAP NHAT GYM TRACKER: TOI UU TOAN DIEN LAYOUT MOBILE
 echo ========================================================
 cd /d C:\Users\Admin\gym-tracker
 
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "feat: add comprehensive back & home buttons across all detail views & modals"
+git commit -m "fix(ui): overhaul mobile layout, eliminate layout-breaking zoom, and refresh sw cache"
 git push origin master
 
 echo.

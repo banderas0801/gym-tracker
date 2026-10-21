@@ -22,38 +22,29 @@ export default function Home() {
   const [isMobileDevice, setIsMobileDevice] = useState(false);
 
   React.useEffect(() => {
-    // 1. Khôi phục kích thước zoom người dùng chọn
+    // 1. Khôi phục kích thước zoom an toàn (chống vỡ layout di động)
     const saved = localStorage.getItem('gym_zoom_scale');
+    let initialZoom = 1;
     if (saved) {
       const num = parseFloat(saved);
-      if (!isNaN(num) && num >= 1) {
-        setZoomScale(num);
-        document.documentElement.style.zoom = String(num);
+      if (num > 1.2) {
+        // Reset nếu trước đó bị kẹt ở mức 150% - 200% gây vỡ giao diện
+        localStorage.setItem('gym_zoom_scale', '1');
+        initialZoom = 1;
+      } else if (!isNaN(num) && num >= 1) {
+        initialZoom = num;
       }
     }
+    setZoomScale(initialZoom);
+    document.documentElement.style.zoom = String(initialZoom);
 
-    // 2. Nhận diện thiết bị di động độc lập với chế độ Desktop của Chrome
+    // 2. Nhận diện thiết bị di động
     const checkMobile = () => {
       const isTouch = navigator.maxTouchPoints > 0;
       const isMobileUA = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
       const isSmallScreen = window.innerWidth <= 768 || (window.screen && window.screen.width <= 768);
       const mobile = (isTouch && isMobileUA) || isSmallScreen;
       setIsMobileDevice(mobile);
-
-      // Nếu là điện thoại mà bị Chrome WebAPK ép viewport Desktop (> 550px)
-      if (isMobileUA && (window.screen?.width <= 550 || window.outerWidth <= 550) && window.innerWidth > 550) {
-        const meta = document.querySelector('meta[name="viewport"]');
-        if (meta) {
-          meta.setAttribute(
-            'content',
-            'width=390, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover'
-          );
-        }
-        if (!saved) {
-          setZoomScale(1.5);
-          document.documentElement.style.zoom = '1.5';
-        }
-      }
     };
 
     checkMobile();
@@ -62,10 +53,10 @@ export default function Home() {
   }, []);
 
   const handleToggleZoom = () => {
-    // Luân chuyển: 100% -> 125% -> 150% -> 175% -> 200%
-    const SCALES = [1, 1.25, 1.5, 1.75, 2.0];
+    // Luân chuyển an toàn: 100% (Chuẩn) -> 110% (Lớn) -> 120% (Rõ nét) -> 100%
+    const SCALES = [1, 1.1, 1.2];
     const currentIndex = SCALES.indexOf(zoomScale);
-    const next = currentIndex !== -1 ? SCALES[(currentIndex + 1) % SCALES.length] : 1.25;
+    const next = currentIndex !== -1 ? SCALES[(currentIndex + 1) % SCALES.length] : 1;
 
     setZoomScale(next);
     localStorage.setItem('gym_zoom_scale', String(next));

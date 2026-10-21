@@ -1,4 +1,4 @@
-=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-10-21T01:55:12.996Z ===
+=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-10-21T02:04:24.481Z ===
 Đang kết nối máy chủ VPS 103.77.209.87...
 ✅ Đã kết nối VPS thành công!
 
@@ -12,30 +12,30 @@
 │ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 46h    │ 1    │ online    │ 0%       │ 13.2mb   │ root     │ disabled │
 │ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 46h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
 │ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 42h    │ 6    │ online    │ 0%       │ 23.3mb   │ root     │ disabled │
-│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 40h    │ 0    │ online    │ 0%       │ 19.5mb   │ root     │ disabled │
-│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 46h    │ 0    │ online    │ 0%       │ 17.7mb   │ root     │ disabled │
-│ 34 │ gym-tracker       │ default     │ N/A     │ fork    │ 781912   │ 15h    │ 0    │ online    │ 0%       │ 59.2mb   │ root     │ disabled │
-│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 922610   │ 16m    │ 33   │ online    │ 0%       │ 67.8mb   │ root     │ disabled │
+│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 41h    │ 0    │ online    │ 0%       │ 19.5mb   │ root     │ disabled │
+│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 46h    │ 0    │ online    │ 0%       │ 17.9mb   │ root     │ disabled │
+│ 37 │ gym-tracker       │ default     │ N/A     │ fork    │ 926555   │ 8m     │ 0    │ online    │ 0%       │ 56.0mb   │ root     │ disabled │
+│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 922610   │ 26m    │ 33   │ online    │ 0%       │ 68.0mb   │ root     │ disabled │
 │ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 46h    │ 16   │ online    │ 0%       │ 10.3mb   │ root     │ disabled │
-│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 46h    │ 0    │ online    │ 0%       │ 47.3mb   │ root     │ disabled │
-│ 36 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 922583   │ 16m    │ 0    │ online    │ 0%       │ 55.1mb   │ root     │ disabled │
-│ 31 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779734   │ 15h    │ 1    │ online    │ 0%       │ 180.1mb  │ root     │ disabled │
+│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 46h    │ 0    │ online    │ 0%       │ 47.2mb   │ root     │ disabled │
+│ 36 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 922583   │ 26m    │ 0    │ online    │ 0%       │ 56.0mb   │ root     │ disabled │
+│ 31 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779734   │ 15h    │ 1    │ online    │ 0%       │ 179.8mb  │ root     │ disabled │
 │ 32 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779748   │ 15h    │ 1    │ online    │ 0%       │ 172.9mb  │ root     │ disabled │
 │ 5  │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 3D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
 └────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 7.8% | ram usage: 48.3% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.035mb/s ⇑ 0.003mb/s drop 12/min | disk: ⇓ 0mb/s ⇑ 0.034mb/s
-tcp   LISTEN 0      511                *:3008             *:*    users:(("next-server (v1",pid=781935,fd=18))                                        
+host metrics | cpu: 6.4% | ram usage: 49.1% | lo: ⇓ 0.018mb/s ⇑ 0.018mb/s | ens192: ⇓ 0.036mb/s ⇑ 0.02mb/s drop 50/min | disk: ⇓ 0mb/s ⇑ 0.04mb/s
+tcp   LISTEN 0      511                *:3008             *:*    users:(("next-server (v1",pid=926574,fd=18))                                        
 
 --- BƯỚC 2: Kéo commit mới nhất từ GitHub ---
 
 >>> [VPS] cd /var/www/gym-tracker && git fetch origin master && git reset --hard origin/master && git log -n 3 --oneline
 From https://github.com/banderas0801/gym-tracker
  * branch            master     -> FETCH_HEAD
-   6260818..731190e  master     -> origin/master
-HEAD is now at 731190e fix(build): resolve setRoutineFilter in RoutineList & add Mobile Home/Back navigation
+   731190e..93639f6  master     -> origin/master
+HEAD is now at 93639f6 feat: add comprehensive back & home buttons across all detail views & modals
+93639f6 feat: add comprehensive back & home buttons across all detail views & modals
 731190e fix(build): resolve setRoutineFilter in RoutineList & add Mobile Home/Back navigation
 6260818 feat: complete audit of exercise media & technique guides across all routines
-8d94b6d fix: clean JSX syntax in manual treadmill runner modal
 
 --- BƯỚC 3: Kiểm tra và đảm bảo các file mã nguồn mới nhất trên VPS ---
 
@@ -67,6 +67,15 @@ HEAD is now at 731190e fix(build): resolve setRoutineFilter in RoutineList & add
 
 [SFTP] Đồng bộ file: ExerciseQuickViewModal.tsx -> /var/www/gym-tracker/src/components/ExerciseQuickViewModal.tsx
 ✅ SFTP hoàn tất: ExerciseQuickViewModal.tsx
+
+[SFTP] Đồng bộ file: SmartWorkoutModal.tsx -> /var/www/gym-tracker/src/components/SmartWorkoutModal.tsx
+✅ SFTP hoàn tất: SmartWorkoutModal.tsx
+
+[SFTP] Đồng bộ file: LevelAdvisorModal.tsx -> /var/www/gym-tracker/src/components/LevelAdvisorModal.tsx
+✅ SFTP hoàn tất: LevelAdvisorModal.tsx
+
+[SFTP] Đồng bộ file: ExerciseBrowser.tsx -> /var/www/gym-tracker/src/components/ExerciseBrowser.tsx
+✅ SFTP hoàn tất: ExerciseBrowser.tsx
 
 [SFTP] Đồng bộ file: ActiveWorkoutView.tsx -> /var/www/gym-tracker/src/components/ActiveWorkoutView.tsx
 ✅ SFTP hoàn tất: ActiveWorkoutView.tsx
@@ -106,20 +115,20 @@ HEAD is now at 731190e fix(build): resolve setRoutineFilter in RoutineList & add
 > next build
 
 ▲ Next.js 16.4.2 (Turbopack)
-✓ Running next.config.ts took 90ms
+✓ Running next.config.ts took 96ms
 - Cache Components enabled
 - Partial Prefetching enabled
 
   Creating an optimized production build ...
-✓ Compiled successfully in 8.6s
+✓ Compiled successfully in 5.3s
   Running TypeScript ...
-  Finished TypeScript in 14.7s ...
+  Finished TypeScript in 19.8s ...
   Collecting page data using 1 worker ...
   Generating static pages using 1 worker (0/5) ...
   Generating static pages using 1 worker (1/5) 
   Generating static pages using 1 worker (2/5) 
   Generating static pages using 1 worker (3/5) 
-✓ Generating static pages using 1 worker (5/5) in 1020ms
+✓ Generating static pages using 1 worker (5/5) in 907ms
   Finalizing page optimization ...
 
 Route (app)
@@ -136,26 +145,26 @@ Route (app)
 --- BƯỚC 5: Khởi động lại PM2 trên cổng 3008 ---
 
 >>> [VPS] pm2 delete gym-tracker 2>/dev/null || true
-[PM2] Applying action deleteProcessId on app [gym-tracker](ids: [ 34 ])
-[PM2] [gym-tracker](34) ✓
+[PM2] Applying action deleteProcessId on app [gym-tracker](ids: [ 37 ])
+[PM2] [gym-tracker](37) ✓
 ┌────┬───────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
 │ id │ name              │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
 ├────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
 │ 16 │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 46h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
 │ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 46h    │ 1    │ online    │ 0%       │ 13.2mb   │ root     │ disabled │
 │ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 46h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
-│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 42h    │ 6    │ online    │ 0%       │ 23.3mb   │ root     │ disabled │
-│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 40h    │ 0    │ online    │ 0%       │ 19.5mb   │ root     │ disabled │
-│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 46h    │ 0    │ online    │ 0%       │ 17.7mb   │ root     │ disabled │
-│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 922610   │ 17m    │ 33   │ online    │ 0%       │ 67.9mb   │ root     │ disabled │
+│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 43h    │ 6    │ online    │ 0%       │ 23.3mb   │ root     │ disabled │
+│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 41h    │ 0    │ online    │ 0%       │ 19.5mb   │ root     │ disabled │
+│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 46h    │ 0    │ online    │ 0%       │ 17.9mb   │ root     │ disabled │
+│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 922610   │ 26m    │ 33   │ online    │ 0%       │ 68.4mb   │ root     │ disabled │
 │ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 46h    │ 16   │ online    │ 0%       │ 10.3mb   │ root     │ disabled │
-│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 46h    │ 0    │ online    │ 4.5%     │ 47.2mb   │ root     │ disabled │
-│ 36 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 922583   │ 17m    │ 0    │ online    │ 0%       │ 55.7mb   │ root     │ disabled │
-│ 31 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779734   │ 15h    │ 1    │ online    │ 0%       │ 179.7mb  │ root     │ disabled │
-│ 32 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779748   │ 15h    │ 1    │ online    │ 0%       │ 173.0mb  │ root     │ disabled │
+│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 46h    │ 0    │ online    │ 0%       │ 47.4mb   │ root     │ disabled │
+│ 36 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 922583   │ 26m    │ 0    │ online    │ 0%       │ 55.9mb   │ root     │ disabled │
+│ 31 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779734   │ 15h    │ 1    │ online    │ 0%       │ 180.2mb  │ root     │ disabled │
+│ 32 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779748   │ 15h    │ 1    │ online    │ 0%       │ 172.9mb  │ root     │ disabled │
 │ 5  │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 3D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
 └────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 22.5% | ram usage: 55.6% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.056mb/s ⇑ 0.005mb/s drop 24/min | disk: ⇓ 0.191mb/s ⇑ 0.101mb/s
+host metrics | cpu: 64.6% | ram usage: 62.5% | lo: ⇓ 0.004mb/s ⇑ 0.004mb/s | ens192: ⇓ 0.046mb/s ⇑ 0.004mb/s drop 24/min | disk: ⇓ 1.806mb/s ⇑ 0.24mb/s
 
 >>> [VPS] cd /var/www/gym-tracker && pm2 start npm --name "gym-tracker" -- run start
 [PM2] Starting /usr/bin/npm in fork_mode (1 instance)
@@ -166,19 +175,19 @@ host metrics | cpu: 22.5% | ram usage: 55.6% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s |
 │ 16 │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 46h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
 │ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 46h    │ 1    │ online    │ 0%       │ 13.2mb   │ root     │ disabled │
 │ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 46h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
-│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 42h    │ 6    │ online    │ 0%       │ 23.3mb   │ root     │ disabled │
-│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 40h    │ 0    │ online    │ 0%       │ 19.5mb   │ root     │ disabled │
-│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 46h    │ 0    │ online    │ 0%       │ 17.7mb   │ root     │ disabled │
-│ 37 │ gym-tracker       │ default     │ N/A     │ fork    │ 926555   │ 0s     │ 0    │ online    │ 0%       │ 25.4mb   │ root     │ disabled │
-│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 922610   │ 17m    │ 33   │ online    │ 0%       │ 68.3mb   │ root     │ disabled │
+│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 43h    │ 6    │ online    │ 0%       │ 23.3mb   │ root     │ disabled │
+│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 41h    │ 0    │ online    │ 0%       │ 19.5mb   │ root     │ disabled │
+│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 46h    │ 0    │ online    │ 0%       │ 17.9mb   │ root     │ disabled │
+│ 38 │ gym-tracker       │ default     │ N/A     │ fork    │ 928689   │ 0s     │ 0    │ online    │ 0%       │ 25.1mb   │ root     │ disabled │
+│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 922610   │ 26m    │ 33   │ online    │ 0%       │ 68.8mb   │ root     │ disabled │
 │ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 46h    │ 16   │ online    │ 0%       │ 10.3mb   │ root     │ disabled │
-│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 46h    │ 0    │ online    │ 0%       │ 47.2mb   │ root     │ disabled │
-│ 36 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 922583   │ 17m    │ 0    │ online    │ 0%       │ 55.2mb   │ root     │ disabled │
-│ 31 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779734   │ 15h    │ 1    │ online    │ 25%      │ 180.1mb  │ root     │ disabled │
+│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 46h    │ 0    │ online    │ 0%       │ 46.9mb   │ root     │ disabled │
+│ 36 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 922583   │ 26m    │ 0    │ online    │ 0%       │ 55.5mb   │ root     │ disabled │
+│ 31 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779734   │ 15h    │ 1    │ online    │ 0%       │ 179.8mb  │ root     │ disabled │
 │ 32 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779748   │ 15h    │ 1    │ online    │ 0%       │ 173.3mb  │ root     │ disabled │
 │ 5  │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 3D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
 └────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 22.5% | ram usage: 55.6% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.056mb/s ⇑ 0.005mb/s drop 24/min | disk: ⇓ 0.191mb/s ⇑ 0.101mb/s
+host metrics | cpu: 64.6% | ram usage: 62.5% | lo: ⇓ 0.004mb/s ⇑ 0.004mb/s | ens192: ⇓ 0.046mb/s ⇑ 0.004mb/s drop 24/min | disk: ⇓ 1.806mb/s ⇑ 0.24mb/s
 
 >>> [VPS] pm2 save
 [PM2] Saving current process list...
@@ -193,19 +202,19 @@ host metrics | cpu: 22.5% | ram usage: 55.6% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s |
 │ 16 │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 46h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
 │ 15 │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 46h    │ 1    │ online    │ 0%       │ 13.2mb   │ root     │ disabled │
 │ 17 │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 46h    │ 1    │ online    │ 0%       │ 13.8mb   │ root     │ disabled │
-│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 42h    │ 6    │ online    │ 0%       │ 23.3mb   │ root     │ disabled │
-│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 40h    │ 0    │ online    │ 0%       │ 19.5mb   │ root     │ disabled │
-│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 46h    │ 0    │ online    │ 0%       │ 17.7mb   │ root     │ disabled │
-│ 37 │ gym-tracker       │ default     │ N/A     │ fork    │ 926555   │ 5s     │ 0    │ online    │ 0%       │ 58.7mb   │ root     │ disabled │
-│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 922610   │ 17m    │ 33   │ online    │ 0%       │ 68.3mb   │ root     │ disabled │
+│ 9  │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 43h    │ 6    │ online    │ 50%      │ 23.3mb   │ root     │ disabled │
+│ 18 │ flowdesk          │ default     │ 0.1.0   │ fork    │ 346984   │ 41h    │ 0    │ online    │ 0%       │ 19.5mb   │ root     │ disabled │
+│ 10 │ gemini-proxy      │ default     │ N/A     │ fork    │ 290252   │ 46h    │ 0    │ online    │ 0%       │ 17.9mb   │ root     │ disabled │
+│ 38 │ gym-tracker       │ default     │ N/A     │ fork    │ 928689   │ 5s     │ 0    │ online    │ 0%       │ 58.5mb   │ root     │ disabled │
+│ 0  │ maccanh           │ default     │ 1.0.0   │ fork    │ 922610   │ 27m    │ 33   │ online    │ 0%       │ 68.4mb   │ root     │ disabled │
 │ 12 │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 46h    │ 16   │ online    │ 0%       │ 10.3mb   │ root     │ disabled │
-│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 46h    │ 0    │ online    │ 0%       │ 46.6mb   │ root     │ disabled │
-│ 36 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 922583   │ 17m    │ 0    │ online    │ 0%       │ 55.7mb   │ root     │ disabled │
-│ 31 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779734   │ 15h    │ 1    │ online    │ 0%       │ 179.6mb  │ root     │ disabled │
-│ 32 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779748   │ 15h    │ 1    │ online    │ 0%       │ 173.3mb  │ root     │ disabled │
+│ 11 │ muse-bridge       │ default     │ N/A     │ fork    │ 290273   │ 46h    │ 0    │ online    │ 0%       │ 47.4mb   │ root     │ disabled │
+│ 36 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 922583   │ 27m    │ 0    │ online    │ 0%       │ 56.8mb   │ root     │ disabled │
+│ 31 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779734   │ 15h    │ 1    │ online    │ 0%       │ 179.8mb  │ root     │ disabled │
+│ 32 │ taxcouncil-web    │ default     │ 16.4.2  │ cluster │ 779748   │ 15h    │ 1    │ online    │ 0%       │ 173.2mb  │ root     │ disabled │
 │ 5  │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 3D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
 └────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 78% | ram usage: 48.7% | lo: ⇓ 0.004mb/s ⇑ 0.004mb/s | ens192: ⇓ 0.036mb/s ⇑ 0.004mb/s drop 4/min | disk: ⇓ 1.551mb/s ⇑ 2.458mb/s
+host metrics | cpu: 64.6% | ram usage: 62.5% | lo: ⇓ 0.004mb/s ⇑ 0.004mb/s | ens192: ⇓ 0.046mb/s ⇑ 0.004mb/s drop 24/min | disk: ⇓ 1.806mb/s ⇑ 0.24mb/s
   % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
                                  Dload  Upload   Total   Spent    Left  Speed
   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0HTTP/1.1 200 OK
@@ -217,10 +226,10 @@ link: </_next/static/media/3c285486269019b7-s.p.2g-0we2o5_ngd.woff2>; rel=preloa
 x-nextjs-stale-time: 300
 X-Powered-By: Next.js
 Cache-Control: s-maxage=31536000
-ETag: "17z7hfrt0n61qk1"
+ETag: "7lg38yip1t1qk1"
 Content-Type: text/html; charset=utf-8
 Content-Length: 82028
-Date: Wed, 21 Oct 2026 01:56:29 GMT
+Date: Wed, 21 Oct 2026 02:05:44 GMT
 Connection: keep-alive
 Keep-Alive: timeout=5
 
@@ -229,7 +238,7 @@ Keep-Alive: timeout=5
                                  Dload  Upload   Total   Spent    Left  Speed
   0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0  0     0    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0HTTP/1.1 200 OK
 Server: nginx/1.24.0 (Ubuntu)
-Date: Wed, 21 Oct 2026 01:56:29 GMT
+Date: Wed, 21 Oct 2026 02:05:44 GMT
 Content-Type: text/html; charset=utf-8
 Content-Length: 82028
 Connection: keep-alive
@@ -242,7 +251,7 @@ link: </_next/static/media/3c285486269019b7-s.p.2g-0we2o5_ngd.woff2>; rel=preloa
 x-nextjs-stale-time: 300
 X-Powered-By: Next.js
 Cache-Control: s-maxage=31536000
-ETag: "17z7hfrt0n61qk1"
+ETag: "7lg38yip1t1qk1"
 
   0 82028    0     0    0     0      0      0 --:--:-- --:--:-- --:--:--     0
 

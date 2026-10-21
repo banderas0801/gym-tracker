@@ -1,4 +1,4 @@
-const CACHE_NAME = 'gymtracker-v2';
+const CACHE_NAME = 'gymtracker-v5';
 
 // Tài nguyên core cần cache ngay khi install
 const PRECACHE_URLS = [

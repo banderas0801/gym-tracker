@@ -96,6 +96,7 @@ async function main() {
     { local: path.join(__dirname, 'src/components/BodyTracker.tsx'), remote: '/var/www/gym-tracker/src/components/BodyTracker.tsx' },
     { local: path.join(__dirname, 'src/lib/bodyStorage.ts'), remote: '/var/www/gym-tracker/src/lib/bodyStorage.ts' },
     { local: path.join(__dirname, 'src/app/page.tsx'), remote: '/var/www/gym-tracker/src/app/page.tsx' },
+    { local: path.join(__dirname, 'public/sw.js'), remote: '/var/www/gym-tracker/public/sw.js' },
     { local: path.join(__dirname, 'package.json'), remote: '/var/www/gym-tracker/package.json' },
   ];
 
