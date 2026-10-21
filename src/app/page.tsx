@@ -267,17 +267,17 @@ export default function Home() {
             )}
             {activeTab === 'body' && (
               <ErrorBoundary fallbackTitle="Không thể tải chỉ số hình thể">
-                <BodyTracker />
+                <BodyTracker onBackToHome={handleGoHome} />
               </ErrorBoundary>
             )}
             {activeTab === 'exercises' && (
               <ErrorBoundary fallbackTitle="Không thể tải thư viện bài tập">
-                <ExerciseBrowser />
+                <ExerciseBrowser onBackToHome={handleGoHome} />
               </ErrorBoundary>
             )}
             {activeTab === 'history' && (
               <ErrorBoundary fallbackTitle="Không thể tải lịch sử tập">
-                <HistoryAnalytics />
+                <HistoryAnalytics onBackToHome={handleGoHome} />
               </ErrorBoundary>
             )}
           </>

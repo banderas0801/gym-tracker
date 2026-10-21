@@ -12,7 +12,8 @@ import {
   RotateCcw, 
   Calculator,
   Award,
-  ArrowRight
+  ArrowRight,
+  ArrowLeft
 } from 'lucide-react';
 import { getLatestBodyLog, getBodyGoal } from '@/lib/bodyStorage';
 
@@ -113,10 +114,12 @@ export default function LevelAdvisorModal({ isOpen, onClose, onApplyLevel }: Lev
 
           <button
             type="button"
-            onClick={onClose}
-            className="p-1.5 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+            onClick={step > 1 ? () => setStep((s) => (s - 1) as 1 | 2 | 3 | 4) : onClose}
+            className="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition shrink-0 flex items-center space-x-1.5 text-xs font-bold active:scale-95 shadow-sm"
+            title={step > 1 ? 'Quay lại bước trước' : 'Đóng / Quay lại'}
           >
-            <X className="w-5 h-5" />
+            <ArrowLeft className="w-4 h-4 text-emerald-400 stroke-[2.5]" />
+            <span>{step > 1 ? 'Bước trước' : 'Quay lại'}</span>
           </button>
         </div>
 

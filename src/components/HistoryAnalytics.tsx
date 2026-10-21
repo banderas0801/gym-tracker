@@ -14,6 +14,7 @@ import {
   Database,
   Search,
   Sparkles,
+  ArrowLeft,
 } from 'lucide-react';
 import { WorkoutSession } from '@/types/workout';
 import { getWorkoutHistory, calculate1RM, deleteWorkoutSession } from '@/lib/storage';
@@ -24,7 +25,11 @@ import WorkoutShareModal from './analytics/WorkoutShareModal';
 import BackupSyncModal from './analytics/BackupSyncModal';
 import WeeklyGymCard from './analytics/WeeklyGymCard';
 
-export default function HistoryAnalytics() {
+interface HistoryAnalyticsProps {
+  onBackToHome?: () => void;
+}
+
+export default function HistoryAnalytics({ onBackToHome }: HistoryAnalyticsProps = {}) {
   const [history, setHistory] = useState<WorkoutSession[]>([]);
   const [expandedSessionId, setExpandedSessionId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
@@ -108,9 +113,22 @@ export default function HistoryAnalytics() {
     <div className="max-w-3xl mx-auto space-y-6 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
       {/* Top Action Bar (Backup & Share) */}
       <div className="flex items-center justify-between gap-2">
-        <div>
-          <h2 className="text-lg font-black text-white">Tiến Độ & Kỷ Lục</h2>
-          <p className="text-xs text-zinc-400">Dữ liệu phân tích thể hình chuẩn khoa học</p>
+        <div className="flex items-center space-x-2">
+          {onBackToHome && (
+            <button
+              type="button"
+              onClick={onBackToHome}
+              className="px-2.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition shrink-0 flex items-center space-x-1.5 text-xs font-bold active:scale-95 shadow-sm"
+              title="Quay lại Trang Chủ Giáo Án"
+            >
+              <ArrowLeft className="w-4 h-4 text-emerald-400 stroke-[2.5]" />
+              <span>Trang Chủ</span>
+            </button>
+          )}
+          <div>
+            <h2 className="text-lg font-black text-white">Tiến Độ & Kỷ Lục</h2>
+            <p className="text-xs text-zinc-400">Dữ liệu phân tích thể hình chuẩn khoa học</p>
+          </div>
         </div>
 
         <div className="flex items-center space-x-2">

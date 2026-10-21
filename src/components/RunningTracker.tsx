@@ -38,7 +38,8 @@ import {
   ChevronUp,
   CheckSquare,
   Layers,
-  Award
+  Award,
+  ArrowLeft
 } from 'lucide-react';
 import { 
   TargetSub, 
@@ -624,9 +625,22 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
 
         <div className="relative z-10 space-y-4">
           <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-xs border border-amber-500/30">
-              <Zap className="w-3.5 h-3.5 text-amber-400" />
-              <span>GIÁO ÁN CHINH PHỤC HALF MARATHON 21KM</span>
+            <div className="flex items-center space-x-2">
+              {onGoToGymWorkout && (
+                <button
+                  type="button"
+                  onClick={onGoToGymWorkout}
+                  className="px-2.5 py-1 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 text-amber-400 hover:text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center space-x-1.5 transition active:scale-95 shadow-sm"
+                  title="Quay lại Trang Chủ Giáo Án Gym"
+                >
+                  <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
+                  <span>Trang Chủ</span>
+                </button>
+              )}
+              <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-xs border border-amber-500/30">
+                <Zap className="w-3.5 h-3.5 text-amber-400" />
+                <span>GIÁO ÁN CHINH PHỤC HALF MARATHON 21KM</span>
+              </div>
             </div>
 
             {/* Nút VDOT & Mibro */}

@@ -20,7 +20,8 @@ import {
   X,
   Check,
   Calculator,
-  Apple
+  Apple,
+  ArrowLeft
 } from 'lucide-react';
 import { BodyMetricLog, BodyGoal, GoalType } from '@/types/body';
 import { 
@@ -33,7 +34,11 @@ import {
 } from '@/lib/bodyStorage';
 import { exportAllData, importAllData } from '@/lib/backup';
 
-export default function BodyTracker() {
+interface BodyTrackerProps {
+  onBackToHome?: () => void;
+}
+
+export default function BodyTracker({ onBackToHome }: BodyTrackerProps = {}) {
   const [logs, setLogs] = useState<BodyMetricLog[]>([]);
   const [goal, setGoal] = useState<BodyGoal>(getBodyGoal());
   const [isLogModalOpen, setIsLogModalOpen] = useState(false);
@@ -197,14 +202,27 @@ export default function BodyTracker() {
     <div className="max-w-4xl mx-auto px-4 pb-24 space-y-6">
       {/* Top Header & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h2 className="text-xl font-black text-white flex items-center space-x-2">
-            <Scale className="w-6 h-6 text-emerald-400" />
-            <span>THEO DÕI HÌNH THỂ & CHỈ SỐ</span>
-          </h2>
-          <p className="text-xs text-zinc-400 mt-0.5">
-            Quản lý cân nặng, số đo các vòng, tỷ lệ mỡ và tiến độ mục tiêu vóc dáng
-          </p>
+        <div className="flex items-center space-x-2">
+          {onBackToHome && (
+            <button
+              type="button"
+              onClick={onBackToHome}
+              className="px-2.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition shrink-0 flex items-center space-x-1.5 text-xs font-bold active:scale-95 shadow-sm"
+              title="Quay lại Trang Chủ Giáo Án"
+            >
+              <ArrowLeft className="w-4 h-4 text-emerald-400 stroke-[2.5]" />
+              <span>Trang Chủ</span>
+            </button>
+          )}
+          <div>
+            <h2 className="text-xl font-black text-white flex items-center space-x-2">
+              <Scale className="w-6 h-6 text-emerald-400" />
+              <span>THEO DÕI HÌNH THỂ & CHỈ SỐ</span>
+            </h2>
+            <p className="text-xs text-zinc-400 mt-0.5">
+              Quản lý cân nặng, số đo các vòng, tỷ lệ mỡ và tiến độ mục tiêu vóc dáng
+            </p>
+          </div>
         </div>
 
         <div className="flex items-center space-x-2">

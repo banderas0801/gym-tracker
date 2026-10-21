@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { X, Dumbbell, Sparkles, AlertTriangle, ShieldCheck, Play } from 'lucide-react';
+import { X, Dumbbell, Sparkles, AlertTriangle, ShieldCheck, Play, ArrowLeft } from 'lucide-react';
 import exercisesData from '@/data/exercises.json';
 import { getExerciseGuide } from '@/lib/exerciseGuide';
 import { getExerciseMedia } from '@/lib/exerciseMedia';
@@ -87,9 +87,11 @@ export default function ExerciseQuickViewModal({
           <button
             type="button"
             onClick={onClose}
-            className="p-2 rounded-2xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white transition shrink-0"
+            className="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition shrink-0 flex items-center space-x-1.5 text-xs font-bold active:scale-95 shadow-sm"
+            title="Quay lại danh sách"
           >
-            <X className="w-5 h-5" />
+            <ArrowLeft className="w-4 h-4 text-emerald-400 stroke-[2.5]" />
+            <span>Quay lại</span>
           </button>
         </div>
 

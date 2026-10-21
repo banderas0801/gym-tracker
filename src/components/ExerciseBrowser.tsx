@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Search, X, Dumbbell, Filter, Info } from 'lucide-react';
+import { Search, X, Dumbbell, Filter, Info, ArrowLeft } from 'lucide-react';
 import { Exercise } from '@/types/workout';
 import exercisesData from '@/data/exercises.json';
 import { translateMuscle, translateEquipment, translateCategory, translateInstructions } from '@/lib/translations';
@@ -23,7 +23,11 @@ const MUSCLE_GROUPS = [
   { id: 'abdominals', label: 'Cơ bụng (Abs)' },
 ];
 
-export default function ExerciseBrowser() {
+interface ExerciseBrowserProps {
+  onBackToHome?: () => void;
+}
+
+export default function ExerciseBrowser({ onBackToHome }: ExerciseBrowserProps) {
   const [search, setSearch] = useState('');
   const [selectedMuscle, setSelectedMuscle] = useState('all');
   const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
@@ -50,14 +54,28 @@ export default function ExerciseBrowser() {
     <div className="max-w-4xl mx-auto space-y-6 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
       {/* Search & Filter Header */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 shadow-xl space-y-4">
-        <div>
-          <h2 className="text-xl font-extrabold text-white flex items-center space-x-2">
-            <Dumbbell className="w-5 h-5 text-emerald-400" />
-            <span>Thư Viện Bài Tập Chi Tiết ({allExercises.length} bài)</span>
-          </h2>
-          <p className="text-xs text-zinc-400 mt-1">
-            Tra cứu hướng dẫn chuẩn động tác, nhóm cơ tác động và hình ảnh minh họa tư thế
-          </p>
+        <div className="flex items-start justify-between gap-3">
+          <div>
+            <h2 className="text-xl font-extrabold text-white flex items-center space-x-2">
+              <Dumbbell className="w-5 h-5 text-emerald-400" />
+              <span>Thư Viện Bài Tập Chi Tiết ({allExercises.length} bài)</span>
+            </h2>
+            <p className="text-xs text-zinc-400 mt-1">
+              Tra cứu hướng dẫn chuẩn động tác, nhóm cơ tác động và hình ảnh minh họa tư thế
+            </p>
+          </div>
+
+          {onBackToHome && (
+            <button
+              type="button"
+              onClick={onBackToHome}
+              className="px-3 py-1.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white border border-zinc-700 transition shrink-0 flex items-center space-x-1.5 text-xs font-bold active:scale-95 shadow-sm"
+              title="Quay lại Trang Chủ Giáo Án"
+            >
+              <ArrowLeft className="w-4 h-4 text-emerald-400 stroke-[2.5]" />
+              <span>Trang Chủ</span>
+            </button>
+          )}
         </div>
 
         <div className="relative">
@@ -193,10 +211,13 @@ export default function ExerciseBrowser() {
                   </div>
                 </div>
                 <button
+                  type="button"
                   onClick={() => setSelectedExercise(null)}
-                  className="p-1 rounded-xl text-zinc-400 hover:text-white hover:bg-zinc-800 transition"
+                  className="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition shrink-0 flex items-center space-x-1.5 text-xs font-bold active:scale-95 shadow-sm"
+                  title="Quay lại danh sách bài tập"
                 >
-                  <X className="w-5 h-5" />
+                  <ArrowLeft className="w-4 h-4 text-emerald-400 stroke-[2.5]" />
+                  <span>Quay lại</span>
                 </button>
               </div>
 
@@ -251,10 +272,12 @@ export default function ExerciseBrowser() {
               </div>
 
               <button
+                type="button"
                 onClick={() => setSelectedExercise(null)}
-                className="w-full py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs transition"
+                className="w-full py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs sm:text-sm transition flex items-center justify-center space-x-1.5 active:scale-95"
               >
-                Đóng
+                <ArrowLeft className="w-4 h-4 text-emerald-400 stroke-[2.5]" />
+                <span>Quay lại danh sách bài tập</span>
               </button>
             </div>
           </div>

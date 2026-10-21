@@ -11,6 +11,7 @@ import {
   Play,
   Layers,
   ChevronRight,
+  ArrowLeft,
 } from 'lucide-react';
 import { WorkoutSession } from '@/types/workout';
 import {
@@ -70,10 +71,13 @@ export default function SmartWorkoutModal({
             </div>
           </div>
           <button
+            type="button"
             onClick={onClose}
-            className="p-2 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 hover:text-white transition"
+            className="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition shrink-0 flex items-center space-x-1 text-xs font-bold active:scale-95 shadow-sm"
+            title="Đóng / Quay lại"
           >
-            <X className="w-5 h-5" />
+            <ArrowLeft className="w-4 h-4 text-emerald-400 stroke-[2.5]" />
+            <span>Quay lại</span>
           </button>
         </div>
 

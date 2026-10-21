@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Play, Plus, Dumbbell, Calendar, Flame, ChevronRight, Layers, Sparkles, Wand2, Compass, BookOpen, Wind, ShieldCheck, X } from 'lucide-react';
+import { Play, Plus, Dumbbell, Calendar, Flame, ChevronRight, Layers, Sparkles, Wand2, Compass, BookOpen, Wind, ShieldCheck, X, ArrowLeft } from 'lucide-react';
 import { RoutineTemplate, WorkoutSession, WorkoutExerciseItem, SetLog, Exercise } from '@/types/workout';
 import { getRoutines, saveRoutine, getPreviousPerformance } from '@/lib/storage';
 import { getExerciseMedia } from '@/lib/exerciseMedia';
@@ -555,10 +555,21 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
       {isCreatingRoutine && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-in fade-in">
           <div className="bg-zinc-950 border border-zinc-800 rounded-3xl w-full max-w-lg p-6 space-y-4 max-h-[90vh] overflow-y-auto">
-            <h3 className="text-lg font-bold text-white flex items-center space-x-2">
-              <Layers className="w-5 h-5 text-emerald-400" />
-              <span>Thiết Lập Giáo Án Tập Mới</span>
-            </h3>
+            <div className="flex items-center justify-between pb-3 border-b border-zinc-800">
+              <h3 className="text-lg font-bold text-white flex items-center space-x-2">
+                <Layers className="w-5 h-5 text-emerald-400" />
+                <span>Thiết Lập Giáo Án Tập Mới</span>
+              </h3>
+              <button
+                type="button"
+                onClick={() => setIsCreatingRoutine(false)}
+                className="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 transition shrink-0 flex items-center space-x-1.5 text-xs font-bold active:scale-95 shadow-sm"
+                title="Quay lại danh sách giáo án"
+              >
+                <ArrowLeft className="w-4 h-4 text-emerald-400 stroke-[2.5]" />
+                <span>Quay lại</span>
+              </button>
+            </div>
 
             <div className="space-y-3">
               <div>
