@@ -23,47 +23,47 @@ export default function StarterComboPanel({ onAddCombo }: StarterComboPanelProps
         </p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5 max-w-2xl mx-auto text-left pt-2">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 max-w-2xl mx-auto text-left pt-2">
         <button
           type="button"
           onClick={() => onAddCombo('fullbody')}
-          className="p-3.5 rounded-2xl bg-zinc-900 border border-emerald-500/40 hover:border-emerald-500 transition group active:scale-[0.98] shadow-md"
+          className="p-4 rounded-2xl bg-zinc-900 border border-emerald-500/40 hover:border-emerald-500 transition group active:scale-[0.98] shadow-md"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-black text-white group-hover:text-emerald-400 transition">
+            <span className="text-sm font-black text-white group-hover:text-emerald-400 transition">
               ⚡ Combo Full Body
             </span>
-            <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-1.5 py-0.5 rounded border border-emerald-500/20">3 bài</span>
+            <span className="text-xs text-emerald-400 font-black bg-emerald-500/10 px-2 py-0.5 rounded-lg border border-emerald-500/20">3 bài</span>
           </div>
-          <p className="text-[10px] text-zinc-400 mt-1">Đẩy ngực • Kéo xô máy • Đạp đùi máy</p>
+          <p className="text-xs text-zinc-300 mt-1.5 font-medium">Đẩy ngực • Kéo xô máy • Đạp đùi máy</p>
         </button>
 
         <button
           type="button"
           onClick={() => onAddCombo('upper')}
-          className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-teal-500/40 transition group active:scale-[0.98] shadow-md"
+          className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-teal-500/40 transition group active:scale-[0.98] shadow-md"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-black text-white group-hover:text-teal-400 transition">
+            <span className="text-sm font-black text-white group-hover:text-teal-400 transition">
               ⚡ Combo Thân Trên
             </span>
-            <span className="text-[10px] text-teal-400 font-bold bg-teal-500/10 px-1.5 py-0.5 rounded border border-teal-500/20">4 bài</span>
+            <span className="text-xs text-teal-400 font-black bg-teal-500/10 px-2 py-0.5 rounded-lg border border-teal-500/20">4 bài</span>
           </div>
-          <p className="text-[10px] text-zinc-400 mt-1">Ngực ngang • Kéo xô • Đẩy vai • Tay sau</p>
+          <p className="text-xs text-zinc-300 mt-1.5 font-medium">Ngực ngang • Kéo xô • Đẩy vai • Tay sau</p>
         </button>
 
         <button
           type="button"
           onClick={() => onAddCombo('lower')}
-          className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-amber-500/40 transition group active:scale-[0.98] shadow-md"
+          className="p-4 rounded-2xl bg-zinc-900 border border-zinc-800 hover:border-amber-500/40 transition group active:scale-[0.98] shadow-md"
         >
           <div className="flex items-center justify-between">
-            <span className="text-xs font-black text-white group-hover:text-amber-400 transition">
+            <span className="text-sm font-black text-white group-hover:text-amber-400 transition">
               ⚡ Combo Thân Dưới
             </span>
-            <span className="text-[10px] text-amber-400 font-bold bg-amber-500/10 px-1.5 py-0.5 rounded border border-amber-500/20">3 bài</span>
+            <span className="text-xs text-amber-400 font-black bg-amber-500/10 px-2 py-0.5 rounded-lg border border-amber-500/20">3 bài</span>
           </div>
-          <p className="text-[10px] text-zinc-400 mt-1">Đạp đùi • Đùi sau mông • Bắp chuối</p>
+          <p className="text-xs text-zinc-300 mt-1.5 font-medium">Đạp đùi • Đùi sau mông • Bắp chuối</p>
         </button>
       </div>
     </div>

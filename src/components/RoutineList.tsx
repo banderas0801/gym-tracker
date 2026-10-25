@@ -494,10 +494,10 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
             </div>
 
             {/* Exercises List inside routine */}
-            <div className="pt-3 border-t border-zinc-800/80 space-y-2">
-              <div className="flex items-center justify-between text-xs uppercase font-bold text-zinc-400 tracking-wider">
+            <div className="pt-3.5 border-t border-zinc-800/80 space-y-2.5">
+              <div className="flex items-center justify-between text-xs uppercase font-extrabold text-zinc-400 tracking-wider">
                 <span>{routine.exercises.length} Bài Tập Trong Buổi:</span>
-                <span className="text-[11px] text-emerald-400 font-normal normal-case">Chạm bài tập để xem kỹ thuật</span>
+                <span className="text-xs text-emerald-400 font-semibold normal-case">Chạm bài tập để xem kỹ thuật</span>
               </div>
               <div className="grid grid-cols-1 gap-2.5">
                 {routine.exercises.map((ex, i) => {
@@ -509,10 +509,10 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
                         setQuickViewExerciseId(ex.exerciseId);
                         setQuickViewExerciseName(ex.exerciseName);
                       }}
-                      className="bg-zinc-950/80 border border-zinc-800/80 hover:border-emerald-500/50 hover:bg-zinc-900/90 rounded-2xl p-3 flex items-center justify-between space-x-3 cursor-pointer transition active:scale-[0.99] group/item shadow-sm"
+                      className="bg-zinc-950/90 border border-zinc-800/90 hover:border-emerald-500/50 hover:bg-zinc-900 rounded-2xl p-3 sm:p-3.5 flex items-center justify-between space-x-3 cursor-pointer transition active:scale-[0.99] group/item shadow-sm"
                     >
-                      <div className="flex items-center space-x-3.5 min-w-0">
-                        <div className="w-13 h-13 rounded-xl bg-zinc-900 border border-zinc-800 shrink-0 overflow-hidden flex items-center justify-center relative group-hover/item:border-emerald-500/40 transition">
+                      <div className="flex items-center space-x-3 sm:space-x-3.5 min-w-0">
+                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-900 border border-zinc-800 shrink-0 overflow-hidden flex items-center justify-center relative group-hover/item:border-emerald-500/40 transition shadow-inner">
                           {media.startImageUrl ? (
                             <img
                               src={media.startImageUrl}
@@ -521,26 +521,26 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
                               loading="lazy"
                             />
                           ) : (
-                            <Dumbbell className="w-6 h-6 text-zinc-600" />
+                            <Dumbbell className="w-7 h-7 text-zinc-600" />
                           )}
                         </div>
                         <div className="min-w-0">
-                          <div className="text-zinc-100 font-bold text-sm sm:text-base group-hover/item:text-emerald-400 transition truncate">
+                          <div className="text-zinc-100 font-extrabold text-base sm:text-lg group-hover/item:text-emerald-400 transition truncate leading-snug">
                             {i + 1}. {ex.exerciseName}
                           </div>
-                          <div className="text-xs text-zinc-400 flex items-center space-x-2 mt-0.5">
-                            <span className="text-emerald-400 font-bold font-mono">
+                          <div className="text-xs sm:text-sm text-zinc-400 flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1">
+                            <span className="text-emerald-400 font-black font-mono bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
                               {ex.defaultSets} × {ex.defaultReps} {ex.suggestedWeightKg ? `(~${ex.suggestedWeightKg}kg)` : ''}
                             </span>
                             <span>•</span>
-                            <span className="text-zinc-500 underline underline-offset-2">Bấm xem chi tiết</span>
+                            <span className="text-zinc-400 font-medium">Bấm xem form</span>
                           </div>
                         </div>
                       </div>
 
-                      <div className="px-2.5 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs font-bold text-zinc-400 group-hover/item:text-emerald-400 group-hover/item:border-emerald-500/30 transition shrink-0 flex items-center space-x-1">
+                      <div className="px-3 py-2 rounded-xl bg-zinc-850 border border-zinc-750 text-xs sm:text-sm font-extrabold text-zinc-200 group-hover/item:text-emerald-400 group-hover/item:border-emerald-500/30 transition shrink-0 flex items-center space-x-1 shadow-sm">
                         <span>Xem</span>
-                        <ChevronRight className="w-3.5 h-3.5" />
+                        <ChevronRight className="w-4 h-4" />
                       </div>
                     </div>
                   );

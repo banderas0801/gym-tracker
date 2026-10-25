@@ -48,18 +48,18 @@ export default function SetRow({
       }`}
     >
       {/* Set Badge / Type */}
-      <td className="py-2 text-center">
+      <td className="py-2.5 text-center">
         <button
           type="button"
           onClick={handleSetTypeClick}
-          className={`w-7 h-7 rounded-lg text-xs font-bold transition flex items-center justify-center mx-auto active:scale-90 ${
+          className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl text-xs sm:text-sm font-black transition flex items-center justify-center mx-auto active:scale-90 shadow-sm ${
             set.setType === 'warmup'
               ? 'bg-amber-500/20 text-amber-400 border border-amber-500/40'
               : set.setType === 'drop'
               ? 'bg-purple-500/20 text-purple-400 border border-purple-500/40'
               : set.setType === 'failure'
               ? 'bg-red-500/20 text-red-400 border border-red-500/40'
-              : 'bg-zinc-800 text-zinc-300'
+              : 'bg-zinc-800 text-zinc-200 border border-zinc-700'
           }`}
           title="Bấm để đổi loại Set (Normal / Warmup / Drop / Failure)"
         >
@@ -74,14 +74,14 @@ export default function SetRow({
       </td>
 
       {/* Previous weight/reps */}
-      <td className="py-2 pl-1.5 sm:pl-2 text-zinc-500 font-mono text-[10px] sm:text-[11px] truncate max-w-[65px] sm:max-w-none">
+      <td className="py-2.5 pl-1.5 sm:pl-2 text-zinc-400 font-mono text-xs sm:text-sm truncate max-w-[70px] sm:max-w-none">
         {set.previousWeightKg !== undefined
           ? `${set.previousWeightKg}k×${set.previousReps}`
           : '—'}
       </td>
 
       {/* Weight input - Mobile optimized: inputMode="decimal" & text-[16px] prevents iOS zoom */}
-      <td className="py-2 px-1 text-center">
+      <td className="py-2.5 px-1 text-center">
         <input
           type="number"
           step="0.5"
@@ -91,12 +91,12 @@ export default function SetRow({
           onChange={(e) =>
             onUpdateSet(exerciseIndex, setIndex, 'weightKg', parseFloat(e.target.value) || 0)
           }
-          className="w-16 sm:w-20 bg-zinc-950 border border-zinc-800 rounded-xl px-1 sm:px-2 py-1.5 text-center text-[16px] sm:text-sm font-bold text-white focus:outline-none focus:border-emerald-500 tabular-nums"
+          className="w-16 sm:w-20 bg-zinc-950 border border-zinc-700/80 rounded-xl px-1 sm:px-2 py-2 text-center text-base sm:text-base font-extrabold text-white focus:outline-none focus:border-emerald-500 tabular-nums shadow-inner"
         />
       </td>
 
       {/* Reps input - Mobile optimized: inputMode="numeric" & text-[16px] prevents iOS zoom */}
-      <td className="py-2 px-1 text-center">
+      <td className="py-2.5 px-1 text-center">
         <input
           type="number"
           inputMode="numeric"
@@ -105,27 +105,27 @@ export default function SetRow({
           onChange={(e) =>
             onUpdateSet(exerciseIndex, setIndex, 'reps', parseInt(e.target.value, 10) || 0)
           }
-          className="w-14 sm:w-16 bg-zinc-950 border border-zinc-800 rounded-xl px-1 sm:px-2 py-1.5 text-center text-[16px] sm:text-sm font-bold text-white focus:outline-none focus:border-emerald-500 tabular-nums"
+          className="w-14 sm:w-16 bg-zinc-950 border border-zinc-700/80 rounded-xl px-1 sm:px-2 py-2 text-center text-base sm:text-base font-extrabold text-white focus:outline-none focus:border-emerald-500 tabular-nums shadow-inner"
         />
       </td>
 
       {/* Est 1RM */}
-      <td className="py-2 text-center font-mono text-[10px] sm:text-[11px] text-zinc-400">
+      <td className="py-2.5 text-center font-mono text-xs sm:text-sm font-bold text-zinc-300">
         {est1RM > 0 ? `${est1RM}` : '—'}
       </td>
 
       {/* Complete Checkbox */}
-      <td className="py-2 text-center">
+      <td className="py-2.5 text-center">
         <button
           type="button"
           onClick={handleToggleClick}
-          className={`w-7 h-7 rounded-xl flex items-center justify-center transition mx-auto active:scale-90 ${
+          className={`w-8 h-8 sm:w-9 sm:h-9 rounded-xl flex items-center justify-center transition mx-auto active:scale-90 ${
             set.isCompleted
-              ? 'bg-emerald-500 text-zinc-950 shadow-md shadow-emerald-500/30'
-              : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-600 hover:text-zinc-300 border border-zinc-700'
+              ? 'bg-emerald-500 text-zinc-950 shadow-md shadow-emerald-500/40'
+              : 'bg-zinc-800 hover:bg-zinc-700 text-zinc-500 hover:text-zinc-200 border border-zinc-700'
           }`}
         >
-          <Check className="w-4 h-4 stroke-[3]" />
+          <Check className="w-5 h-5 stroke-[3]" />
         </button>
       </td>
     </tr>

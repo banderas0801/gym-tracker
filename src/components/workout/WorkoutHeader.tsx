@@ -114,39 +114,39 @@ export default function WorkoutHeader({
       </div>
 
       {/* Quick Stats Bar */}
-      <div className="grid grid-cols-4 gap-1.5 sm:gap-2 pt-1.5 sm:pt-2 border-t border-zinc-800/80 text-center">
-        <div className="bg-zinc-950/60 p-1.5 sm:p-2 rounded-xl border border-zinc-800/50">
-          <div className="text-[9px] uppercase font-bold text-zinc-500">Volume</div>
-          <div className="text-xs sm:text-sm font-extrabold text-emerald-400 truncate font-mono">
-            {totalVolume.toLocaleString()} <span className="text-[9px] font-normal text-zinc-400">kg</span>
+      <div className="grid grid-cols-4 gap-1.5 sm:gap-2 pt-2 border-t border-zinc-800/80 text-center">
+        <div className="bg-zinc-950/70 p-2 sm:p-2.5 rounded-2xl border border-zinc-800/60">
+          <div className="text-[10px] sm:text-xs uppercase font-extrabold text-zinc-400">Volume</div>
+          <div className="text-xs sm:text-base font-black text-emerald-400 truncate font-mono mt-0.5">
+            {totalVolume.toLocaleString()} <span className="text-[10px] sm:text-xs font-normal text-zinc-400">kg</span>
           </div>
         </div>
-        <div className="bg-zinc-950/60 p-1.5 sm:p-2 rounded-xl border border-zinc-800/50">
-          <div className="text-[9px] uppercase font-bold text-zinc-500">Bài Tập</div>
-          <div className="text-xs sm:text-sm font-extrabold text-white">
-            {exerciseCount} <span className="text-[9px] font-normal text-zinc-400">bài</span>
+        <div className="bg-zinc-950/70 p-2 sm:p-2.5 rounded-2xl border border-zinc-800/60">
+          <div className="text-[10px] sm:text-xs uppercase font-extrabold text-zinc-400">Bài Tập</div>
+          <div className="text-xs sm:text-base font-black text-white mt-0.5">
+            {exerciseCount} <span className="text-[10px] sm:text-xs font-normal text-zinc-400">bài</span>
           </div>
         </div>
-        <div className="bg-zinc-950/60 p-1.5 sm:p-2 rounded-xl border border-zinc-800/50">
-          <div className="text-[9px] uppercase font-bold text-zinc-500">Nghỉ</div>
+        <div className="bg-zinc-950/70 p-2 sm:p-2.5 rounded-2xl border border-zinc-800/60">
+          <div className="text-[10px] sm:text-xs uppercase font-extrabold text-zinc-400">Nghỉ</div>
           <button
             type="button"
             onClick={onOpenRestTimer}
-            className="text-xs sm:text-sm font-extrabold text-amber-400 hover:underline flex items-center justify-center space-x-1 mx-auto active:scale-90 transition font-mono"
+            className="text-xs sm:text-base font-black text-amber-400 hover:underline flex items-center justify-center space-x-1 mx-auto active:scale-90 transition font-mono mt-0.5"
           >
-            <Timer className="w-3 h-3" />
+            <Timer className="w-3.5 h-3.5 text-amber-400" />
             <span>{restSeconds}s</span>
           </button>
         </div>
-        <div className="bg-zinc-950/60 p-1.5 sm:p-2 rounded-xl border border-zinc-800/50">
-          <div className="text-[9px] uppercase font-bold text-zinc-500">Bánh Tạ</div>
+        <div className="bg-zinc-950/70 p-2 sm:p-2.5 rounded-2xl border border-zinc-800/60">
+          <div className="text-[10px] sm:text-xs uppercase font-extrabold text-zinc-400">Bánh Tạ</div>
           <button
             type="button"
             onClick={onOpenPlateCalculator}
-            className="text-xs sm:text-sm font-extrabold text-teal-400 hover:underline flex items-center justify-center space-x-1 mx-auto active:scale-90 transition"
+            className="text-xs sm:text-base font-black text-teal-400 hover:underline flex items-center justify-center space-x-1 mx-auto active:scale-90 transition mt-0.5"
             title="Mở máy tính xếp bánh tạ đòn"
           >
-            <Calculator className="w-3 h-3" />
+            <Calculator className="w-3.5 h-3.5 text-teal-400" />
             <span>Tính Tạ</span>
           </button>
         </div>
