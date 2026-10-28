@@ -1,4 +1,4 @@
-=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-10-25T03:31:26.200Z ===
+=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-10-28T09:21:25.739Z ===
 Đang kết nối máy chủ VPS 103.77.209.87...
 ✅ Đã kết nối VPS thành công!
 
@@ -8,22 +8,22 @@
 ┌─────┬───────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
 │ id  │ name              │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
 ├─────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 16  │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 5D     │ 1    │ online    │ 0%       │ 4.8mb    │ root     │ disabled │
-│ 15  │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 5D     │ 1    │ online    │ 0%       │ 4.8mb    │ root     │ disabled │
-│ 17  │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 5D     │ 1    │ online    │ 0%       │ 4.9mb    │ root     │ disabled │
-│ 9   │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 5D     │ 6    │ online    │ 0%       │ 19.8mb   │ root     │ disabled │
-│ 18  │ flowdesk          │ default     │ 0.1.0   │ fork    │ 2138644  │ 21m    │ 2    │ online    │ 0%       │ 49.0mb   │ root     │ disabled │
-│ 10  │ gemini-proxy      │ default     │ N/A     │ fork    │ 1426962  │ 2D     │ 5    │ online    │ 0%       │ 4.0mb    │ root     │ disabled │
-│ 60  │ gym-tracker       │ default     │ N/A     │ fork    │ 1373016  │ 2D     │ 0    │ online    │ 0%       │ 31.6mb   │ root     │ disabled │
-│ 0   │ maccanh           │ default     │ 1.0.0   │ fork    │ 2141006  │ 11m    │ 82   │ online    │ 0%       │ 63.9mb   │ root     │ disabled │
-│ 12  │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 5D     │ 16   │ online    │ 0%       │ 7.5mb    │ root     │ disabled │
-│ 11  │ muse-bridge       │ default     │ N/A     │ fork    │ 1391148  │ 2D     │ 1    │ online    │ 0%       │ 30.2mb   │ root     │ disabled │
-│ 155 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 2140974  │ 11m    │ 0    │ online    │ 0%       │ 56.1mb   │ root     │ disabled │
-│ 144 │ taxcouncil-web    │ default     │ 16.4.2  │ fork    │ 1987761  │ 12h    │ 0    │ online    │ 0%       │ 106.1mb  │ root     │ disabled │
-│ 5   │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 7D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
-│ 156 │ vieneu-tts        │ default     │ 0.1.0   │ fork    │ 2140996  │ 11m    │ 0    │ online    │ 0%       │ 645.3mb  │ root     │ disabled │
+│ 16  │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 9D     │ 1    │ online    │ 0%       │ 10.7mb   │ root     │ disabled │
+│ 15  │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 9D     │ 1    │ online    │ 0%       │ 10.4mb   │ root     │ disabled │
+│ 17  │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 9D     │ 1    │ online    │ 0%       │ 10.9mb   │ root     │ disabled │
+│ 9   │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 9D     │ 6    │ online    │ 0%       │ 22.3mb   │ root     │ disabled │
+│ 18  │ flowdesk          │ default     │ 0.1.0   │ fork    │ 2623106  │ 37h    │ 12   │ online    │ 0%       │ 48.5mb   │ root     │ disabled │
+│ 10  │ gemini-proxy      │ default     │ N/A     │ fork    │ 1426962  │ 5D     │ 5    │ online    │ 0%       │ 4.0mb    │ root     │ disabled │
+│ 60  │ gym-tracker       │ default     │ N/A     │ fork    │ 1373016  │ 5D     │ 0    │ online    │ 0%       │ 27.8mb   │ root     │ disabled │
+│ 0   │ maccanh           │ default     │ 1.0.0   │ fork    │ 2147160  │ 3D     │ 83   │ online    │ 0%       │ 82.2mb   │ root     │ disabled │
+│ 12  │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 9D     │ 16   │ online    │ 0%       │ 7.5mb    │ root     │ disabled │
+│ 11  │ muse-bridge       │ default     │ N/A     │ fork    │ 1391148  │ 5D     │ 1    │ online    │ 0%       │ 26.9mb   │ root     │ disabled │
+│ 157 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 2147125  │ 3D     │ 0    │ online    │ 0%       │ 59.7mb   │ root     │ disabled │
+│ 144 │ taxcouncil-web    │ default     │ 16.4.2  │ fork    │ 1987761  │ 3D     │ 0    │ online    │ 0%       │ 159.7mb  │ root     │ disabled │
+│ 5   │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 11D    │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
+│ 158 │ vieneu-tts        │ default     │ 0.1.0   │ fork    │ 2147143  │ 3D     │ 0    │ online    │ 0%       │ 647.0mb  │ root     │ disabled │
 └─────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 5.8% | ram usage: 47.1% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.053mb/s ⇑ 0.003mb/s drop 8/min | disk: ⇓ 0mb/s ⇑ 0.02mb/s
+host metrics | cpu: 3.6% | ram usage: 52.4% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.032mb/s ⇑ 0.002mb/s drop 42/min | disk: ⇓ 0mb/s ⇑ 0.01mb/s / 60.3%
 tcp   LISTEN 0      511                *:3008             *:*    users:(("next-server (v1",pid=1373039,fd=18))                                           
 
 --- BƯỚC 2: Kéo commit mới nhất từ GitHub ---
@@ -31,11 +31,11 @@ tcp   LISTEN 0      511                *:3008             *:*    users:(("next-s
 >>> [VPS] cd /var/www/gym-tracker && git fetch origin master && git reset --hard origin/master && git log -n 3 --oneline
 From https://github.com/banderas0801/gym-tracker
  * branch            master     -> FETCH_HEAD
-   5f9be4d..07cbcdd  master     -> origin/master
-HEAD is now at 07cbcdd fix(ui): enlarge font sizes, touch targets, and illustrations for mobile gym readability
+   07cbcdd..5ae95a6  master     -> origin/master
+HEAD is now at 5ae95a6 feat(dashboard): add home tracking overview, enable mobile pinch-zoom, and compact routine view
+5ae95a6 feat(dashboard): add home tracking overview, enable mobile pinch-zoom, and compact routine view
 07cbcdd fix(ui): enlarge font sizes, touch targets, and illustrations for mobile gym readability
 5f9be4d fix(ui): enlarge font sizes, touch targets, and illustrations for mobile gym readability
-8797b08 fix(ui): overhaul mobile layout, eliminate layout-breaking zoom, and refresh sw cache
 
 --- BƯỚC 3: Kiểm tra và đảm bảo các file mã nguồn mới nhất trên VPS ---
 
@@ -61,6 +61,9 @@ HEAD is now at 07cbcdd fix(ui): enlarge font sizes, touch targets, and illustrat
 
 [SFTP] Đồng bộ file: storage.ts -> /var/www/gym-tracker/src/lib/storage.ts
 ✅ SFTP hoàn tất: storage.ts
+
+[SFTP] Đồng bộ file: HomeDashboardOverview.tsx -> /var/www/gym-tracker/src/components/HomeDashboardOverview.tsx
+✅ SFTP hoàn tất: HomeDashboardOverview.tsx
 
 [SFTP] Đồng bộ file: RoutineList.tsx -> /var/www/gym-tracker/src/components/RoutineList.tsx
 ✅ SFTP hoàn tất: RoutineList.tsx
@@ -113,6 +116,9 @@ HEAD is now at 07cbcdd fix(ui): enlarge font sizes, touch targets, and illustrat
 [SFTP] Đồng bộ file: bodyStorage.ts -> /var/www/gym-tracker/src/lib/bodyStorage.ts
 ✅ SFTP hoàn tất: bodyStorage.ts
 
+[SFTP] Đồng bộ file: layout.tsx -> /var/www/gym-tracker/src/app/layout.tsx
+✅ SFTP hoàn tất: layout.tsx
+
 [SFTP] Đồng bộ file: page.tsx -> /var/www/gym-tracker/src/app/page.tsx
 ✅ SFTP hoàn tất: page.tsx
 
@@ -130,14 +136,16 @@ HEAD is now at 07cbcdd fix(ui): enlarge font sizes, touch targets, and illustrat
 > next build
 
 ▲ Next.js 16.4.2 (Turbopack)
-✓ Running next.config.ts took 551ms
+✓ Running next.config.ts took 798ms
 - Cache Components enabled
 - Partial Prefetching enabled
 
   Creating an optimized production build ...
-✓ Compiled successfully in 6.5s
+✓ Compiled successfully in 19.0s
   Running TypeScript ...
 src/components/ExerciseSelectorModal.tsx(232,22): error TS2304: Cannot find name 'ArrowLeft'.
+src/components/HomeDashboardOverview.tsx(80,26): error TS2339: Property 'startTime' does not exist on type 'RunSession'.
+src/components/HomeDashboardOverview.tsx(110,28): error TS2339: Property 'startTime' does not exist on type 'RunSession'.
 Failed to type check.
 
 
