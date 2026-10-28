@@ -22,13 +22,12 @@ export default function Home() {
   const [isMobileDevice, setIsMobileDevice] = useState(false);
 
   React.useEffect(() => {
-    // 1. Khôi phục kích thước zoom an toàn (chống vỡ layout di động)
+    // 1. Khôi phục kích thước chữ & zoom an toàn trên mọi trình duyệt di động
     const saved = localStorage.getItem('gym_zoom_scale');
     let initialZoom = 1;
     if (saved) {
       const num = parseFloat(saved);
-      if (num > 1.2) {
-        // Reset nếu trước đó bị kẹt ở mức 150% - 200% gây vỡ giao diện
+      if (num > 1.35) {
         localStorage.setItem('gym_zoom_scale', '1');
         initialZoom = 1;
       } else if (!isNaN(num) && num >= 1) {
@@ -36,7 +35,10 @@ export default function Home() {
       }
     }
     setZoomScale(initialZoom);
-    document.documentElement.style.zoom = String(initialZoom);
+    document.documentElement.style.fontSize = `${initialZoom * 100}%`;
+    try {
+      document.documentElement.style.zoom = String(initialZoom);
+    } catch {}
 
     // 2. Nhận diện thiết bị di động
     const checkMobile = () => {
@@ -53,14 +55,17 @@ export default function Home() {
   }, []);
 
   const handleToggleZoom = () => {
-    // Luân chuyển an toàn: 100% (Chuẩn) -> 110% (Lớn) -> 120% (Rõ nét) -> 100%
-    const SCALES = [1, 1.1, 1.2];
+    // 3 Mức cỡ chữ chuẩn mobile: 100% (Chuẩn) -> 115% (Lớn dễ đọc) -> 130% (Cực lớn) -> 100%
+    const SCALES = [1, 1.15, 1.3];
     const currentIndex = SCALES.indexOf(zoomScale);
     const next = currentIndex !== -1 ? SCALES[(currentIndex + 1) % SCALES.length] : 1;
 
     setZoomScale(next);
     localStorage.setItem('gym_zoom_scale', String(next));
-    document.documentElement.style.zoom = String(next);
+    document.documentElement.style.fontSize = `${next * 100}%`;
+    try {
+      document.documentElement.style.zoom = String(next);
+    } catch {}
   };
 
   const handleGoHome = () => {
@@ -124,19 +129,11 @@ export default function Home() {
               type="button"
               onClick={handleToggleZoom}
               className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-emerald-500/50 text-xs font-bold transition active:scale-95 shadow-sm flex items-center space-x-1"
-              title="Nhấn để chuyển các mức phóng to: 100% -> 125% -> 150% -> 175% -> 200%"
+              title="Nhấn để đổi cỡ chữ: 100% (Chuẩn) -> 115% (Lớn) -> 130% (Cực lớn)"
             >
               <span className="text-emerald-400 font-black text-xs sm:text-sm">Aa</span>
               <span className="text-[10px] sm:text-[11px] text-zinc-300 font-mono font-semibold">
-                {zoomScale === 1
-                  ? '100%'
-                  : zoomScale === 1.25
-                  ? '125%'
-                  : zoomScale === 1.5
-                  ? '150%'
-                  : zoomScale === 1.75
-                  ? '175%'
-                  : '200%'}
+                {zoomScale === 1 ? '100%' : zoomScale === 1.15 ? '115%' : '130%'}
               </span>
             </button>
 
@@ -245,10 +242,14 @@ export default function Home() {
           <>
             {activeTab === 'routines' && (
               <ErrorBoundary fallbackTitle="Không thể tải giáo án">
-                <RoutineList onStartSession={(sess) => {
-                  setActiveSession(sess);
-                  setIsSessionMinimized(false);
-                }} />
+                <RoutineList 
+                  onStartSession={(sess) => {
+                    setActiveSession(sess);
+                    setIsSessionMinimized(false);
+                  }}
+                  onGoToRunning={() => setActiveTab('running')}
+                  onGoToHistory={() => setActiveTab('history')}
+                />
               </ErrorBoundary>
             )}
             {activeTab === 'running' && (

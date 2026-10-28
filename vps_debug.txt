@@ -1,4 +1,4 @@
-=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-10-25T02:45:13.033Z ===
+=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-10-25T03:31:26.200Z ===
 Đang kết nối máy chủ VPS 103.77.209.87...
 ✅ Đã kết nối VPS thành công!
 
@@ -10,20 +10,20 @@
 ├─────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
 │ 16  │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 5D     │ 1    │ online    │ 0%       │ 4.8mb    │ root     │ disabled │
 │ 15  │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 5D     │ 1    │ online    │ 0%       │ 4.8mb    │ root     │ disabled │
-│ 17  │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 5D     │ 1    │ online    │ 0%       │ 5.0mb    │ root     │ disabled │
-│ 9   │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 5D     │ 6    │ online    │ 0%       │ 19.7mb   │ root     │ disabled │
-│ 18  │ flowdesk          │ default     │ 0.1.0   │ fork    │ 1834598  │ 24h    │ 1    │ online    │ 0%       │ 2.7mb    │ root     │ disabled │
+│ 17  │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 5D     │ 1    │ online    │ 0%       │ 4.9mb    │ root     │ disabled │
+│ 9   │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 5D     │ 6    │ online    │ 0%       │ 19.8mb   │ root     │ disabled │
+│ 18  │ flowdesk          │ default     │ 0.1.0   │ fork    │ 2138644  │ 21m    │ 2    │ online    │ 0%       │ 49.0mb   │ root     │ disabled │
 │ 10  │ gemini-proxy      │ default     │ N/A     │ fork    │ 1426962  │ 2D     │ 5    │ online    │ 0%       │ 4.0mb    │ root     │ disabled │
-│ 60  │ gym-tracker       │ default     │ N/A     │ fork    │ 1373016  │ 2D     │ 0    │ online    │ 0%       │ 30.2mb   │ root     │ disabled │
-│ 0   │ maccanh           │ default     │ 1.0.0   │ fork    │ 2004043  │ 10h    │ 81   │ online    │ 0%       │ 79.6mb   │ root     │ disabled │
-│ 12  │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 5D     │ 16   │ online    │ 0%       │ 7.3mb    │ root     │ disabled │
-│ 11  │ muse-bridge       │ default     │ N/A     │ fork    │ 1391148  │ 2D     │ 1    │ online    │ 0%       │ 29.6mb   │ root     │ disabled │
-│ 153 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 2004003  │ 10h    │ 0    │ online    │ 0%       │ 59.4mb   │ root     │ disabled │
+│ 60  │ gym-tracker       │ default     │ N/A     │ fork    │ 1373016  │ 2D     │ 0    │ online    │ 0%       │ 31.6mb   │ root     │ disabled │
+│ 0   │ maccanh           │ default     │ 1.0.0   │ fork    │ 2141006  │ 11m    │ 82   │ online    │ 0%       │ 63.9mb   │ root     │ disabled │
+│ 12  │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 5D     │ 16   │ online    │ 0%       │ 7.5mb    │ root     │ disabled │
+│ 11  │ muse-bridge       │ default     │ N/A     │ fork    │ 1391148  │ 2D     │ 1    │ online    │ 0%       │ 30.2mb   │ root     │ disabled │
+│ 155 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 2140974  │ 11m    │ 0    │ online    │ 0%       │ 56.1mb   │ root     │ disabled │
 │ 144 │ taxcouncil-web    │ default     │ 16.4.2  │ fork    │ 1987761  │ 12h    │ 0    │ online    │ 0%       │ 106.1mb  │ root     │ disabled │
 │ 5   │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 7D     │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
-│ 154 │ vieneu-tts        │ default     │ 0.1.0   │ fork    │ 2004021  │ 10h    │ 0    │ online    │ 0%       │ 592.0mb  │ root     │ disabled │
+│ 156 │ vieneu-tts        │ default     │ 0.1.0   │ fork    │ 2140996  │ 11m    │ 0    │ online    │ 0%       │ 645.3mb  │ root     │ disabled │
 └─────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 5.7% | ram usage: 42.7% | lo: ⇓ 0.022mb/s ⇑ 0.022mb/s | ens192: ⇓ 0.038mb/s ⇑ 0.025mb/s drop 2/min | disk: ⇓ 0mb/s ⇑ 0.04mb/s
+host metrics | cpu: 5.8% | ram usage: 47.1% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.053mb/s ⇑ 0.003mb/s drop 8/min | disk: ⇓ 0mb/s ⇑ 0.02mb/s
 tcp   LISTEN 0      511                *:3008             *:*    users:(("next-server (v1",pid=1373039,fd=18))                                           
 
 --- BƯỚC 2: Kéo commit mới nhất từ GitHub ---
@@ -31,11 +31,11 @@ tcp   LISTEN 0      511                *:3008             *:*    users:(("next-s
 >>> [VPS] cd /var/www/gym-tracker && git fetch origin master && git reset --hard origin/master && git log -n 3 --oneline
 From https://github.com/banderas0801/gym-tracker
  * branch            master     -> FETCH_HEAD
-   8797b08..5f9be4d  master     -> origin/master
-HEAD is now at 5f9be4d fix(ui): enlarge font sizes, touch targets, and illustrations for mobile gym readability
+   5f9be4d..07cbcdd  master     -> origin/master
+HEAD is now at 07cbcdd fix(ui): enlarge font sizes, touch targets, and illustrations for mobile gym readability
+07cbcdd fix(ui): enlarge font sizes, touch targets, and illustrations for mobile gym readability
 5f9be4d fix(ui): enlarge font sizes, touch targets, and illustrations for mobile gym readability
 8797b08 fix(ui): overhaul mobile layout, eliminate layout-breaking zoom, and refresh sw cache
-c2a42bf fix(ui): overhaul mobile layout, eliminate layout-breaking zoom, and refresh sw cache
 
 --- BƯỚC 3: Kiểm tra và đảm bảo các file mã nguồn mới nhất trên VPS ---
 
@@ -130,12 +130,12 @@ c2a42bf fix(ui): overhaul mobile layout, eliminate layout-breaking zoom, and ref
 > next build
 
 ▲ Next.js 16.4.2 (Turbopack)
-✓ Running next.config.ts took 764ms
+✓ Running next.config.ts took 551ms
 - Cache Components enabled
 - Partial Prefetching enabled
 
   Creating an optimized production build ...
-✓ Compiled successfully in 10.0s
+✓ Compiled successfully in 6.5s
   Running TypeScript ...
 src/components/ExerciseSelectorModal.tsx(232,22): error TS2304: Cannot find name 'ArrowLeft'.
 Failed to type check.

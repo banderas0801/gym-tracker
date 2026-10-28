@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Play, Plus, Dumbbell, Calendar, Flame, ChevronRight, Layers, Sparkles, Wand2, Compass, BookOpen, Wind, ShieldCheck, X, ArrowLeft } from 'lucide-react';
+import { Play, Plus, Dumbbell, Calendar, Flame, ChevronRight, ChevronDown, ChevronUp, Layers, Sparkles, Wand2, Compass, BookOpen, Wind, ShieldCheck, X, ArrowLeft } from 'lucide-react';
 import { RoutineTemplate, WorkoutSession, WorkoutExerciseItem, SetLog, Exercise } from '@/types/workout';
 import { getRoutines, saveRoutine, getPreviousPerformance } from '@/lib/storage';
 import { getExerciseMedia } from '@/lib/exerciseMedia';
@@ -10,16 +10,25 @@ import ExerciseSelectorModal from './ExerciseSelectorModal';
 import SmartWorkoutModal from './SmartWorkoutModal';
 import ExerciseQuickViewModal from './ExerciseQuickViewModal';
 import LevelAdvisorModal from './LevelAdvisorModal';
+import HomeDashboardOverview from './HomeDashboardOverview';
 
 interface RoutineListProps {
   onStartSession: (session: WorkoutSession) => void;
+  onGoToRunning?: () => void;
+  onGoToHistory?: () => void;
 }
 
-export default function RoutineList({ onStartSession }: RoutineListProps) {
+export default function RoutineList({ 
+  onStartSession,
+  onGoToRunning,
+  onGoToHistory,
+}: RoutineListProps) {
   const [routines, setRoutines] = useState<RoutineTemplate[]>(() => getRoutines());
   const [routineSystem, setRoutineSystem] = useState<'basic' | 'thol'>('basic');
   const [basicFilter, setBasicFilter] = useState<'all' | 'newbie' | 'intermediate'>('all');
   const [tholFilter, setTholFilter] = useState<'all' | 'tang1' | 'tang2' | 'tang3'>('all');
+  const [expandedRoutines, setExpandedRoutines] = useState<Record<string, boolean>>({});
+  const [isGlobalExpanded, setIsGlobalExpanded] = useState<boolean>(false);
   const [isGymPhoModalOpen, setIsGymPhoModalOpen] = useState(false);
   const [isAdvisorModalOpen, setIsAdvisorModalOpen] = useState(false);
   const [isCreatingRoutine, setIsCreatingRoutine] = useState(false);
@@ -33,6 +42,13 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
   const [quickViewExerciseId, setQuickViewExerciseId] = useState<string | null>(null);
   const [quickViewExerciseName, setQuickViewExerciseName] = useState<string>('');
   const [todayRec, setTodayRec] = useState(() => getTodayRecommendation(1));
+
+  const toggleRoutineExpand = (routineId: string) => {
+    setExpandedRoutines((prev) => ({
+      ...prev,
+      [routineId]: !prev[routineId],
+    }));
+  };
 
   React.useEffect(() => {
     setTodayRec(getTodayRecommendation(new Date().getDay()));
@@ -145,6 +161,14 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
 
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
+      {/* 0. PHÂN HỆ TỔNG HỢP & TRACKING THỂ LỰC HIỂN THỊ MÀN HÌNH CHÍNH */}
+      <HomeDashboardOverview 
+        onStartTodayRecommendation={handleStartTodayRecommendation}
+        onGoToRunning={() => onGoToRunning ? onGoToRunning() : null}
+        onGoToHistory={() => onGoToHistory ? onGoToHistory() : null}
+        onStartEmptyWorkout={handleStartEmptyWorkout}
+      />
+
       {/* 1. GỢI Ý HÔM NAY (TODAY'S AI RECOMMENDATION HERO CARD) */}
       <div className="bg-gradient-to-br from-emerald-950/90 via-zinc-900 to-zinc-950 border-2 border-emerald-500/50 rounded-3xl p-5 sm:p-6 shadow-2xl relative overflow-hidden">
         <div className="absolute -right-8 -bottom-8 opacity-15 pointer-events-none">
@@ -412,143 +436,221 @@ export default function RoutineList({ onStartSession }: RoutineListProps) {
         </div>
       )}
 
-      {/* Routine Templates Header */}
-      <div className="space-y-1 pt-1">
-        <h3 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
-          <Calendar className="w-4 h-4 text-emerald-400" />
-          <span>
-            {routineSystem === 'basic' ? 'Danh Sách Giáo Án Cơ Bản' : 'Danh Sách Giáo Trình Gym Phổ'} ({filteredRoutines.length} Buổi Tập)
-          </span>
-        </h3>
-        <p className="text-xs text-zinc-400">
-          {routineSystem === 'basic'
-            ? 'Bấm "Bắt đầu" để nạp toàn bộ bài tập vào ca tập, hoặc chạm từng bài để xem ảnh và video tư thế chuẩn'
-            : 'Tuân thủ thứ tự từng tầng để xây dựng nền tảng khớp và hệ tuần hoàn khỏe mạnh trước khi nâng tạ nặng'}
-        </p>
+      {/* Routine Templates Header & View Mode Switcher */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-zinc-800/80">
+        <div className="space-y-0.5">
+          <h3 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
+            <Calendar className="w-4 h-4 text-emerald-400" />
+            <span>
+              {routineSystem === 'basic' ? 'Danh Sách Giáo Án Cơ Bản' : 'Danh Sách Giáo Trình Gym Phổ'} ({filteredRoutines.length} Buổi Tập)
+            </span>
+          </h3>
+          <p className="text-xs text-zinc-400">
+            {isGlobalExpanded
+              ? 'Đang hiển thị đầy đủ hình ảnh động tác. Chạm bài tập để xem kỹ thuật chuẩn.'
+              : 'Chế độ xem gọn: Màn hình thoáng, không bị ngợp thông tin. Bấm bài tập để xem chi tiết.'}
+          </p>
+        </div>
+
+        {/* View Mode Toggle: Xem Gọn vs Xem Đầy Đủ Ảnh */}
+        <div className="flex items-center space-x-1 bg-zinc-900 border border-zinc-800 p-1 rounded-2xl shrink-0 self-start sm:self-center shadow-inner">
+          <button
+            type="button"
+            onClick={() => setIsGlobalExpanded(false)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 ${
+              !isGlobalExpanded
+                ? 'bg-emerald-500 text-zinc-950 font-black shadow-sm'
+                : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            <span>📑 Xem Gọn</span>
+          </button>
+          <button
+            type="button"
+            onClick={() => setIsGlobalExpanded(true)}
+            className={`px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center space-x-1.5 ${
+              isGlobalExpanded
+                ? 'bg-emerald-500 text-zinc-950 font-black shadow-sm'
+                : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            <span>🖼️ Xem Ảnh Chi Tiết</span>
+          </button>
+        </div>
       </div>
 
       {/* Routine Grid */}
       <div className="space-y-4">
-        {filteredRoutines.map((routine) => (
-          <div
-            key={routine.id}
-            className={`border rounded-3xl p-5 hover:border-zinc-700 transition shadow-lg space-y-3 group ${
-              routine.id.startsWith('thol-tang1')
-                ? 'bg-gradient-to-br from-emerald-950/30 to-zinc-900 border-emerald-500/40 shadow-emerald-950/20'
-                : routine.id.startsWith('thol-tang2')
-                ? 'bg-gradient-to-br from-teal-950/30 to-zinc-900 border-teal-500/40 shadow-teal-950/20'
-                : routine.id.startsWith('thol-tang3')
-                ? 'bg-gradient-to-br from-amber-950/25 to-zinc-900 border-amber-500/40 shadow-amber-950/20'
-                : routine.level === 'Newbie'
-                ? 'bg-gradient-to-br from-emerald-950/30 to-zinc-900 border-emerald-500/40 shadow-emerald-950/20'
-                : 'bg-zinc-900 border-zinc-800'
-            }`}
-          >
-            <div className="flex items-start justify-between gap-3">
-              <div className="space-y-1.5 min-w-0">
-                <div className="flex flex-wrap items-center gap-1.5">
-                  {routine.id.startsWith('thol-tang1') && (
-                    <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-500 text-black shadow-sm font-mono">
-                      🎓 GYM PHỔ TẦNG 1 (TẠ KHỐI)
-                    </span>
-                  )}
-                  {routine.id.startsWith('thol-tang2') && (
-                    <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-teal-400 text-black shadow-sm font-mono">
-                      ⚙️ GYM PHỔ TẦNG 2 (ROBOT ĐÒN BẨY)
-                    </span>
-                  )}
-                  {routine.id.startsWith('thol-tang3') && (
-                    <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-400 text-black shadow-sm font-mono">
-                      🏋️ GYM PHỔ TẦNG 3 (FREE WEIGHT)
-                    </span>
-                  )}
-                  {routine.level === 'Newbie' && !routine.id.startsWith('thol-') && (
-                    <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
-                      ⭐ DÀNH CHO NGƯỜI MỚI (NEWBIE)
-                    </span>
-                  )}
-                  {routine.level === 'Intermediate' && !routine.id.startsWith('thol-') && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                      🔥 PHÂN HÓA PPL
-                    </span>
+        {filteredRoutines.map((routine) => {
+          const isExpanded = isGlobalExpanded || !!expandedRoutines[routine.id];
+
+          return (
+            <div
+              key={routine.id}
+              className={`border rounded-3xl p-5 hover:border-zinc-700 transition shadow-lg space-y-3 group ${
+                routine.id.startsWith('thol-tang1')
+                  ? 'bg-gradient-to-br from-emerald-950/30 to-zinc-900 border-emerald-500/40 shadow-emerald-950/20'
+                  : routine.id.startsWith('thol-tang2')
+                  ? 'bg-gradient-to-br from-teal-950/30 to-zinc-900 border-teal-500/40 shadow-teal-950/20'
+                  : routine.id.startsWith('thol-tang3')
+                  ? 'bg-gradient-to-br from-amber-950/25 to-zinc-900 border-amber-500/40 shadow-amber-950/20'
+                  : routine.level === 'Newbie'
+                  ? 'bg-gradient-to-br from-emerald-950/30 to-zinc-900 border-emerald-500/40 shadow-emerald-950/20'
+                  : 'bg-zinc-900 border-zinc-800'
+              }`}
+            >
+              <div className="flex items-start justify-between gap-3">
+                <div className="space-y-1.5 min-w-0">
+                  <div className="flex flex-wrap items-center gap-1.5">
+                    {routine.id.startsWith('thol-tang1') && (
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-emerald-500 text-black shadow-sm font-mono">
+                        🎓 GYM PHỔ TẦNG 1 (TẠ KHỐI)
+                      </span>
+                    )}
+                    {routine.id.startsWith('thol-tang2') && (
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-teal-400 text-black shadow-sm font-mono">
+                        ⚙️ GYM PHỔ TẦNG 2 (ROBOT ĐÒN BẨY)
+                      </span>
+                    )}
+                    {routine.id.startsWith('thol-tang3') && (
+                      <span className="text-[10px] font-black px-2.5 py-0.5 rounded-full bg-amber-400 text-black shadow-sm font-mono">
+                        🏋️ GYM PHỔ TẦNG 3 (FREE WEIGHT)
+                      </span>
+                    )}
+                    {routine.level === 'Newbie' && !routine.id.startsWith('thol-') && (
+                      <span className="text-[10px] font-black px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">
+                        ⭐ DÀNH CHO NGƯỜI MỚI (NEWBIE)
+                      </span>
+                    )}
+                    {routine.level === 'Intermediate' && !routine.id.startsWith('thol-') && (
+                      <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                        🔥 PHÂN HÓA PPL
+                      </span>
+                    )}
+                  </div>
+                  <h4 className="text-base sm:text-lg font-bold text-white group-hover:text-emerald-400 transition">
+                    {routine.name}
+                  </h4>
+                  <p className="text-xs text-zinc-400">{routine.targetFocus}</p>
+                  {routine.description && (
+                    <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
+                      {routine.description}
+                    </p>
                   )}
                 </div>
-                <h4 className="text-base sm:text-lg font-bold text-white group-hover:text-emerald-400 transition">
-                  {routine.name}
-                </h4>
-                <p className="text-xs text-zinc-400">{routine.targetFocus}</p>
-                {routine.description && (
-                  <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed">
-                    {routine.description}
-                  </p>
-                )}
+
+                <button
+                  onClick={() => handleStartRoutine(routine)}
+                  className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-bold text-xs sm:text-sm flex items-center space-x-1.5 shadow-md shadow-emerald-500/15 transition shrink-0 self-start"
+                >
+                  <Play className="w-3.5 h-3.5 fill-zinc-950" />
+                  <span>Bắt đầu</span>
+                </button>
               </div>
 
-              <button
-                onClick={() => handleStartRoutine(routine)}
-                className="px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-zinc-950 font-bold text-xs sm:text-sm flex items-center space-x-1.5 shadow-md shadow-emerald-500/15 transition shrink-0 self-start"
-              >
-                <Play className="w-3.5 h-3.5 fill-zinc-950" />
-                <span>Bắt đầu</span>
-              </button>
-            </div>
-
-            {/* Exercises List inside routine */}
-            <div className="pt-3.5 border-t border-zinc-800/80 space-y-2.5">
-              <div className="flex items-center justify-between text-xs uppercase font-extrabold text-zinc-400 tracking-wider">
-                <span>{routine.exercises.length} Bài Tập Trong Buổi:</span>
-                <span className="text-xs text-emerald-400 font-semibold normal-case">Chạm bài tập để xem kỹ thuật</span>
-              </div>
-              <div className="grid grid-cols-1 gap-2.5">
-                {routine.exercises.map((ex, i) => {
-                  const media = getExerciseMedia(ex.exerciseId, ex.exerciseName);
-                  return (
-                    <div
-                      key={i}
-                      onClick={() => {
-                        setQuickViewExerciseId(ex.exerciseId);
-                        setQuickViewExerciseName(ex.exerciseName);
-                      }}
-                      className="bg-zinc-950/90 border border-zinc-800/90 hover:border-emerald-500/50 hover:bg-zinc-900 rounded-2xl p-3 sm:p-3.5 flex items-center justify-between space-x-3 cursor-pointer transition active:scale-[0.99] group/item shadow-sm"
+              {/* Exercises List inside routine */}
+              {isExpanded ? (
+                <div className="pt-3.5 border-t border-zinc-800/80 space-y-2.5 animate-in fade-in duration-200">
+                  <div className="flex items-center justify-between text-xs uppercase font-extrabold text-zinc-400 tracking-wider">
+                    <span>{routine.exercises.length} Bài Tập Trong Buổi:</span>
+                    <button
+                      type="button"
+                      onClick={() => toggleRoutineExpand(routine.id)}
+                      className="text-xs text-zinc-400 hover:text-white font-bold flex items-center space-x-1 lowercase first-letter:uppercase normal-case"
                     >
-                      <div className="flex items-center space-x-3 sm:space-x-3.5 min-w-0">
-                        <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-900 border border-zinc-800 shrink-0 overflow-hidden flex items-center justify-center relative group-hover/item:border-emerald-500/40 transition shadow-inner">
-                          {media.startImageUrl ? (
-                            <img
-                              src={media.startImageUrl}
-                              alt={ex.exerciseName}
-                              className="w-full h-full object-cover group-hover/item:scale-105 transition"
-                              loading="lazy"
-                            />
-                          ) : (
-                            <Dumbbell className="w-7 h-7 text-zinc-600" />
-                          )}
-                        </div>
-                        <div className="min-w-0">
-                          <div className="text-zinc-100 font-extrabold text-base sm:text-lg group-hover/item:text-emerald-400 transition truncate leading-snug">
-                            {i + 1}. {ex.exerciseName}
+                      <span>Thu gọn</span>
+                      <ChevronUp className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2.5">
+                    {routine.exercises.map((ex, i) => {
+                      const media = getExerciseMedia(ex.exerciseId, ex.exerciseName);
+                      return (
+                        <div
+                          key={i}
+                          onClick={() => {
+                            setQuickViewExerciseId(ex.exerciseId);
+                            setQuickViewExerciseName(ex.exerciseName);
+                          }}
+                          className="bg-zinc-950/90 border border-zinc-800/90 hover:border-emerald-500/50 hover:bg-zinc-900 rounded-2xl p-3 sm:p-3.5 flex items-center justify-between space-x-3 cursor-pointer transition active:scale-[0.99] group/item shadow-sm"
+                        >
+                          <div className="flex items-center space-x-3 sm:space-x-3.5 min-w-0">
+                            <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-zinc-900 border border-zinc-800 shrink-0 overflow-hidden flex items-center justify-center relative group-hover/item:border-emerald-500/40 transition shadow-inner">
+                              {media.startImageUrl ? (
+                                <img
+                                  src={media.startImageUrl}
+                                  alt={ex.exerciseName}
+                                  className="w-full h-full object-cover group-hover/item:scale-105 transition"
+                                  loading="lazy"
+                                />
+                              ) : (
+                                <Dumbbell className="w-7 h-7 text-zinc-600" />
+                              )}
+                            </div>
+                            <div className="min-w-0">
+                              <div className="text-zinc-100 font-extrabold text-base sm:text-lg group-hover/item:text-emerald-400 transition truncate leading-snug">
+                                {i + 1}. {ex.exerciseName}
+                              </div>
+                              <div className="text-xs sm:text-sm text-zinc-400 flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1">
+                                <span className="text-emerald-400 font-black font-mono bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
+                                  {ex.defaultSets} × {ex.defaultReps} {ex.suggestedWeightKg ? `(~${ex.suggestedWeightKg}kg)` : ''}
+                                </span>
+                                <span>•</span>
+                                <span className="text-zinc-400 font-medium">Bấm xem form</span>
+                              </div>
+                            </div>
                           </div>
-                          <div className="text-xs sm:text-sm text-zinc-400 flex flex-wrap items-center gap-1.5 sm:gap-2 mt-1">
-                            <span className="text-emerald-400 font-black font-mono bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20">
-                              {ex.defaultSets} × {ex.defaultReps} {ex.suggestedWeightKg ? `(~${ex.suggestedWeightKg}kg)` : ''}
-                            </span>
-                            <span>•</span>
-                            <span className="text-zinc-400 font-medium">Bấm xem form</span>
-                          </div>
-                        </div>
-                      </div>
 
-                      <div className="px-3 py-2 rounded-xl bg-zinc-850 border border-zinc-750 text-xs sm:text-sm font-extrabold text-zinc-200 group-hover/item:text-emerald-400 group-hover/item:border-emerald-500/30 transition shrink-0 flex items-center space-x-1 shadow-sm">
-                        <span>Xem</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </div>
+                          <div className="px-3 py-2 rounded-xl bg-zinc-850 border border-zinc-750 text-xs sm:text-sm font-extrabold text-zinc-200 group-hover/item:text-emerald-400 group-hover/item:border-emerald-500/30 transition shrink-0 flex items-center space-x-1 shadow-sm">
+                            <span>Xem</span>
+                            <ChevronRight className="w-4 h-4" />
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              ) : (
+                /* Compact Exercise Summary View (Chế độ xem tóm tắt gọn gàng) */
+                <div className="pt-3 border-t border-zinc-800/80 space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="text-xs text-zinc-400 font-bold flex items-center space-x-1.5">
+                      <Dumbbell className="w-3.5 h-3.5 text-emerald-400" />
+                      <span>{routine.exercises.length} Bài Tập Trong Buổi:</span>
                     </div>
-                  );
-                })}
-              </div>
+                    <button
+                      type="button"
+                      onClick={() => toggleRoutineExpand(routine.id)}
+                      className="text-xs text-emerald-400 hover:text-emerald-300 font-bold flex items-center space-x-1 px-2.5 py-1 rounded-xl bg-emerald-500/10 border border-emerald-500/25 active:scale-95 transition"
+                    >
+                      <span>Xem chi tiết bài tập</span>
+                      <ChevronDown className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+
+                  {/* Danh sách chip bài tập tóm tắt */}
+                  <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                    {routine.exercises.map((ex, i) => (
+                      <button
+                        key={i}
+                        type="button"
+                        onClick={() => {
+                          setQuickViewExerciseId(ex.exerciseId);
+                          setQuickViewExerciseName(ex.exerciseName);
+                        }}
+                        className="px-2.5 py-1 rounded-xl bg-zinc-950 border border-zinc-800 hover:border-emerald-500/50 hover:bg-zinc-900 text-zinc-300 hover:text-white text-xs font-medium transition active:scale-95 flex items-center space-x-1 shadow-sm"
+                        title="Chạm để xem nhanh kỹ thuật bài này"
+                      >
+                        <span className="text-emerald-400 font-bold">{i + 1}.</span>
+                        <span className="truncate max-w-[130px] sm:max-w-[200px]">{ex.exerciseName}</span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       {/* Modal Tạo Lịch Tập Mới */}

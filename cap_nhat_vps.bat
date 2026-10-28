@@ -1,16 +1,16 @@
 @echo off
 chcp 65001 > nul
-title CAP NHAT GYM TRACKER - TOI UU LAYOUT MOBILE & FIX ZOOM CACHE
+title CAP NHAT GYM TRACKER - DASHBOARD TRACKING TONG HOP & FIX ZOOM MOBILE
 color 0A
 echo ========================================================
-echo   CAP NHAT GYM TRACKER: TOI UU TOAN DIEN LAYOUT MOBILE
+echo   CAP NHAT GYM TRACKER: DASHBOARD TRACKING & VIEWPORT ZOOM
 echo ========================================================
 cd /d C:\Users\Admin\gym-tracker
 
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "fix(ui): overhaul mobile layout, eliminate layout-breaking zoom, and refresh sw cache"
+git commit -m "feat(dashboard): add home tracking overview, enable mobile pinch-zoom, and compact routine view"
 git push origin master
 
 echo.
