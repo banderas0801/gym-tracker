@@ -82,6 +82,7 @@ async function main() {
     { local: path.join(__dirname, 'src/lib/exerciseMedia.ts'), remote: '/var/www/gym-tracker/src/lib/exerciseMedia.ts' },
     { local: path.join(__dirname, 'src/lib/exerciseGuide.ts'), remote: '/var/www/gym-tracker/src/lib/exerciseGuide.ts' },
     { local: path.join(__dirname, 'src/lib/storage.ts'), remote: '/var/www/gym-tracker/src/lib/storage.ts' },
+    { local: path.join(__dirname, 'src/lib/runningStorage.ts'), remote: '/var/www/gym-tracker/src/lib/runningStorage.ts' },
     { local: path.join(__dirname, 'src/components/HomeDashboardOverview.tsx'), remote: '/var/www/gym-tracker/src/components/HomeDashboardOverview.tsx' },
     { local: path.join(__dirname, 'src/components/RoutineList.tsx'), remote: '/var/www/gym-tracker/src/components/RoutineList.tsx' },
     { local: path.join(__dirname, 'src/components/ExerciseQuickViewModal.tsx'), remote: '/var/www/gym-tracker/src/components/ExerciseQuickViewModal.tsx' },

@@ -76,6 +76,32 @@ export interface WeekTrainingPlan {
 
 export type RunMode = 'outdoor_gps' | 'treadmill' | 'interval' | 'manual_mibro' | 'strava';
 
+export type HeartRateZoneId = 1 | 2 | 3 | 4 | 5;
+
+export interface HeartRateZoneInfo {
+  zone: HeartRateZoneId;
+  name: string;
+  nameVi: string;
+  minPercent: number;
+  maxPercent: number;
+  minBpm: number;
+  maxBpm: number;
+  color: string;
+  textColor: string;
+  bgColor: string;
+  borderColor: string;
+  description: string;
+  talkTest: string;
+  purpose21k: string;
+  targetRatio: string;
+}
+
+export interface UserHeartProfile {
+  age: number;
+  restingHeartRate: number;
+  customMaxHeartRate?: number;
+}
+
 export interface RunSession {
   id: string;
   date: string;
@@ -88,6 +114,7 @@ export interface RunSession {
   calories: number;
   avgHeartRate?: number;
   maxHeartRate?: number;
+  recoveryHeartRate1Min?: number; // Độ giảm nhịp tim sau 1 phút nghỉ (HRR)
   cadence?: number; // SPM (Steps Per Minute)
   elevationGainM?: number;
   inclinePercent?: number; // Độ dốc máy chạy bộ (%)

@@ -1,4 +1,4 @@
-import { TargetSub, RunningGroup, RunSession, RunningPRs, StravaProfile } from '@/types/running';
+import { TargetSub, RunningGroup, RunSession, RunningPRs, StravaProfile, UserHeartProfile, HeartRateZoneInfo } from '@/types/running';
 
 const TARGET_SUB_KEY = 'gym_runner_target_sub_v1';
 const RUNNING_GROUP_KEY = 'gym_runner_group_v1';
@@ -6,6 +6,177 @@ const CURRENT_WEEK_KEY = 'gym_runner_current_week_v1';
 const RUN_SESSIONS_KEY = 'gym_running_sessions_v1';
 const COMPLETED_DAYS_KEY = 'gym_runner_completed_days_v1';
 const STRAVA_PROFILE_KEY = 'gym_strava_profile_v1';
+const USER_HEART_PROFILE_KEY = 'gym_user_heart_profile_v1';
+
+export function getUserHeartProfile(): UserHeartProfile {
+  if (typeof window === 'undefined') return { age: 30, restingHeartRate: 65 };
+  try {
+    const saved = localStorage.getItem(USER_HEART_PROFILE_KEY);
+    if (saved) return JSON.parse(saved);
+  } catch {}
+  return { age: 30, restingHeartRate: 65 };
+}
+
+export function saveUserHeartProfile(profile: UserHeartProfile): void {
+  if (typeof window === 'undefined') return;
+  try {
+    localStorage.setItem(USER_HEART_PROFILE_KEY, JSON.stringify(profile));
+  } catch {}
+}
+
+/**
+ * Tính nhịp tim tối đa theo công thức khoa học hiện đại Tanaka (208 - 0.7 * Tuổi)
+ */
+export function calculateMaxHeartRate(age: number, customMax?: number): number {
+  if (customMax && customMax > 120 && customMax < 230) return customMax;
+  const safeAge = Math.max(15, Math.min(85, age || 30));
+  return Math.round(208 - 0.7 * safeAge);
+}
+
+/**
+ * Phân chia 5 vùng nhịp tim khoa học (Zone 1 -> Zone 5) cho cự ly 21K
+ */
+export function calculateHeartRateZones(age: number, restingHr = 65, customMax?: number): HeartRateZoneInfo[] {
+  const maxHr = calculateMaxHeartRate(age, customMax);
+
+  return [
+    {
+      zone: 1,
+      name: 'Active Recovery',
+      nameVi: 'Khởi Động & Phục Hồi',
+      minPercent: 50,
+      maxPercent: 60,
+      minBpm: Math.round(maxHr * 0.50),
+      maxBpm: Math.round(maxHr * 0.60),
+      color: 'text-zinc-300',
+      textColor: 'text-zinc-200',
+      bgColor: 'bg-zinc-800/80',
+      borderColor: 'border-zinc-700',
+      description: 'Nhịp tim nhẹ nhàng, thở bằng mũi. Bơm máu giàu oxy giúp cơ bắp hồi phục nhanh sau buổi tập nặng.',
+      talkTest: 'Nói chuyện hoàn toàn tự nhiên, không bị gián đoạn, có thể hát thành tiếng.',
+      purpose21k: 'Khởi động 5-10 phút đầu ca chạy hoặc chạy phục hồi (Recovery Run) 20-30 phút.',
+      targetRatio: '5% - 10%'
+    },
+    {
+      zone: 2,
+      name: 'Aerobic Base',
+      nameVi: 'Hiếu Khí Nền Tảng (Vùng Vàng 21K)',
+      minPercent: 60,
+      maxPercent: 70,
+      minBpm: Math.round(maxHr * 0.60) + 1,
+      maxBpm: Math.round(maxHr * 0.70),
+      color: 'text-emerald-400',
+      textColor: 'text-emerald-300',
+      bgColor: 'bg-emerald-950/40',
+      borderColor: 'border-emerald-500/40',
+      description: 'Phát triển ti thể tế bào, mở rộng mao mạch và rèn luyện cơ thể ưu tiên đốt mỡ thừa làm nhiên liệu.',
+      talkTest: 'Có thể trò chuyện cả câu dài liên tục với bạn chạy mà không bị hụt hơi.',
+      purpose21k: 'Trọng tâm tuyệt đối cho bài Easy Run & Long Run cuối tuần. Xây dựng sức bền để không đuối ở km 18-21.',
+      targetRatio: '70% - 80% (Quy tắc 80/20)'
+    },
+    {
+      zone: 3,
+      name: 'Tempo / Aerobic Power',
+      nameVi: 'Nhịp Độ Sức Bền (Steady)',
+      minPercent: 70,
+      maxPercent: 80,
+      minBpm: Math.round(maxHr * 0.70) + 1,
+      maxBpm: Math.round(maxHr * 0.80),
+      color: 'text-teal-400',
+      textColor: 'text-teal-300',
+      bgColor: 'bg-teal-950/40',
+      borderColor: 'border-teal-500/40',
+      description: 'Tăng thể tích tâm thất tống máu, nâng cao hiệu suất tiêu thụ oxy ở tốc độ nhanh đều.',
+      talkTest: 'Hơi thở sâu và đều, chỉ nói được từng câu ngắn 4 - 6 từ rồi cần hít vào.',
+      purpose21k: 'Mô phỏng tốc độ mục tiêu thi đấu (Half Marathon Race Pace). Rèn cảm giác giữ nhịp ổn định.',
+      targetRatio: '10% - 15%'
+    },
+    {
+      zone: 4,
+      name: 'Lactate Threshold',
+      nameVi: 'Ngưỡng Axit Lactic (Threshold)',
+      minPercent: 80,
+      maxPercent: 90,
+      minBpm: Math.round(maxHr * 0.80) + 1,
+      maxBpm: Math.round(maxHr * 0.90),
+      color: 'text-amber-400',
+      textColor: 'text-amber-300',
+      bgColor: 'bg-amber-950/40',
+      borderColor: 'border-amber-500/40',
+      description: 'Chạy sát điểm tích tụ axit lactic trong máu. Nâng trần chịu tải giúp duy trì tốc độ nhanh mà không mỏi cơ.',
+      talkTest: 'Thở dốc, chỉ nói được 1 - 2 từ ngắn (vd: "Được rồi", "Nhanh lên").',
+      purpose21k: 'Bài chạy Tempo Run 20-30 phút hoặc Cruise Intervals. Nâng ngưỡng tốc độ cho cả chu kỳ 21K.',
+      targetRatio: '5% - 10%'
+    },
+    {
+      zone: 5,
+      name: 'VO2 Max & Anaerobic',
+      nameVi: 'Vô Khí Cực Đại (VO2max)',
+      minPercent: 90,
+      maxPercent: 100,
+      minBpm: Math.round(maxHr * 0.90) + 1,
+      maxBpm: maxHr,
+      color: 'text-rose-400',
+      textColor: 'text-rose-300',
+      bgColor: 'bg-rose-950/40',
+      borderColor: 'border-rose-500/40',
+      description: 'Công suất tối đa của tim phổi và hệ thần kinh cơ bắp. Kích hoạt toàn bộ sợi cơ co nhanh loại II.',
+      talkTest: 'Không thể nói chuyện, hoàn toàn tập trung vào nhịp thở gấp gáp.',
+      purpose21k: 'Các hiệp bứt tốc biến tốc ngắn (Interval Sprint 200m - 400m hoặc bứt phá 500m cuối về đích).',
+      targetRatio: '< 5%'
+    }
+  ];
+}
+
+/**
+ * Phân loại nhịp tim vào Zone tương ứng
+ */
+export function classifyHeartRateZone(bpm: number, age: number, customMax?: number): HeartRateZoneInfo | null {
+  if (!bpm || bpm <= 40) return null;
+  const zones = calculateHeartRateZones(age, 65, customMax);
+  for (const z of zones) {
+    if (bpm >= z.minBpm && bpm <= z.maxBpm) return z;
+  }
+  if (bpm > zones[zones.length - 1].maxBpm) return zones[zones.length - 1];
+  if (bpm < zones[0].minBpm) return zones[0];
+  return null;
+}
+
+/**
+ * Đánh giá độ hồi phục tim sau 1 phút nghỉ (Heart Rate Recovery - HRR)
+ */
+export function calculateHeartRateRecoveryVerdict(dropBpm: number): { 
+  verdict: string; 
+  level: 'excellent' | 'good' | 'fair' | 'poor'; 
+  note: string 
+} {
+  if (dropBpm >= 30) {
+    return {
+      verdict: 'Xuất Sắc (Phục Hồi Cực Nhanh)',
+      level: 'excellent',
+      note: 'Hệ tim mạch và thần kinh phế vị của bạn thích ứng xuất sắc với tải trọng hiếu khí.'
+    };
+  }
+  if (dropBpm >= 20) {
+    return {
+      verdict: 'Tốt (Chuẩn Vận Động Viên)',
+      level: 'good',
+      note: 'Nhịp tim hạ nhanh chóng sau 1 phút, cơ thể sẵn sàng cho các bài tập tiếp theo.'
+    };
+  }
+  if (dropBpm >= 13) {
+    return {
+      verdict: 'Khá (Đang Thích Nghi)',
+      level: 'fair',
+      note: 'Độ phục hồi ở mức trung bình. Hãy chú ý bổ sung điện giải và ngủ đủ giấc.'
+    };
+  }
+  return {
+    verdict: 'Cần Lưu Ý (Hồi Phục Chậm)',
+    level: 'poor',
+    note: 'Nhịp tim hạ dưới 12 bpm sau 1 phút. Có thể cơ thể đang thiếu nước, quá tải hoặc stress. Nên chạy nhẹ hoặc nghỉ ngơi.'
+  };
+}
 
 export function getTargetSub(): TargetSub {
   if (typeof window === 'undefined') return 'sub215';

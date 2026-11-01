@@ -1046,6 +1046,47 @@ export const RUNNING_KNOWLEDGE_CHAPTERS: RunningChapter[] = [
     ]
   },
   {
+    id: 'chap-heart-rate',
+    chapterNumber: 'CHƯƠNG VII',
+    title: 'Giáo Trình Nhịp Tim & 5 Vùng Heart Rate Zone 21K',
+    iconName: 'Activity',
+    summary: 'Khoa học về nhịp tim: 3 khung thời gian đo vàng, bản đồ 5 Zone và cách khắc phục tim trôi (Cardiac Drift).',
+    sections: [
+      {
+        heading: '1. Tại sao nhịp tim là "kim chỉ nam" chuẩn hơn Pace?',
+        content: [
+          'Pace chỉ là tốc độ cơ học bên ngoài, rất dễ bị sai lệch bởi gió cản, dốc cầu, nhiệt độ nắng nóng hay thiếu ngủ. Cùng 1 Pace 6:00, hôm mát trời tim bạn chỉ 130 bpm (Zone 2), nhưng hôm nắng gắt 35°C tim có thể vọt lên 165 bpm (Zone 4).',
+          'Nhịp tim phản ánh tải trọng sinh lý thật bên trong cơ quan tuần hoàn. Chạy theo nhịp tim giúp bạn không bao giờ bị "cháy máy", hạn chế chấn thương và tối ưu hóa năng lượng cho cự ly 21K.'
+        ],
+        badge: 'Tải trọng sinh lý thật'
+      },
+      {
+        heading: '2. Ba khung thời điểm đo nhịp tim cốt lõi (Trước - Trong - Sau)',
+        content: [
+          '① TRƯỚC CHẠY (Nhịp tim nghỉ - Resting HR): Đo lúc vừa thức dậy hoặc ngồi yên 2 phút trước khi chạy. Nếu cao hơn bình thường 7 - 10 bpm, cơ thể đang quá tải thần kinh, thiếu ngủ hoặc mất nước — nên chuyển sang chạy nhẹ phục hồi hoặc nghỉ.',
+          '② TRONG KHI CHẠY (Time-in-Zone & Chống Tim trôi): Giữ 80% thời lượng ở Zone 2. Lưu ý hiện tượng "Cardiac Drift" (tim tự trôi lên cao sau 30-40 phút dù pace không đổi) do cơ thể thoát mồ hôi làm đặc máu — hãy hạ nhẹ tốc độ và uống thêm nước điện giải.',
+          '③ SAU KHI CHẠY (Độ hồi phục tim - HR Recovery 1 phút): Đo ngay khi dừng chạy và đo lại sau đúng 60 giây. Nếu giảm từ 20-30 bpm trở lên là hệ tim mạch phục hồi rất tốt; nếu giảm dưới 12 bpm là cảnh báo cơ thể đang mệt mỏi quá tải.'
+        ],
+        badge: '3 Khung đo vàng'
+      },
+      {
+        heading: '3. Bản đồ 5 vùng nhịp tim khoa học (Zone 1 -> Zone 5)',
+        content: [
+          'Zone 1 (50-60% Max HR - Phục Hồi): Thở bằng mũi, nói chuyện như bình thường. Tác dụng bơm máu thải axit lactic sau buổi chạy dài hoặc sau ngày tập chân tạ.',
+          'Zone 2 (60-70% Max HR - Hiếu Khí Nền Tảng): VÙNG QUAN TRỌNG NHẤT 21K (chiếm 75-80% giáo án). Vừa chạy vừa nói cả câu dài. Rèn ti thể tế bào và huấn luyện cơ thể đốt mỡ thừa thay vì đốt cạn đường glycogen.',
+          'Zone 3 (70-80% Max HR - Nhịp Độ Sức Bền): Hơi thở sâu, chỉ nói được câu ngắn 4-6 từ. Tương đương tốc độ thi đấu mục tiêu (Race Pace) cho Half Marathon.',
+          'Zone 4 (80-90% Max HR - Ngưỡng Lactic): Nặng, thở dốc, nói được 1-2 từ rời rạc. Dành cho các bài Tempo 20-30 phút để nâng trần tốc độ.',
+          'Zone 5 (90-100% Max HR - Vô Khí Cực Đại): Hết sức lực, không thể nói chuyện. Áp dụng cho bài biến tốc Interval Sprint 200m - 400m.'
+        ],
+        tips: [
+          'Công thức tính nhịp tim tối đa hiện đại: Max HR = 208 - (0.7 × Tuổi).',
+          'Luôn nhớ câu thần chú: "Muốn chạy nhanh hơn và xa hơn ở 21K, hãy chạy thật chậm ở Zone 2."'
+        ],
+        badge: 'Bản đồ 5 Zone'
+      }
+    ]
+  },
+  {
     id: 'appendix',
     chapterNumber: 'PHỤ LỤC',
     title: 'Từ Điển Thuật Ngữ Runner Chuyên Nghiệp',

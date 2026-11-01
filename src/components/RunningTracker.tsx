@@ -49,7 +49,9 @@ import {
   StravaProfile,
   DayTrainingPlan,
   WeekTrainingPlan,
-  SupplementaryExercise
+  SupplementaryExercise,
+  UserHeartProfile,
+  HeartRateZoneInfo
 } from '@/types/running';
 import { 
   SUB_PACE_TABLE, 
@@ -76,7 +78,13 @@ import {
   calculateRunningPRs,
   getStravaProfile,
   saveStravaProfile,
-  parseGPXFile
+  parseGPXFile,
+  getUserHeartProfile,
+  saveUserHeartProfile,
+  calculateMaxHeartRate,
+  calculateHeartRateZones,
+  classifyHeartRateZone,
+  calculateHeartRateRecoveryVerdict
 } from '@/lib/runningStorage';
 import WeeklyRunningCard from './analytics/WeeklyRunningCard';
 
@@ -95,11 +103,22 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
   const [prs, setPrs] = useState<RunningPRs>(() => calculateRunningPRs(getRunSessions()));
   const [stravaProfile, setStravaProfile] = useState<StravaProfile>(() => getStravaProfile());
 
+  // Heart Rate Profile & Zone State
+  const [heartProfile, setHeartProfile] = useState<UserHeartProfile>(() => getUserHeartProfile());
+  const [paceSubTab, setPaceSubTab] = useState<'heart_zones' | 'vdot_paces'>('heart_zones');
+  const [testRecoveryPeakHr, setTestRecoveryPeakHr] = useState('');
+  const [testRecovery1MinHr, setTestRecovery1MinHr] = useState('');
+
+  // Live Tracker Heart Rate Inputs
+  const [trackerAvgHr, setTrackerAvgHr] = useState('');
+  const [trackerMaxHr, setTrackerMaxHr] = useState('');
+  const [trackerRecoveryHr, setTrackerRecoveryHr] = useState('');
+
   // Modals
   const [isVDOTModalOpen, setIsVDOTModalOpen] = useState(false);
   const [isMibroModalOpen, setIsMibroModalOpen] = useState(false);
   const [isStravaModalOpen, setIsStravaModalOpen] = useState(false);
-  const [activeKnowledgeChapter, setActiveKnowledgeChapter] = useState<string>('chap-1');
+  const [activeKnowledgeChapter, setActiveKnowledgeChapter] = useState<string>('chap-heart-rate');
   const [knowledgeSearch, setKnowledgeSearch] = useState('');
 
   // Live Run Tracker State
@@ -403,6 +422,9 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
       avgSpeedKmh: avgSpeed,
       calories,
       inclinePercent: runMode === 'treadmill' ? inclinePercent : undefined,
+      avgHeartRate: parseInt(trackerAvgHr, 10) || undefined,
+      maxHeartRate: parseInt(trackerMaxHr, 10) || undefined,
+      recoveryHeartRate1Min: parseInt(trackerRecoveryHr, 10) || undefined,
       targetSub,
       weekNumber: selectedDayPlanForRun?.week,
       dayOfWeek: selectedDayPlanForRun?.day.dayOfWeek,
@@ -416,6 +438,9 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
     setCompletedDays(getCompletedDays());
     setSelectedDayPlanForRun(null);
     setManualDistanceInput('');
+    setTrackerAvgHr('');
+    setTrackerMaxHr('');
+    setTrackerRecoveryHr('');
     setElapsedSeconds(0);
     setDistanceKm(0);
     setCurrentPaceSec(0);
@@ -437,6 +462,8 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
   const [mibroMin, setMibroMin] = useState('30');
   const [mibroSec, setMibroSec] = useState('0');
   const [mibroHr, setMibroHr] = useState('');
+  const [mibroMaxHr, setMibroMaxHr] = useState('');
+  const [mibroRecoveryHr, setMibroRecoveryHr] = useState('');
   const [mibroCadence, setMibroCadence] = useState('');
   const [treadmillIncline, setTreadmillIncline] = useState('0'); // Không ghi thì mặc định = 0!
   const [selectedPlanDayKey, setSelectedPlanDayKey] = useState<string>('');
@@ -547,6 +574,8 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
       calories: previewCalo,
       inclinePercent: incline,
       avgHeartRate: parseInt(mibroHr, 10) || undefined,
+      maxHeartRate: parseInt(mibroMaxHr, 10) || undefined,
+      recoveryHeartRate1Min: parseInt(mibroRecoveryHr, 10) || undefined,
       cadence: parseInt(mibroCadence, 10) || undefined,
       targetSub,
       weekNumber: weekNum,
@@ -1106,97 +1135,438 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
         </div>
       )}
 
-      {/* TAB 2: BẢNG TRA PACE MỤC TIÊU E/M/T/I */}
+      {/* TAB 2: BẢNG TRA PACE & VÙNG NHỊP TIM MỤC TIÊU 21K */}
       {activeSubTab === 'paces' && (
         <div className="space-y-4">
-          <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 space-y-3">
-            <h3 className="text-base sm:text-lg font-black text-white flex items-center space-x-2">
-              <Gauge className="w-5 h-5 text-amber-400" />
-              <span>Bảng Sub HM Theo Mục Tiêu Cá Nhân</span>
-            </h3>
-            <p className="text-xs text-zinc-300 leading-relaxed">
-              Dựa trên phương pháp khoa học của <strong>Jack Daniels</strong> và <strong>Giang Mê Chạy</strong>. Chọn đúng mốc Sub mục tiêu để hệ thống cá nhân hóa dải Pace chuẩn xác nhất:
-            </p>
+          {/* Sub Navigation: Vùng Nhịp Tim vs Bảng Pace Sub */}
+          <div className="flex rounded-2xl bg-zinc-900 border border-zinc-800 p-1.5 shadow-md">
+            <button
+              type="button"
+              onClick={() => setPaceSubTab('heart_zones')}
+              className={`flex-1 py-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition active:scale-95 ${
+                paceSubTab === 'heart_zones'
+                  ? 'bg-gradient-to-r from-rose-500 to-amber-500 text-zinc-950 shadow-md font-black'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <Heart className="w-4 h-4 fill-current" />
+              <span>❤️ 5 Vùng Nhịp Tim (Zone 1 - 5)</span>
+            </button>
 
-            {/* Bảng Pace Table Responsive */}
-            <div className="overflow-x-auto pt-2">
-              <table className="w-full text-left text-xs border-collapse">
-                <thead>
-                  <tr className="border-b border-zinc-700 text-amber-400 font-black uppercase text-[11px]">
-                    <th className="py-2.5 px-3">Mục tiêu</th>
-                    <th className="py-2.5 px-2 bg-emerald-950/40 text-emerald-300">Easy (E)</th>
-                    <th className="py-2.5 px-2 bg-teal-950/40 text-teal-300">Long (L)</th>
-                    <th className="py-2.5 px-2 bg-amber-950/40 text-amber-300">Marathon (M)</th>
-                    <th className="py-2.5 px-2 bg-blue-950/40 text-blue-300">Tempo (T)</th>
-                    <th className="py-2.5 px-2 bg-rose-950/40 text-rose-300">Interval (I)</th>
-                    <th className="py-2.5 px-2">Rep (R)</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-zinc-800/80 font-mono">
-                  {Object.values(SUB_PACE_TABLE).map((row) => {
-                    const isSelected = row.subId === targetSub;
-                    return (
-                      <tr
-                        key={row.subId}
-                        onClick={() => setTargetSub(row.subId)}
-                        className={`cursor-pointer transition ${
-                          isSelected 
-                            ? 'bg-amber-500/20 font-bold border-l-4 border-amber-500 text-white' 
-                            : 'hover:bg-zinc-800/50 text-zinc-300'
-                        }`}
+            <button
+              type="button"
+              onClick={() => setPaceSubTab('vdot_paces')}
+              className={`flex-1 py-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition active:scale-95 ${
+                paceSubTab === 'vdot_paces'
+                  ? 'bg-amber-500 text-zinc-950 shadow-md font-black'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <Gauge className="w-4 h-4" />
+              <span>⏱️ Bảng Pace Sub HM (Jack Daniels)</span>
+            </button>
+          </div>
+
+          {/* VIEW 1: VÙNG NHỊP TIM KHOA HỌC (HEART RATE ZONES) */}
+          {paceSubTab === 'heart_zones' && (() => {
+            const maxHr = calculateMaxHeartRate(heartProfile.age, heartProfile.customMaxHeartRate);
+            const zones = calculateHeartRateZones(heartProfile.age, heartProfile.restingHeartRate, heartProfile.customMaxHeartRate);
+
+            const peakVal = parseInt(testRecoveryPeakHr, 10);
+            const min1Val = parseInt(testRecovery1MinHr, 10);
+            const recoveryDrop = (peakVal > 0 && min1Val > 0 && peakVal > min1Val) ? (peakVal - min1Val) : null;
+            const recoveryVerdict = recoveryDrop !== null ? calculateHeartRateRecoveryVerdict(recoveryDrop) : null;
+
+            return (
+              <div className="space-y-4 animate-in fade-in duration-200">
+                {/* 1. Bộ Tính & Cá Nhân Hóa Tuổi / Max HR */}
+                <div className="bg-gradient-to-br from-zinc-900 via-zinc-900/90 to-zinc-950 border border-zinc-800 rounded-3xl p-5 space-y-4 shadow-xl">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-zinc-800/80 pb-3.5">
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <span className="w-8 h-8 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center font-black">
+                          <Heart className="w-4 h-4 fill-rose-400" />
+                        </span>
+                        <h3 className="text-base sm:text-lg font-black text-white">
+                          Cá Nhân Hóa Vùng Tim Runner
+                        </h3>
+                      </div>
+                      <p className="text-xs text-zinc-400 mt-1">
+                        Áp dụng công thức thể thao hiện đại <strong>Tanaka: Max HR = 208 - (0.7 × Tuổi)</strong> chuẩn xác hơn công thức cũ 220.
+                      </p>
+                    </div>
+
+                    <div className="px-4 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-center shrink-0 shadow-inner">
+                      <span className="text-[10px] uppercase font-bold text-zinc-400 block font-mono">Nhịp Tim Tối Đa (Max HR)</span>
+                      <span className="text-xl sm:text-2xl font-black text-rose-400 font-mono mt-0.5 block">
+                        {maxHr} <span className="text-xs font-normal text-zinc-400">bpm</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Input Tuổi & Nhịp Tim Nghỉ */}
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="p-3.5 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs text-zinc-300 font-bold">Tuổi của bạn:</label>
+                        <span className="text-sm font-black text-amber-400 font-mono">{heartProfile.age} tuổi</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const nextAge = Math.max(15, heartProfile.age - 1);
+                            const updated = { ...heartProfile, age: nextAge };
+                            setHeartProfile(updated);
+                            saveUserHeartProfile(updated);
+                          }}
+                          className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-200 font-black text-base hover:bg-zinc-800 active:scale-95"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          value={heartProfile.age}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value, 10) || 30;
+                            const updated = { ...heartProfile, age: val };
+                            setHeartProfile(updated);
+                            saveUserHeartProfile(updated);
+                          }}
+                          className="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl py-2 text-center text-base font-black text-white font-mono focus:border-amber-500 focus:outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const nextAge = Math.min(85, heartProfile.age + 1);
+                            const updated = { ...heartProfile, age: nextAge };
+                            setHeartProfile(updated);
+                            saveUserHeartProfile(updated);
+                          }}
+                          className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-200 font-black text-base hover:bg-zinc-800 active:scale-95"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-zinc-950/80 border border-zinc-800 space-y-2">
+                      <div className="flex items-center justify-between">
+                        <label className="text-xs text-zinc-300 font-bold">Nhịp tim nghỉ buổi sáng (RHR):</label>
+                        <span className="text-sm font-black text-emerald-400 font-mono">{heartProfile.restingHeartRate || 65} bpm</span>
+                      </div>
+                      <div className="flex items-center space-x-2">
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const nextRhr = Math.max(40, (heartProfile.restingHeartRate || 65) - 1);
+                            const updated = { ...heartProfile, restingHeartRate: nextRhr };
+                            setHeartProfile(updated);
+                            saveUserHeartProfile(updated);
+                          }}
+                          className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-200 font-black text-base hover:bg-zinc-800 active:scale-95"
+                        >
+                          -
+                        </button>
+                        <input
+                          type="number"
+                          value={heartProfile.restingHeartRate || 65}
+                          onChange={(e) => {
+                            const val = parseInt(e.target.value, 10) || 65;
+                            const updated = { ...heartProfile, restingHeartRate: val };
+                            setHeartProfile(updated);
+                            saveUserHeartProfile(updated);
+                          }}
+                          className="flex-1 bg-zinc-900 border border-zinc-700 rounded-xl py-2 text-center text-base font-black text-white font-mono focus:border-emerald-500 focus:outline-none"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const nextRhr = Math.min(100, (heartProfile.restingHeartRate || 65) + 1);
+                            const updated = { ...heartProfile, restingHeartRate: nextRhr };
+                            setHeartProfile(updated);
+                            saveUserHeartProfile(updated);
+                          }}
+                          className="w-10 h-10 rounded-xl bg-zinc-900 border border-zinc-700 text-zinc-200 font-black text-base hover:bg-zinc-800 active:scale-95"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 2. Bản Đồ 5 Vùng Nhịp Tim Chi Tiết */}
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-black uppercase tracking-wider text-zinc-300 flex items-center space-x-2">
+                      <Activity className="w-4 h-4 text-emerald-400" />
+                      <span>Chi Tiết 5 Vùng Nhịp Tim Cho Cự Ly 21K:</span>
+                    </h4>
+                    <span className="text-xs text-amber-400 font-bold">Quy tắc 80/20</span>
+                  </div>
+
+                  <div className="grid grid-cols-1 gap-3">
+                    {zones.map((z) => (
+                      <div
+                        key={z.zone}
+                        className={`rounded-3xl p-4 sm:p-5 border transition shadow-lg ${z.bgColor} ${z.borderColor} space-y-3`}
                       >
-                        <td className="py-2.5 px-3 font-sans font-black flex items-center space-x-1.5">
-                          {isSelected && <span className="text-amber-400">✓</span>}
-                          <span>{row.subId.toUpperCase()}</span>
-                        </td>
-                        <td className="py-2.5 px-2 text-emerald-400">{row.easy}</td>
-                        <td className="py-2.5 px-2 text-teal-300">{row.longRun}</td>
-                        <td className="py-2.5 px-2 text-amber-400 font-bold">{row.marathon}</td>
-                        <td className="py-2.5 px-2 text-blue-300">{row.tempo}</td>
-                        <td className="py-2.5 px-2 text-rose-400">{row.interval}</td>
-                        <td className="py-2.5 px-2 text-purple-300">{row.repetition}</td>
+                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800/80 pb-3">
+                          <div className="flex items-center space-x-2.5">
+                            <span className="w-8 h-8 rounded-xl bg-zinc-950 border border-zinc-800 flex items-center justify-center font-black text-sm font-mono text-white shadow-inner">
+                              Z{z.zone}
+                            </span>
+                            <div>
+                              <div className="flex items-center space-x-2">
+                                <h5 className={`text-base font-black ${z.color}`}>
+                                  Zone {z.zone}: {z.nameVi}
+                                </h5>
+                                {z.zone === 2 && (
+                                  <span className="px-2 py-0.5 rounded-full bg-emerald-500 text-zinc-950 text-[10px] font-black uppercase font-mono shadow-sm">
+                                    ⭐ Trọng Tâm 21K
+                                  </span>
+                                )}
+                              </div>
+                              <span className="text-[11px] text-zinc-400 font-medium">({z.name})</span>
+                            </div>
+                          </div>
+
+                          <div className="flex items-center space-x-2 self-start sm:self-center shrink-0">
+                            <span className="px-2.5 py-1 rounded-xl bg-zinc-950/80 border border-zinc-800 text-xs font-mono font-bold text-zinc-300">
+                              {z.minPercent}% - {z.maxPercent}% Max HR
+                            </span>
+                            <span className={`px-3 py-1 rounded-xl bg-zinc-950 font-mono font-black text-sm sm:text-base border border-zinc-800 ${z.color} shadow-inner`}>
+                              {z.minBpm} - {z.maxBpm} bpm
+                            </span>
+                          </div>
+                        </div>
+
+                        {/* Chi tiết nội dung vùng */}
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-2.5 text-xs">
+                          <div className="p-3 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
+                            <span className="text-[10px] font-bold uppercase text-zinc-400 block font-mono">🗣️ Cảm Giác Nói Chuyện (Talk Test):</span>
+                            <p className="text-zinc-200 font-medium leading-relaxed">{z.talkTest}</p>
+                          </div>
+
+                          <div className="p-3 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
+                            <span className="text-[10px] font-bold uppercase text-zinc-400 block font-mono">🎯 Mục Đích Trong Giáo Án 21K:</span>
+                            <p className="text-zinc-200 font-medium leading-relaxed">{z.purpose21k}</p>
+                          </div>
+
+                          <div className="p-3 rounded-2xl bg-zinc-950/60 border border-zinc-800/80 space-y-1">
+                            <span className="text-[10px] font-bold uppercase text-zinc-400 block font-mono">⏱️ Tỷ Trọng Thời Gian Khuyên Dùng:</span>
+                            <p className="text-white font-bold font-mono">{z.targetRatio}</p>
+                            <p className="text-[11px] text-zinc-400 leading-snug">{z.description}</p>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 3. Ba Khung Giờ Đo Vàng Cốt Lõi (Trước - Trong - Sau) */}
+                <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 space-y-3.5 shadow-xl">
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-5 h-5 text-amber-400" />
+                    <h4 className="text-base font-black text-white">
+                      3 Khung Giờ Đo Nhịp Tim Vàng Runner Cần Ghi Nhớ
+                    </h4>
+                  </div>
+
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-3 text-xs">
+                    <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-1.5">
+                      <div className="flex items-center space-x-1.5 text-emerald-400 font-bold uppercase font-mono">
+                        <span>① Trước Khi Chạy (Resting HR)</span>
+                      </div>
+                      <p className="text-zinc-300 leading-relaxed">
+                        Đo lúc vừa thức dậy hoặc ngồi yên 2 phút trước khi xỏ giày. 
+                      </p>
+                      <div className="text-[11px] text-zinc-400 bg-zinc-900 p-2 rounded-xl border border-zinc-800">
+                        💡 <strong>Cảnh báo quá tải:</strong> Nếu tăng vọt <strong className="text-amber-400">&gt;7-10 bpm</strong> so với bình thường, cơ thể đang mệt mỏi, thiếu ngủ hoặc mất nước $\rightarrow$ Nên đổi sang chạy nhẹ hoặc nghỉ.
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-1.5">
+                      <div className="flex items-center space-x-1.5 text-teal-400 font-bold uppercase font-mono">
+                        <span>② Trong Khi Chạy (Time in Zone)</span>
+                      </div>
+                      <p className="text-zinc-300 leading-relaxed">
+                        Giữ 80% thời gian ở <strong>Zone 2</strong> để rèn luyện chuyển hóa đốt mỡ thừa và bảo vệ hệ tim mạch.
+                      </p>
+                      <div className="text-[11px] text-zinc-400 bg-zinc-900 p-2 rounded-xl border border-zinc-800">
+                        💡 <strong>Chống Tim Trôi (Cardiac Drift):</strong> Chạy sau 30-40 phút tim tự tăng dù pace không đổi do mất nước $\rightarrow$ Hãy uống điện giải và hạ tốc độ.
+                      </div>
+                    </div>
+
+                    <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 space-y-1.5">
+                      <div className="flex items-center space-x-1.5 text-rose-400 font-bold uppercase font-mono">
+                        <span>③ Sau Khi Chạy (HR Recovery 1-Min)</span>
+                      </div>
+                      <p className="text-zinc-300 leading-relaxed">
+                        Đo ngay lúc vừa dừng chạy, và đo lại sau đúng <strong>60 giây</strong> đứng thở hoặc đi bộ thả lỏng.
+                      </p>
+                      <div className="text-[11px] text-zinc-400 bg-zinc-900 p-2 rounded-xl border border-zinc-800">
+                        💡 <strong>Chỉ số phục hồi tim:</strong> Tim hạ <strong className="text-emerald-400">&gt;20-30 bpm</strong> sau 1 phút là hệ tim mạch cực tốt và thích ứng hoàn hảo.
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* 4. Bộ Đo & Đánh Giá Tức Thì Độ Hồi Phục Tim (Heart Rate Recovery Test) */}
+                <div className="bg-gradient-to-r from-rose-950/30 via-zinc-900 to-zinc-950 border border-rose-500/30 rounded-3xl p-5 space-y-3.5 shadow-xl">
+                  <div className="flex items-center space-x-2">
+                    <ShieldCheck className="w-5 h-5 text-rose-400" />
+                    <div>
+                      <h4 className="text-sm sm:text-base font-black text-white">
+                        Bộ Đánh Giá Độ Hồi Phục Tim Sau 1 Phút (HRR Test)
+                      </h4>
+                      <p className="text-xs text-zinc-400">
+                        Nhập nhịp tim lúc vừa dừng ca chạy và nhịp tim sau 1 phút nghỉ để hệ thống đánh giá sức khỏe tim mạch:
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+                    <div>
+                      <label className="text-xs text-zinc-300 font-bold block">1. Nhịp tim ngay khi dừng chạy (Peak BPM):</label>
+                      <input
+                        type="number"
+                        placeholder="VD: 168"
+                        value={testRecoveryPeakHr}
+                        onChange={(e) => setTestRecoveryPeakHr(e.target.value)}
+                        className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-mono font-bold mt-1 focus:border-rose-500 focus:outline-none"
+                      />
+                    </div>
+
+                    <div>
+                      <label className="text-xs text-zinc-300 font-bold block">2. Nhịp tim sau đúng 60 giây nghỉ (1-Min BPM):</label>
+                      <input
+                        type="number"
+                        placeholder="VD: 135"
+                        value={testRecovery1MinHr}
+                        onChange={(e) => setTestRecovery1MinHr(e.target.value)}
+                        className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-mono font-bold mt-1 focus:border-rose-500 focus:outline-none"
+                      />
+                    </div>
+                  </div>
+
+                  {recoveryDrop !== null && recoveryVerdict && (
+                    <div className="p-3.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-center space-y-1.5 animate-in fade-in">
+                      <div className="flex items-center justify-center space-x-2">
+                        <span className="text-xs text-zinc-400">Độ giảm sau 1 phút:</span>
+                        <span className="text-lg font-black text-emerald-400 font-mono">-{recoveryDrop} bpm</span>
+                      </div>
+                      <div className={`text-base font-black ${
+                        recoveryVerdict.level === 'excellent' ? 'text-emerald-400' :
+                        recoveryVerdict.level === 'good' ? 'text-teal-400' :
+                        recoveryVerdict.level === 'fair' ? 'text-amber-400' : 'text-rose-400'
+                      }`}>
+                        Đánh giá: {recoveryVerdict.verdict}
+                      </div>
+                      <p className="text-xs text-zinc-300 max-w-lg mx-auto leading-relaxed">
+                        {recoveryVerdict.note}
+                      </p>
+                    </div>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
+          {/* VIEW 2: BẢNG PACE SUB HM (JACK DANIELS VDOT) */}
+          {paceSubTab === 'vdot_paces' && (
+            <div className="space-y-4 animate-in fade-in duration-200">
+              <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-5 space-y-3">
+                <h3 className="text-base sm:text-lg font-black text-white flex items-center space-x-2">
+                  <Gauge className="w-5 h-5 text-amber-400" />
+                  <span>Bảng Sub HM Theo Mục Tiêu Cá Nhân</span>
+                </h3>
+                <p className="text-xs text-zinc-300 leading-relaxed">
+                  Dựa trên phương pháp khoa học của <strong>Jack Daniels</strong> và <strong>Giang Mê Chạy</strong>. Chọn đúng mốc Sub mục tiêu để hệ thống cá nhân hóa dải Pace chuẩn xác nhất:
+                </p>
+
+                {/* Bảng Pace Table Responsive */}
+                <div className="overflow-x-auto pt-2">
+                  <table className="w-full text-left text-xs border-collapse">
+                    <thead>
+                      <tr className="border-b border-zinc-700 text-amber-400 font-black uppercase text-[11px]">
+                        <th className="py-2.5 px-3">Mục tiêu</th>
+                        <th className="py-2.5 px-2 bg-emerald-950/40 text-emerald-300">Easy (E)</th>
+                        <th className="py-2.5 px-2 bg-teal-950/40 text-teal-300">Long (L)</th>
+                        <th className="py-2.5 px-2 bg-amber-950/40 text-amber-300">Marathon (M)</th>
+                        <th className="py-2.5 px-2 bg-blue-950/40 text-blue-300">Tempo (T)</th>
+                        <th className="py-2.5 px-2 bg-rose-950/40 text-rose-300">Interval (I)</th>
+                        <th className="py-2.5 px-2">Rep (R)</th>
                       </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
+                    </thead>
+                    <tbody className="divide-y divide-zinc-800/80 font-mono">
+                      {Object.values(SUB_PACE_TABLE).map((row) => {
+                        const isSelected = row.subId === targetSub;
+                        return (
+                          <tr
+                            key={row.subId}
+                            onClick={() => setTargetSub(row.subId)}
+                            className={`cursor-pointer transition ${
+                              isSelected 
+                                ? 'bg-amber-500/20 font-bold border-l-4 border-amber-500 text-white' 
+                                : 'hover:bg-zinc-800/50 text-zinc-300'
+                            }`}
+                          >
+                            <td className="py-2.5 px-3 font-sans font-black flex items-center space-x-1.5">
+                              {isSelected && <span className="text-amber-400">✓</span>}
+                              <span>{row.subId.toUpperCase()}</span>
+                            </td>
+                            <td className="py-2.5 px-2 text-emerald-400">{row.easy}</td>
+                            <td className="py-2.5 px-2 text-teal-300">{row.longRun}</td>
+                            <td className="py-2.5 px-2 text-amber-400 font-bold">{row.marathon}</td>
+                            <td className="py-2.5 px-2 text-blue-300">{row.tempo}</td>
+                            <td className="py-2.5 px-2 text-rose-400">{row.interval}</td>
+                            <td className="py-2.5 px-2 text-purple-300">{row.repetition}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </table>
+                </div>
 
-            <div className="pt-2 text-[11px] text-zinc-400 italic">
-              💡 Chạm vào bất kỳ hàng nào để chọn làm mục tiêu tập luyện của bạn.
-            </div>
-          </div>
+                <div className="pt-2 text-[11px] text-zinc-400 italic">
+                  💡 Chạm vào bất kỳ hàng nào để chọn làm mục tiêu tập luyện của bạn.
+                </div>
+              </div>
 
-          {/* Giải thích các vùng Pace */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
-            <div className="p-3.5 rounded-2xl bg-zinc-900 border border-emerald-500/30 space-y-1">
-              <span className="font-black text-emerald-400 uppercase font-mono">🍃 Easy (E) - Chạy Nhẹ</span>
-              <p className="text-zinc-300 leading-relaxed">
-                Chiếm 75-80% khối lượng. Chạy thở đều nói chuyện được, rèn luyện hệ mao mạch, phục hồi cơ và đốt mỡ.
-              </p>
-            </div>
+              {/* Giải thích các vùng Pace */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-emerald-500/30 space-y-1">
+                  <span className="font-black text-emerald-400 uppercase font-mono">🍃 Easy (E) - Chạy Nhẹ (Zone 2)</span>
+                  <p className="text-zinc-300 leading-relaxed">
+                    Chiếm 75-80% khối lượng. Chạy thở đều nói chuyện được, rèn luyện hệ mao mạch, phục hồi cơ và đốt mỡ.
+                  </p>
+                </div>
 
-            <div className="p-3.5 rounded-2xl bg-zinc-900 border border-teal-500/30 space-y-1">
-              <span className="font-black text-teal-300 uppercase font-mono">🏃 Long Run (L) - Chạy Dài</span>
-              <p className="text-zinc-300 leading-relaxed">
-                Chạy cuối tuần, rèn sức bền tâm lý và khả năng chuyển hóa chất béo khi cạn Glycogen.
-              </p>
-            </div>
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-teal-500/30 space-y-1">
+                  <span className="font-black text-teal-300 uppercase font-mono">🏃 Long Run (L) - Chạy Dài (Zone 2-3)</span>
+                  <p className="text-zinc-300 leading-relaxed">
+                    Chạy cuối tuần, rèn sức bền tâm lý và khả năng chuyển hóa chất béo khi cạn Glycogen.
+                  </p>
+                </div>
 
-            <div className="p-3.5 rounded-2xl bg-zinc-900 border border-blue-500/30 space-y-1">
-              <span className="font-black text-blue-300 uppercase font-mono">⚡ Tempo (T) - Ngưỡng Axit Lactic</span>
-              <p className="text-zinc-300 leading-relaxed">
-                Chạy ở tốc độ "nặng vừa phải" duy trì 20-40 phút để nâng cao ngưỡng thanh thải axit lactic.
-              </p>
-            </div>
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-blue-500/30 space-y-1">
+                  <span className="font-black text-blue-300 uppercase font-mono">⚡ Tempo (T) - Ngưỡng Lactic (Zone 4)</span>
+                  <p className="text-zinc-300 leading-relaxed">
+                    Chạy ở tốc độ "nặng vừa phải" duy trì 20-40 phút để nâng cao ngưỡng thanh thải axit lactic.
+                  </p>
+                </div>
 
-            <div className="p-3.5 rounded-2xl bg-zinc-900 border border-rose-500/30 space-y-1">
-              <span className="font-black text-rose-400 uppercase font-mono">🔥 Interval (I) - Biến Tốc VO2max</span>
-              <p className="text-zinc-300 leading-relaxed">
-                Hiệp chạy bứt tốc 1 phút hoặc 200m xen kẽ đi bộ, nâng công suất tiêu thụ oxy tối đa VO2max.
-              </p>
+                <div className="p-3.5 rounded-2xl bg-zinc-900 border border-rose-500/30 space-y-1">
+                  <span className="font-black text-rose-400 uppercase font-mono">🔥 Interval (I) - Biến Tốc VO2max (Zone 5)</span>
+                  <p className="text-zinc-300 leading-relaxed">
+                    Hiệp chạy bứt tốc 1 phút hoặc 200m xen kẽ đi bộ, nâng công suất tiêu thụ oxy tối đa VO2max.
+                  </p>
+                </div>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       )}
 
@@ -1440,6 +1810,64 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                 </span>
                 <div className="h-28 w-full bg-zinc-950 rounded-xl border border-zinc-800 flex items-center justify-center text-xs text-emerald-400 font-mono">
                   Đang ghi lộ trình GPS thời gian thực...
+                </div>
+              </div>
+            )}
+
+            {/* Nhập nhịp tim buổi chạy (Khi tạm dừng hoặc chuẩn bị kết thúc) */}
+            {elapsedSeconds > 0 && (
+              <div className="p-3.5 rounded-2xl bg-zinc-900/90 border border-zinc-800 space-y-2.5 animate-in fade-in">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-1.5 text-xs font-bold text-zinc-200">
+                    <Heart className="w-4 h-4 text-rose-400 fill-rose-400" />
+                    <span>Nhịp Tim Buổi Chạy (Tùy chọn):</span>
+                  </div>
+                  {trackerAvgHr && classifyHeartRateZone(parseInt(trackerAvgHr, 10), heartProfile.age, heartProfile.customMaxHeartRate) && (
+                    <span className={`text-[10px] font-mono font-black px-2 py-0.5 rounded-lg border ${
+                      classifyHeartRateZone(parseInt(trackerAvgHr, 10), heartProfile.age, heartProfile.customMaxHeartRate)!.bgColor
+                    } ${
+                      classifyHeartRateZone(parseInt(trackerAvgHr, 10), heartProfile.age, heartProfile.customMaxHeartRate)!.color
+                    } ${
+                      classifyHeartRateZone(parseInt(trackerAvgHr, 10), heartProfile.age, heartProfile.customMaxHeartRate)!.borderColor
+                    }`}>
+                      Zone {classifyHeartRateZone(parseInt(trackerAvgHr, 10), heartProfile.age, heartProfile.customMaxHeartRate)!.zone}: {classifyHeartRateZone(parseInt(trackerAvgHr, 10), heartProfile.age, heartProfile.customMaxHeartRate)!.nameVi}
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+                  <div>
+                    <label className="text-[10px] text-zinc-400 font-mono block">Nhịp tim TB (BPM):</label>
+                    <input
+                      type="number"
+                      placeholder="VD: 142"
+                      value={trackerAvgHr}
+                      onChange={(e) => setTrackerAvgHr(e.target.value)}
+                      className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-1.5 text-sm text-white font-mono font-bold mt-0.5 focus:border-rose-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-zinc-400 font-mono block">Nhịp tim Max (BPM):</label>
+                    <input
+                      type="number"
+                      placeholder="VD: 168"
+                      value={trackerMaxHr}
+                      onChange={(e) => setTrackerMaxHr(e.target.value)}
+                      className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-1.5 text-sm text-white font-mono font-bold mt-0.5 focus:border-rose-500 focus:outline-none"
+                    />
+                  </div>
+
+                  <div className="col-span-2 sm:col-span-1">
+                    <label className="text-[10px] text-zinc-400 font-mono block">Hạ sau 1p nghỉ (HRR):</label>
+                    <input
+                      type="number"
+                      placeholder="VD: 25"
+                      value={trackerRecoveryHr}
+                      onChange={(e) => setTrackerRecoveryHr(e.target.value)}
+                      className="w-full bg-zinc-950 border border-zinc-700 rounded-xl px-3 py-1.5 text-sm text-white font-mono font-bold mt-0.5 focus:border-emerald-500 focus:outline-none"
+                    />
+                  </div>
                 </div>
               </div>
             )}
@@ -1733,7 +2161,25 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                       <span>Thời gian: <strong className="text-white">{formatSecondsToTime(sess.durationSeconds)}</strong></span>
                       <span>Pace TB: <strong className="text-emerald-400">{sess.avgPace}/km</strong></span>
                       {sess.cadence && <span>Cadence: <strong>{sess.cadence} spm</strong></span>}
-                      {sess.avgHeartRate && <span>Tim: <strong>{sess.avgHeartRate} bpm</strong></span>}
+                      {sess.avgHeartRate && (() => {
+                        const zInfo = classifyHeartRateZone(sess.avgHeartRate, heartProfile.age, heartProfile.customMaxHeartRate);
+                        return (
+                          <span className="inline-flex items-center space-x-1">
+                            <span>Tim: <strong className="text-rose-400">{sess.avgHeartRate} bpm</strong></span>
+                            {zInfo && (
+                              <span className={`text-[10px] px-1.5 py-0.5 rounded font-black font-mono border ${zInfo.bgColor} ${zInfo.color} ${zInfo.borderColor}`}>
+                                Z{zInfo.zone}
+                              </span>
+                            )}
+                            {sess.maxHeartRate && <span className="text-[10px] text-zinc-400 font-normal">(Max: {sess.maxHeartRate})</span>}
+                            {sess.recoveryHeartRate1Min && (
+                              <span className="text-[10px] text-emerald-400 font-mono font-bold" title="Độ giảm sau 1 phút nghỉ">
+                                ↓{sess.recoveryHeartRate1Min}p
+                              </span>
+                            )}
+                          </span>
+                        );
+                      })()}
                     </div>
                   </div>
 
@@ -2151,35 +2597,74 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                 </div>
               </div>
 
-              {/* Thông số Nhịp tim & Cadence (Tùy chọn) */}
-              {inputSource === 'mibro' && (
-                <div className="grid grid-cols-2 gap-2 pt-1">
+              {/* Thông số Nhịp tim & Cadence (Tùy chọn cho tất cả hình thức) */}
+              <div className="pt-2 border-t border-zinc-800/80 space-y-2">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center space-x-1.5 text-xs font-bold text-zinc-300">
+                    <Heart className="w-4 h-4 text-rose-400 fill-rose-400" />
+                    <span>Nhịp tim & Cadence (Tùy chọn):</span>
+                  </div>
+                  {mibroHr && classifyHeartRateZone(parseInt(mibroHr, 10), heartProfile.age, heartProfile.customMaxHeartRate) && (
+                    <span className={`text-[10px] font-mono font-black px-2 py-0.5 rounded-lg border ${
+                      classifyHeartRateZone(parseInt(mibroHr, 10), heartProfile.age, heartProfile.customMaxHeartRate)!.bgColor
+                    } ${
+                      classifyHeartRateZone(parseInt(mibroHr, 10), heartProfile.age, heartProfile.customMaxHeartRate)!.color
+                    } ${
+                      classifyHeartRateZone(parseInt(mibroHr, 10), heartProfile.age, heartProfile.customMaxHeartRate)!.borderColor
+                    }`}>
+                      Zone {classifyHeartRateZone(parseInt(mibroHr, 10), heartProfile.age, heartProfile.customMaxHeartRate)!.zone}: {classifyHeartRateZone(parseInt(mibroHr, 10), heartProfile.age, heartProfile.customMaxHeartRate)!.nameVi}
+                    </span>
+                  )}
+                </div>
+
+                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                   <div>
-                    <label className="text-xs text-zinc-400 font-medium block">Nhịp tim TB (BPM):</label>
+                    <label className="text-[10px] text-zinc-400 font-medium block font-mono">Nhịp tim TB (BPM):</label>
                     <input
                       type="number"
                       placeholder="VD: 145"
                       value={mibroHr}
                       onChange={(e) => setMibroHr(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-bold font-mono mt-1"
+                      className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-bold font-mono mt-0.5"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-zinc-400 font-medium block font-mono">Nhịp tim Max (BPM):</label>
+                    <input
+                      type="number"
+                      placeholder="VD: 168"
+                      value={mibroMaxHr}
+                      onChange={(e) => setMibroMaxHr(e.target.value)}
+                      className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-bold font-mono mt-0.5"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-[10px] text-zinc-400 font-medium block font-mono">Hạ sau 1p (HRR):</label>
+                    <input
+                      type="number"
+                      placeholder="VD: 25"
+                      value={mibroRecoveryHr}
+                      onChange={(e) => setMibroRecoveryHr(e.target.value)}
+                      className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-bold font-mono mt-0.5"
                     />
                   </div>
 
                   <div>
                     <div className="flex items-center justify-between">
-                      <label className="text-xs text-zinc-400 font-medium">Cadence (SPM):</label>
-                      <span className="text-[10px] text-amber-400 font-bold">175-185 tối ưu</span>
+                      <label className="text-[10px] text-zinc-400 font-medium font-mono">Cadence (SPM):</label>
                     </div>
                     <input
                       type="number"
                       placeholder="VD: 178"
                       value={mibroCadence}
                       onChange={(e) => setMibroCadence(e.target.value)}
-                      className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-bold font-mono mt-1"
+                      className="w-full bg-zinc-900 border border-zinc-700 rounded-xl px-3 py-2 text-sm text-white font-bold font-mono mt-0.5"
                     />
                   </div>
                 </div>
-              )}
+              </div>
 
               {/* Gắn vào giáo án 8 tuần để tự động tích hoàn thành */}
               <div className="pt-1">
