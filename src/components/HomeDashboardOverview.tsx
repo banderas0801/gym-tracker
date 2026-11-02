@@ -1,28 +1,19 @@
 'use client';
 
-import React, { useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
   Dumbbell, 
   Footprints, 
   Flame, 
-  TrendingUp, 
-  Calendar, 
   Clock, 
-  Play, 
-  ChevronRight, 
   Activity, 
-  Trophy, 
-  Zap, 
-  CheckCircle2, 
-  ShieldCheck,
-  Award,
-  Sparkles
+  Trophy
 } from 'lucide-react';
 import { WorkoutSession } from '@/types/workout';
 import { RunSession } from '@/types/running';
 import { getWorkoutHistory } from '@/lib/storage';
 import { getRunSessions, getTargetSub } from '@/lib/runningStorage';
-import { calculateWeeklyGymAnalytics, calculateWeeklyRunningAnalytics, formatSecondsToTime } from '@/lib/weeklyAnalytics';
+import { calculateWeeklyGymAnalytics, calculateWeeklyRunningAnalytics, WeeklyGymComparison, WeeklyRunningComparison } from '@/lib/weeklyAnalytics';
 
 interface HomeDashboardOverviewProps {
   onStartTodayRecommendation: () => void;
@@ -31,39 +22,38 @@ interface HomeDashboardOverviewProps {
   onStartEmptyWorkout: () => void;
 }
 
+interface DashboardState {
+  gymAnalytics: WeeklyGymComparison;
+  runningAnalytics: WeeklyRunningComparison;
+  recentActivity: { date: Date; type: 'gym' | 'run'; title: string; meta: string } | null;
+  daysActiveThisWeek: number;
+  gymProgressPercent: number;
+  runProgressPercent: number;
+  targetWeeklyKm: number;
+  todayLabel: string;
+  greeting: string;
+}
+
 export default function HomeDashboardOverview({
-  onStartTodayRecommendation,
   onGoToRunning,
   onGoToHistory,
-  onStartEmptyWorkout,
 }: HomeDashboardOverviewProps) {
-  // 1. Tải lịch sử Gym & Running
-  const workoutHistory: WorkoutSession[] = useMemo(() => {
-    return getWorkoutHistory();
-  }, []);
+  const [data, setData] = useState<DashboardState | null>(null);
 
-  const runSessions: RunSession[] = useMemo(() => {
-    return getRunSessions();
-  }, []);
+  useEffect(() => {
+    // 1. Tải lịch sử Gym & Running từ client storage an toàn
+    const workoutHistory: WorkoutSession[] = getWorkoutHistory();
+    const runSessions: RunSession[] = getRunSessions();
 
-  // 2. Phân tích số liệu Gym tuần này
-  const gymAnalytics = useMemo(() => {
-    return calculateWeeklyGymAnalytics(workoutHistory);
-  }, [workoutHistory]);
+    // 2. Phân tích số liệu Gym tuần này
+    const gymAnalytics = calculateWeeklyGymAnalytics(workoutHistory);
 
-  // 3. Phân tích số liệu Chạy bộ tuần này
-  const targetSub = useMemo(() => getTargetSub(), []);
-  const targetWeeklyKm = targetSub === 'sub200' ? 24 : targetSub === 'sub145' ? 32 : 18;
+    // 3. Phân tích số liệu Chạy bộ tuần này
+    const targetSub = getTargetSub();
+    const targetWeeklyKm = targetSub === 'sub200' ? 24 : targetSub === 'sub145' ? 32 : 18;
+    const runningAnalytics = calculateWeeklyRunningAnalytics(runSessions, targetWeeklyKm);
 
-  const runningAnalytics = useMemo(() => {
-    return calculateWeeklyRunningAnalytics(runSessions, targetWeeklyKm);
-  }, [runSessions, targetWeeklyKm]);
-
-  const { thisWeek: gymThisWeek } = gymAnalytics;
-  const { thisWeek: runThisWeek } = runningAnalytics;
-
-  // 4. Tính toán Streak & Hoạt động gần nhất
-  const recentActivity = useMemo(() => {
+    // 4. Tính toán Streak & Hoạt động gần nhất
     const allEvents: { date: Date; type: 'gym' | 'run'; title: string; meta: string }[] = [];
 
     workoutHistory.forEach((w) => {
@@ -85,11 +75,8 @@ export default function HomeDashboardOverview({
     });
 
     allEvents.sort((a, b) => b.date.getTime() - a.date.getTime());
-    return allEvents[0] || null;
-  }, [workoutHistory, runSessions]);
 
-  // Tính số ngày đã vận động trong tuần này
-  const daysActiveThisWeek = useMemo(() => {
+    // 5. Tính số ngày đã vận động trong tuần này
     const now = new Date();
     const startOfWeek = new Date(now);
     const day = now.getDay();
@@ -98,7 +85,6 @@ export default function HomeDashboardOverview({
     startOfWeek.setHours(0, 0, 0, 0);
 
     const activeDaysSet = new Set<string>();
-
     workoutHistory.forEach((w) => {
       const d = new Date(w.startTime);
       if (d >= startOfWeek) {
@@ -113,28 +99,59 @@ export default function HomeDashboardOverview({
       }
     });
 
-    return activeDaysSet.size;
-  }, [workoutHistory, runSessions]);
+    const targetWorkouts = 4;
+    const gymProgressPercent = Math.min(100, Math.round((gymAnalytics.thisWeek.workoutsCount / targetWorkouts) * 100));
+    const runProgressPercent = Math.min(100, Math.round((runningAnalytics.thisWeek.totalKm / targetWeeklyKm) * 100));
 
-  // Target số buổi tập trong tuần (thường là 4-5 buổi)
+    const hour = now.getHours();
+    let greeting = 'Chào bạn! Sẵn sàng rèn luyện thể lực chưa?';
+    if (hour < 12) greeting = 'Chào buổi sáng! Sẵn sàng rèn luyện thể lực chưa?';
+    else if (hour < 18) greeting = 'Chào buổi chiều! Giờ vàng để bùng nổ thể lực.';
+    else greeting = 'Chào buổi tối! Hoàn thành mục tiêu vận động hôm nay nhé.';
+
+    const todayLabel = now.toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' });
+
+    setData({
+      gymAnalytics,
+      runningAnalytics,
+      recentActivity: allEvents[0] || null,
+      daysActiveThisWeek: activeDaysSet.size,
+      gymProgressPercent,
+      runProgressPercent,
+      targetWeeklyKm,
+      todayLabel,
+      greeting,
+    });
+  }, []);
+
+  // Trong quá trình Next.js static prerender, trả về null để tránh hydration mismatch và unstable Date
+  if (!data) {
+    return null;
+  }
+
+  const {
+    gymAnalytics,
+    runningAnalytics,
+    recentActivity,
+    daysActiveThisWeek,
+    gymProgressPercent,
+    runProgressPercent,
+    targetWeeklyKm,
+    todayLabel,
+    greeting,
+  } = data;
+
+  const { thisWeek: gymThisWeek } = gymAnalytics;
+  const { thisWeek: runThisWeek } = runningAnalytics;
   const targetWorkouts = 4;
-  const gymProgressPercent = Math.min(100, Math.round((gymThisWeek.workoutsCount / targetWorkouts) * 100));
-  const runProgressPercent = Math.min(100, Math.round((runThisWeek.totalKm / targetWeeklyKm) * 100));
 
   const formatVolume = (kg: number) => {
     if (kg >= 1000) return `${(kg / 1000).toFixed(1)} tấn`;
     return `${kg.toLocaleString()} kg`;
   };
 
-  const getGreeting = () => {
-    const hour = new Date().getHours();
-    if (hour < 12) return 'Chào buổi sáng! Sẵn sàng rèn luyện thể lực chưa?';
-    if (hour < 18) return 'Chào buổi chiều! Giờ vàng để bùng nổ thể lực.';
-    return 'Chào buổi tối! Hoàn thành mục tiêu vận động hôm nay nhé.';
-  };
-
   return (
-    <section className="space-y-4">
+    <section className="space-y-4 animate-in fade-in duration-300">
       {/* 1. Header Lời Chào & Chuỗi Ngày Rèn Luyện */}
       <div className="bg-gradient-to-r from-zinc-900 via-zinc-900/90 to-zinc-950 border border-zinc-800 rounded-3xl p-4 sm:p-5 shadow-xl relative overflow-hidden">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -145,11 +162,9 @@ export default function HomeDashboardOverview({
                 <span>BẢNG TỔNG HỢP & TRACKING TUẦN</span>
               </span>
               <span>•</span>
-              <span className="text-zinc-300 font-medium">
-                {new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: 'numeric', month: 'numeric' })}
-              </span>
+              <span className="text-zinc-300 font-medium">{todayLabel}</span>
             </div>
-            <h2 className="text-lg sm:text-xl font-black text-white">{getGreeting()}</h2>
+            <h2 className="text-lg sm:text-xl font-black text-white">{greeting}</h2>
             <p className="text-xs text-zinc-400 mt-0.5">
               Theo dõi nhịp độ phát triển cơ bắp và sức bền tim mạch tuần này tại một nơi duy nhất.
             </p>

@@ -1,4 +1,4 @@
-=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-11-01T04:03:54.118Z ===
+=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-11-02T00:51:16.473Z ===
 Đang kết nối máy chủ VPS 103.77.209.87...
 ✅ Đã kết nối VPS thành công!
 
@@ -11,19 +11,19 @@
 │ 16  │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 13D    │ 1    │ online    │ 0%       │ 7.8mb    │ root     │ disabled │
 │ 15  │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 13D    │ 1    │ online    │ 0%       │ 8.0mb    │ root     │ disabled │
 │ 17  │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 13D    │ 1    │ online    │ 0%       │ 7.9mb    │ root     │ disabled │
-│ 9   │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 12D    │ 6    │ online    │ 0%       │ 22.7mb   │ root     │ disabled │
-│ 18  │ flowdesk          │ default     │ 0.1.0   │ fork    │ 3954388  │ 13h    │ 17   │ online    │ 0%       │ 48.4mb   │ root     │ disabled │
-│ 10  │ gemini-proxy      │ default     │ N/A     │ fork    │ 3393340  │ 2D     │ 26   │ online    │ 0%       │ 23.7mb   │ root     │ disabled │
-│ 60  │ gym-tracker       │ default     │ N/A     │ fork    │ 1373016  │ 9D     │ 0    │ online    │ 0%       │ 31.8mb   │ root     │ disabled │
-│ 0   │ maccanh           │ default     │ 1.0.0   │ fork    │ 2147160  │ 7D     │ 83   │ online    │ 0%       │ 73.3mb   │ root     │ disabled │
+│ 9   │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 13D    │ 6    │ online    │ 0%       │ 22.8mb   │ root     │ disabled │
+│ 18  │ flowdesk          │ default     │ 0.1.0   │ fork    │ 3954388  │ 33h    │ 17   │ online    │ 0%       │ 48.4mb   │ root     │ disabled │
+│ 10  │ gemini-proxy      │ default     │ N/A     │ fork    │ 3393340  │ 3D     │ 26   │ online    │ 0%       │ 23.7mb   │ root     │ disabled │
+│ 60  │ gym-tracker       │ default     │ N/A     │ fork    │ 1373016  │ 10D    │ 0    │ online    │ 0%       │ 31.6mb   │ root     │ disabled │
+│ 0   │ maccanh           │ default     │ 1.0.0   │ fork    │ 2147160  │ 7D     │ 83   │ online    │ 0%       │ 70.2mb   │ root     │ disabled │
 │ 12  │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 13D    │ 16   │ online    │ 0%       │ 7.8mb    │ root     │ disabled │
-│ 11  │ muse-bridge       │ default     │ N/A     │ fork    │ 1391148  │ 9D     │ 1    │ online    │ 0%       │ 26.8mb   │ root     │ disabled │
-│ 157 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 2147125  │ 7D     │ 0    │ online    │ 0%       │ 56.5mb   │ root     │ disabled │
-│ 171 │ taxcouncil-web    │ default     │ 16.4.2  │ fork    │ 3961183  │ 12h    │ 0    │ online    │ 0%       │ 138.3mb  │ root     │ disabled │
-│ 5   │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 14D    │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
+│ 11  │ muse-bridge       │ default     │ N/A     │ fork    │ 1391148  │ 10D    │ 1    │ online    │ 0%       │ 26.7mb   │ root     │ disabled │
+│ 157 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 2147125  │ 7D     │ 0    │ online    │ 0%       │ 55.8mb   │ root     │ disabled │
+│ 171 │ taxcouncil-web    │ default     │ 16.4.2  │ fork    │ 3961183  │ 33h    │ 0    │ online    │ 0%       │ 138.9mb  │ root     │ disabled │
+│ 5   │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 15D    │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
 │ 158 │ vieneu-tts        │ default     │ 0.1.0   │ fork    │ 2147143  │ 7D     │ 0    │ online    │ 0%       │ 400.2mb  │ root     │ disabled │
 └─────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 3.1% | ram usage: 50.3% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.029mb/s ⇑ 0.003mb/s drop 50/min | disk: ⇓ 0mb/s ⇑ 0.023mb/s / 61.57%
+host metrics | cpu: 2.9% | ram usage: 51.1% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.032mb/s ⇑ 0.002mb/s drop 150/min | disk: ⇓ 0mb/s ⇑ 0.008mb/s / 61.74%
 tcp   LISTEN 0      511                *:3008             *:*    users:(("next-server (v1",pid=1373039,fd=18))                                           
 
 --- BƯỚC 2: Kéo commit mới nhất từ GitHub ---
@@ -31,11 +31,11 @@ tcp   LISTEN 0      511                *:3008             *:*    users:(("next-s
 >>> [VPS] cd /var/www/gym-tracker && git fetch origin master && git reset --hard origin/master && git log -n 3 --oneline
 From https://github.com/banderas0801/gym-tracker
  * branch            master     -> FETCH_HEAD
-   7da7e7d..a4b3177  master     -> origin/master
-HEAD is now at a4b3177 feat(running): integrate 5 heart rate zones, Tanaka max HR calculator, and HR recovery test
+   a4b3177..56e179f  master     -> origin/master
+HEAD is now at 56e179f fix: resolve ArrowLeft missing import and runSession date in HomeDashboardOverview
+56e179f fix: resolve ArrowLeft missing import and runSession date in HomeDashboardOverview
 a4b3177 feat(running): integrate 5 heart rate zones, Tanaka max HR calculator, and HR recovery test
 7da7e7d feat(dashboard): add home tracking overview, enable mobile pinch-zoom, and compact routine view
-5ae95a6 feat(dashboard): add home tracking overview, enable mobile pinch-zoom, and compact routine view
 
 --- BƯỚC 3: Kiểm tra và đảm bảo các file mã nguồn mới nhất trên VPS ---
 
@@ -139,17 +139,43 @@ a4b3177 feat(running): integrate 5 heart rate zones, Tanaka max HR calculator, a
 > next build
 
 ▲ Next.js 16.4.2 (Turbopack)
-✓ Running next.config.ts took 454ms
+✓ Running next.config.ts took 110ms
 - Cache Components enabled
 - Partial Prefetching enabled
 
   Creating an optimized production build ...
-✓ Compiled successfully in 13.4s
+✓ Compiled successfully in 2.9s
   Running TypeScript ...
-src/components/ExerciseSelectorModal.tsx(232,22): error TS2304: Cannot find name 'ArrowLeft'.
-src/components/HomeDashboardOverview.tsx(80,26): error TS2339: Property 'startTime' does not exist on type 'RunSession'.
-src/components/HomeDashboardOverview.tsx(110,28): error TS2339: Property 'startTime' does not exist on type 'RunSession'.
-Failed to type check.
+  Finished TypeScript in 8.7s ...
+  Collecting page data using 1 worker ...
+  Generating static pages using 1 worker (0/5) ...
+  Generating static pages using 1 worker (1/5) 
+  Generating static pages using 1 worker (2/5) 
+Error: Route "/": Next.js encountered the unstable value `new Date()` in a Client Component.
 
+This value would be evaluated during the prerender, instead of recomputed on each visit.
+
+Ways to fix this:
+  - [stream] Wrap the Client Component in `<Suspense fallback={...}>`
+  - [defer] Move the read into a `useEffect` or event handler
+  - [measure] If the value is for telemetry, use a timing API such as `performance.now()`
+
+Learn more: https://nextjs.org/docs/messages/blocking-prerender-current-time-client
+    at bk (src/lib/weeklyAnalytics.ts:272:15)
+    at <unknown> (src/components/HomeDashboardOverview.tsx:51:12)
+    at bl (src/components/HomeDashboardOverview.tsx:50:24)
+  270 |
+  271 | export function calculateWeeklyGymAnalytics(history: WorkoutSession[]): WeeklyGymComparison {
+> 272 |   const now = new Date();
+      |               ^
+  273 |   const currentWeekStart = getStartOfWeek(now);
+  274 |
+  275 |   const prevWeekStart = new Date(currentWeekStart);
+To get a more detailed stack trace and pinpoint the issue, try one of the following:
+  - Start the app in development mode by running `next dev`, then open "/" in your browser to investigate the error.
+  - Rerun the production build with `next build --debug-prerender` to generate better stack traces.
+Error occurred prerendering page "/". Read more: https://nextjs.org/docs/messages/prerender-error
+Export encountered an error on /page: /, exiting the build.
+⨯ Next.js build worker exited with code: 1 and signal: null
 
 ❌ Build thất bại! Dừng quy trình.

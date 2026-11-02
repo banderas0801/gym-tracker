@@ -162,12 +162,14 @@ export default function RoutineList({
   return (
     <div className="max-w-3xl mx-auto space-y-6 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
       {/* 0. PHÂN HỆ TỔNG HỢP & TRACKING THỂ LỰC HIỂN THỊ MÀN HÌNH CHÍNH */}
-      <HomeDashboardOverview 
-        onStartTodayRecommendation={handleStartTodayRecommendation}
-        onGoToRunning={() => onGoToRunning ? onGoToRunning() : null}
-        onGoToHistory={() => onGoToHistory ? onGoToHistory() : null}
-        onStartEmptyWorkout={handleStartEmptyWorkout}
-      />
+      <React.Suspense fallback={null}>
+        <HomeDashboardOverview 
+          onStartTodayRecommendation={handleStartTodayRecommendation}
+          onGoToRunning={() => onGoToRunning ? onGoToRunning() : null}
+          onGoToHistory={() => onGoToHistory ? onGoToHistory() : null}
+          onStartEmptyWorkout={handleStartEmptyWorkout}
+        />
+      </React.Suspense>
 
       {/* 1. GỢI Ý HÔM NAY (TODAY'S AI RECOMMENDATION HERO CARD) */}
       <div className="bg-gradient-to-br from-emerald-950/90 via-zinc-900 to-zinc-950 border-2 border-emerald-500/50 rounded-3xl p-5 sm:p-6 shadow-2xl relative overflow-hidden">
