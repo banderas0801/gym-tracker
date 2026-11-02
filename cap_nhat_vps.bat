@@ -1,16 +1,16 @@
 @echo off
 chcp 65001 > nul
-title CAP NHAT GYM TRACKER - TICH HOP 5 VUNG NHIP TIM (HEART RATE ZONES 21K)
+title CAP NHAT GYM TRACKER - FIX BUILD & DONG BO VPS
 color 0A
 echo ========================================================
-echo   CAP NHAT GYM TRACKER: TICH HOP NHIP TIM & 5 ZONE 21K
+echo   CAP NHAT GYM TRACKER: FIX BUILD & DONG BO VPS
 echo ========================================================
 cd /d C:\Users\Admin\gym-tracker
 
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "feat(running): integrate 5 heart rate zones, Tanaka max HR calculator, and HR recovery test"
+git commit -m "fix: resolve ArrowLeft missing import and runSession date in HomeDashboardOverview"
 git push origin master
 
 echo.

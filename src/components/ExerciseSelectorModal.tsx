@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState, useMemo } from 'react';
-import { Search, X, Dumbbell, Filter, Info, Check } from 'lucide-react';
+import { Search, X, Dumbbell, Filter, Info, Check, ArrowLeft } from 'lucide-react';
 import { Exercise } from '@/types/workout';
 import exercisesData from '@/data/exercises.json';
 import { translateMuscle, translateEquipment, translateInstructions } from '@/lib/translations';

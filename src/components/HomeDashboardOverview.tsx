@@ -77,7 +77,7 @@ export default function HomeDashboardOverview({
 
     runSessions.forEach((r) => {
       allEvents.push({
-        date: new Date(r.startTime),
+        date: new Date(r.date),
         type: 'run',
         title: `Chạy ${r.mode === 'outdoor_gps' ? 'ngoài trời' : r.mode === 'treadmill' ? 'máy chạy' : 'biến tốc'}`,
         meta: `${r.distanceKm} km • Pace ${r.avgPace || '--:--'} • ${Math.round(r.calories || 0)} kcal`,
@@ -107,7 +107,7 @@ export default function HomeDashboardOverview({
     });
 
     runSessions.forEach((r) => {
-      const d = new Date(r.startTime);
+      const d = new Date(r.date);
       if (d >= startOfWeek) {
         activeDaysSet.add(d.toDateString());
       }
