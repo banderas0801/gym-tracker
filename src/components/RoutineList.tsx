@@ -1,7 +1,7 @@
 'use client';
 
-import React, { useState } from 'react';
-import { Play, Plus, Dumbbell, Calendar, Flame, ChevronRight, ChevronDown, ChevronUp, Layers, Sparkles, Wand2, Compass, BookOpen, Wind, ShieldCheck, X, ArrowLeft } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import { Play, Plus, Dumbbell, Calendar, Flame, ChevronRight, ChevronDown, ChevronUp, Layers, Sparkles, Wand2, Compass, BookOpen, Wind, ShieldCheck, X, ArrowLeft, Activity, Footprints, LayoutDashboard } from 'lucide-react';
 import { RoutineTemplate, WorkoutSession, WorkoutExerciseItem, SetLog, Exercise } from '@/types/workout';
 import { getRoutines, saveRoutine, getPreviousPerformance } from '@/lib/storage';
 import { getExerciseMedia } from '@/lib/exerciseMedia';
@@ -18,13 +18,15 @@ interface RoutineListProps {
   onGoToHistory?: () => void;
 }
 
+export type RoutineMainTab = 'overview' | 'basic' | 'thol';
+
 export default function RoutineList({ 
   onStartSession,
   onGoToRunning,
   onGoToHistory,
 }: RoutineListProps) {
   const [routines, setRoutines] = useState<RoutineTemplate[]>(() => getRoutines());
-  const [routineSystem, setRoutineSystem] = useState<'basic' | 'thol'>('basic');
+  const [mainTab, setMainTab] = useState<RoutineMainTab>('overview');
   const [basicFilter, setBasicFilter] = useState<'all' | 'newbie' | 'intermediate'>('all');
   const [tholFilter, setTholFilter] = useState<'all' | 'tang1' | 'tang2' | 'tang3'>('all');
   const [expandedRoutines, setExpandedRoutines] = useState<Record<string, boolean>>({});
@@ -140,153 +142,255 @@ export default function RoutineList({
     setNewRoutineExercises([]);
   };
 
-  const filteredRoutines = routines.filter((r) => {
-    const isThol = r.category === 'thol' || r.id.startsWith('thol-');
-    if (routineSystem === 'basic') {
-      if (isThol) return false;
-      if (basicFilter === 'newbie') return r.level === 'Newbie';
-      if (basicFilter === 'intermediate') return r.level === 'Intermediate';
-      return true;
-    } else {
-      if (!isThol) return false;
-      if (tholFilter === 'tang1') return r.id.startsWith('thol-tang1');
-      if (tholFilter === 'tang2') return r.id.startsWith('thol-tang2');
-      if (tholFilter === 'tang3') return r.id.startsWith('thol-tang3');
-      return true;
-    }
-  });
+  const filteredRoutines = useMemo(() => {
+    return routines.filter((r) => {
+      const isThol = r.category === 'thol' || r.id.startsWith('thol-');
+      if (mainTab === 'basic') {
+        if (isThol) return false;
+        if (basicFilter === 'newbie') return r.level === 'Newbie';
+        if (basicFilter === 'intermediate') return r.level === 'Intermediate';
+        return true;
+      } else if (mainTab === 'thol') {
+        if (!isThol) return false;
+        if (tholFilter === 'tang1') return r.id.startsWith('thol-tang1');
+        if (tholFilter === 'tang2') return r.id.startsWith('thol-tang2');
+        if (tholFilter === 'tang3') return r.id.startsWith('thol-tang3');
+        return true;
+      }
+      return false;
+    });
+  }, [routines, mainTab, basicFilter, tholFilter]);
 
   const basicCount = routines.filter(r => r.category === 'basic' || (!r.id.startsWith('thol-') && r.category !== 'thol')).length;
   const tholCount = routines.filter(r => r.category === 'thol' || r.id.startsWith('thol-')).length;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
-      {/* 0. PHÂN HỆ TỔNG HỢP & TRACKING THỂ LỰC HIỂN THỊ MÀN HÌNH CHÍNH */}
-      <React.Suspense fallback={null}>
-        <HomeDashboardOverview 
-          onStartTodayRecommendation={handleStartTodayRecommendation}
-          onGoToRunning={() => onGoToRunning ? onGoToRunning() : null}
-          onGoToHistory={() => onGoToHistory ? onGoToHistory() : null}
-          onStartEmptyWorkout={handleStartEmptyWorkout}
-        />
-      </React.Suspense>
+    <div className="max-w-3xl mx-auto space-y-5 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
+      {/* 🔝 THANH TAB CHUYỂN HƯỚNG GỌN GÀNG - TRÁNH KÉO DÀI MÀN HÌNH CHÍNH */}
+      <div className="sticky top-16 z-30 bg-black/95 backdrop-blur-md pt-1 pb-3 -mx-3 px-3 sm:-mx-4 sm:px-4 border-b border-zinc-800/80">
+        <div className="grid grid-cols-3 gap-1.5 p-1 bg-zinc-900/90 rounded-2xl border border-zinc-800 shadow-lg max-w-xl mx-auto">
+          <button
+            type="button"
+            onClick={() => setMainTab('overview')}
+            className={`py-2 sm:py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition active:scale-95 ${
+              mainTab === 'overview'
+                ? 'bg-gradient-to-r from-emerald-500 to-teal-400 text-zinc-950 shadow-md shadow-emerald-500/25'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-850'
+            }`}
+          >
+            <Activity className="w-4 h-4 shrink-0" />
+            <span className="truncate">Tổng Quan</span>
+          </button>
 
-      {/* 1. GỢI Ý HÔM NAY (TODAY'S AI RECOMMENDATION HERO CARD) */}
-      <div className="bg-gradient-to-br from-emerald-950/90 via-zinc-900 to-zinc-950 border-2 border-emerald-500/50 rounded-3xl p-5 sm:p-6 shadow-2xl relative overflow-hidden">
-        <div className="absolute -right-8 -bottom-8 opacity-15 pointer-events-none">
-          <Sparkles className="w-56 h-56 text-emerald-400" />
-        </div>
+          <button
+            type="button"
+            onClick={() => {
+              setMainTab('basic');
+              setBasicFilter('all');
+            }}
+            className={`py-2 sm:py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition active:scale-95 ${
+              mainTab === 'basic'
+                ? 'bg-emerald-500 text-zinc-950 shadow-md shadow-emerald-500/25'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-850'
+            }`}
+          >
+            <Sparkles className="w-4 h-4 shrink-0" />
+            <span className="truncate">Giáo Án ({basicCount})</span>
+          </button>
 
-        <div className="relative z-10 space-y-3">
-          <div className="flex flex-wrap items-center justify-between gap-2">
-            <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold text-xs border border-emerald-500/30">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span>GỢI Ý HÔM NAY ({todayRec.dayName})</span>
-            </div>
-            <span className="text-[11px] text-zinc-400 font-mono font-medium">
-              Thời lượng: ~{todayRec.suggestedDuration} phút
-            </span>
-          </div>
-
-          <div>
-            <h2 className="text-xl sm:text-2xl font-black text-white flex items-center space-x-2">
-              <span>{todayRec.title}</span>
-            </h2>
-            <p className="text-xs text-zinc-300 mt-1 leading-relaxed max-w-xl">
-              {todayRec.description}
-            </p>
-            <div className="flex items-center space-x-2 mt-2 text-[11px] text-zinc-400">
-              <span className="font-semibold text-emerald-400">Cơ bắp kích hoạt:</span>
-              <span>{todayRec.focusMuscles}</span>
-            </div>
-          </div>
-
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-3">
-            <button
-              type="button"
-              onClick={handleStartTodayRecommendation}
-              className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-zinc-950 font-black text-sm sm:text-base shadow-lg shadow-emerald-500/25 transition flex items-center justify-center space-x-2 active:scale-95"
-            >
-              <Play className="w-5 h-5 fill-zinc-950" />
-              <span>Vào Tập Ngay Buổi Đề Xuất (1-Chạm)</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsSmartModalOpen(true)}
-              className="px-5 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs sm:text-sm border border-zinc-700 transition flex items-center justify-center space-x-2 active:scale-95 shadow-md"
-            >
-              <Wand2 className="w-4 h-4 text-amber-400" />
-              <span>Trợ Lý Tạo Buổi Tập (Theo Ý Bạn)</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              setMainTab('thol');
+              setTholFilter('all');
+            }}
+            className={`py-2 sm:py-2.5 px-2 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition active:scale-95 ${
+              mainTab === 'thol'
+                ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-zinc-950 shadow-md shadow-amber-500/25'
+                : 'text-zinc-400 hover:text-white hover:bg-zinc-850'
+            }`}
+          >
+            <BookOpen className="w-4 h-4 shrink-0" />
+            <span className="truncate">Gym Phổ ({tholCount})</span>
+          </button>
         </div>
       </div>
 
-      {/* Quick Action Options: Tập Tự Do & Tạo Lịch Thủ Công */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <button
-          onClick={handleStartEmptyWorkout}
-          className="p-4 rounded-2xl bg-zinc-900/90 hover:bg-zinc-850 border border-zinc-800 text-left transition group active:scale-[0.99]"
-        >
-          <div className="text-sm font-bold text-zinc-200 group-hover:text-emerald-400 transition flex items-center space-x-2">
-            <Play className="w-4 h-4 text-zinc-400 group-hover:text-emerald-400" />
-            <span>Tập Tự Do (Tự Chọn Bài)</span>
-          </div>
-          <div className="text-xs text-zinc-400 mt-1">Không theo giáo án cố định, thêm bài tùy ý</div>
-        </button>
-
-        <button
-          onClick={() => setIsCreatingRoutine(true)}
-          className="p-4 rounded-2xl bg-zinc-900/90 hover:bg-zinc-850 border border-zinc-800 text-left transition group active:scale-[0.99]"
-        >
-          <div className="text-sm font-bold text-zinc-200 group-hover:text-emerald-400 transition flex items-center space-x-2">
-            <Plus className="w-4 h-4 text-emerald-400" />
-            <span>Tự Thiết Kế Giáo Án Mới</span>
-          </div>
-          <div className="text-xs text-zinc-400 mt-1">Lưu lại lịch tập riêng phù hợp với bạn</div>
-        </button>
-      </div>
-
       {/* ========================================================================= */}
-      {/* PHÂN ĐỊNH RÕ RÀNG: GIÁO ÁN KHOA HỌC CƠ BẢN vs CẨM NANG GYM PHỔ THOL       */}
+      {/* 1. PHÂN HỆ TỔNG QUAN (DASHBOARD TRACKING & GỢI Ý HÔM NAY)                  */}
       {/* ========================================================================= */}
-      <div className="bg-zinc-900/90 p-1.5 rounded-2xl border border-zinc-800 grid grid-cols-2 gap-1.5 shadow-lg">
-        <button
-          type="button"
-          onClick={() => {
-            setRoutineSystem('basic');
-            setBasicFilter('all');
-          }}
-          className={`py-3 px-3 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-2 transition active:scale-98 ${
-            routineSystem === 'basic'
-              ? 'bg-emerald-500 text-zinc-950 shadow-md shadow-emerald-500/20'
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-850'
-          }`}
-        >
-          <Sparkles className="w-4 h-4" />
-          <span>🌟 Giáo Án Cơ Bản ({basicCount})</span>
-        </button>
+      {mainTab === 'overview' && (
+        <div className="space-y-5 animate-in fade-in duration-200">
+          {/* Bảng theo dõi thể lực tuần */}
+          <React.Suspense fallback={null}>
+            <HomeDashboardOverview 
+              onStartTodayRecommendation={handleStartTodayRecommendation}
+              onGoToRunning={() => onGoToRunning ? onGoToRunning() : null}
+              onGoToHistory={() => onGoToHistory ? onGoToHistory() : null}
+              onStartEmptyWorkout={handleStartEmptyWorkout}
+            />
+          </React.Suspense>
 
-        <button
-          type="button"
-          onClick={() => {
-            setRoutineSystem('thol');
-            setTholFilter('all');
-          }}
-          className={`py-3 px-3 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-2 transition active:scale-98 ${
-            routineSystem === 'thol'
-              ? 'bg-gradient-to-r from-amber-400 to-amber-500 text-zinc-950 shadow-md shadow-amber-500/20'
-              : 'text-zinc-400 hover:text-white hover:bg-zinc-850'
-          }`}
-        >
-          <BookOpen className="w-4 h-4" />
-          <span>🏛️ Gym Phổ THOL ({tholCount})</span>
-        </button>
-      </div>
+          {/* Hero Card: Gợi ý bài tập hôm nay */}
+          <div className="bg-gradient-to-br from-emerald-950/90 via-zinc-900 to-zinc-950 border-2 border-emerald-500/50 rounded-3xl p-5 sm:p-6 shadow-2xl relative overflow-hidden">
+            <div className="absolute -right-8 -bottom-8 opacity-15 pointer-events-none">
+              <Sparkles className="w-56 h-56 text-emerald-400" />
+            </div>
+
+            <div className="relative z-10 space-y-3">
+              <div className="flex flex-wrap items-center justify-between gap-2">
+                <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 font-extrabold text-xs border border-emerald-500/30">
+                  <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                  <span>GỢI Ý HÔM NAY ({todayRec.dayName})</span>
+                </div>
+                <span className="text-[11px] text-zinc-400 font-mono font-medium">
+                  Thời lượng: ~{todayRec.suggestedDuration} phút
+                </span>
+              </div>
+
+              <div>
+                <h2 className="text-xl sm:text-2xl font-black text-white flex items-center space-x-2">
+                  <span>{todayRec.title}</span>
+                </h2>
+                <p className="text-xs text-zinc-300 mt-1 leading-relaxed max-w-xl">
+                  {todayRec.description}
+                </p>
+                <div className="flex items-center space-x-2 mt-2 text-[11px] text-zinc-400">
+                  <span className="font-semibold text-emerald-400">Cơ bắp kích hoạt:</span>
+                  <span>{todayRec.focusMuscles}</span>
+                </div>
+              </div>
+
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3 pt-3">
+                <button
+                  type="button"
+                  onClick={handleStartTodayRecommendation}
+                  className="px-6 py-3.5 rounded-2xl bg-gradient-to-r from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-zinc-950 font-black text-sm sm:text-base shadow-lg shadow-emerald-500/25 transition flex items-center justify-center space-x-2 active:scale-95"
+                >
+                  <Play className="w-5 h-5 fill-zinc-950" />
+                  <span>Vào Tập Ngay Buổi Đề Xuất (1-Chạm)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setIsSmartModalOpen(true)}
+                  className="px-5 py-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs sm:text-sm border border-zinc-700 transition flex items-center justify-center space-x-2 active:scale-95 shadow-md"
+                >
+                  <Wand2 className="w-4 h-4 text-amber-400" />
+                  <span>Trợ Lý Tạo Buổi Tập (Theo Ý Bạn)</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {/* 2 Phím tắt nhanh: Tập tự do & Tự tạo giáo án */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <button
+              onClick={handleStartEmptyWorkout}
+              className="p-4 rounded-2xl bg-zinc-900/90 hover:bg-zinc-850 border border-zinc-800 text-left transition group active:scale-[0.99]"
+            >
+              <div className="text-sm font-bold text-zinc-200 group-hover:text-emerald-400 transition flex items-center space-x-2">
+                <Play className="w-4 h-4 text-zinc-400 group-hover:text-emerald-400" />
+                <span>Tập Tự Do (Tự Chọn Bài)</span>
+              </div>
+              <div className="text-xs text-zinc-400 mt-1">Không theo giáo án cố định, thêm bài tùy ý</div>
+            </button>
+
+            <button
+              onClick={() => setIsCreatingRoutine(true)}
+              className="p-4 rounded-2xl bg-zinc-900/90 hover:bg-zinc-850 border border-zinc-800 text-left transition group active:scale-[0.99]"
+            >
+              <div className="text-sm font-bold text-zinc-200 group-hover:text-emerald-400 transition flex items-center space-x-2">
+                <Plus className="w-4 h-4 text-emerald-400" />
+                <span>Tự Thiết Kế Giáo Án Mới</span>
+              </div>
+              <div className="text-xs text-zinc-400 mt-1">Lưu lại lịch tập riêng phù hợp với bạn</div>
+            </button>
+          </div>
+
+          {/* Lối tắt chuyển nhanh sang các phân hệ giáo án */}
+          <div className="space-y-3 pt-2">
+            <div className="flex items-center justify-between">
+              <h3 className="text-xs font-black text-zinc-300 uppercase tracking-wider flex items-center space-x-2">
+                <Compass className="w-4 h-4 text-emerald-400" />
+                <span>Khám Phá Các Phân Hệ Giáo Án</span>
+              </h3>
+              <span className="text-[11px] text-zinc-500 font-medium">Bấm để chuyển tab</span>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {/* Thẻ Giáo Án Căn Bản */}
+              <div 
+                onClick={() => {
+                  setMainTab('basic');
+                  setBasicFilter('all');
+                }}
+                className="p-4 rounded-3xl bg-zinc-950/80 border border-zinc-800 hover:border-emerald-500/50 transition cursor-pointer group active:scale-[0.99] flex flex-col justify-between shadow-lg"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="w-9 h-9 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                      <Sparkles className="w-5 h-5" />
+                    </div>
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-emerald-500/15 text-emerald-400 border border-emerald-500/30">
+                      {basicCount} Buổi Tập
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-white group-hover:text-emerald-400 transition">
+                      🌟 Giáo Án Khoa Học Cơ Bản
+                    </h4>
+                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                      Tân binh Full Body 3 buổi kích hoạt thần kinh cơ và Phân hóa Đẩy - Kéo - Chân (PPL).
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-3 mt-3 border-t border-zinc-850 flex items-center justify-between text-xs font-bold text-emerald-400">
+                  <span>Mở danh sách giáo án ({basicCount} buổi)</span>
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+                </div>
+              </div>
+
+              {/* Thẻ THOL Gym Phổ */}
+              <div 
+                onClick={() => {
+                  setMainTab('thol');
+                  setTholFilter('all');
+                }}
+                className="p-4 rounded-3xl bg-zinc-950/80 border border-zinc-800 hover:border-amber-500/50 transition cursor-pointer group active:scale-[0.99] flex flex-col justify-between shadow-lg"
+              >
+                <div className="space-y-2">
+                  <div className="flex items-center justify-between">
+                    <div className="w-9 h-9 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center">
+                      <BookOpen className="w-5 h-5" />
+                    </div>
+                    <span className="text-[10px] font-mono font-bold px-2 py-0.5 rounded-full bg-amber-500/15 text-amber-400 border border-amber-500/30">
+                      {tholCount} Buổi Tập
+                    </span>
+                  </div>
+                  <div>
+                    <h4 className="text-base font-bold text-white group-hover:text-amber-400 transition">
+                      🏛️ Cẩm Nang Gym Phổ THOL
+                    </h4>
+                    <p className="text-xs text-zinc-400 mt-1 leading-relaxed">
+                      Hệ thống giáo trình THOL Duy Nguyễn: Tầng 1 (Tạ khối), Tầng 2 (Robot), Tầng 3 (Free Weight).
+                    </p>
+                  </div>
+                </div>
+
+                <div className="pt-3 mt-3 border-t border-zinc-850 flex items-center justify-between text-xs font-bold text-amber-400">
+                  <span>Khám phá Gym Phổ ({tholCount} buổi)</span>
+                  <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* 2A. GIAO DIỆN KHOA HỌC CƠ BẢN */}
-      {routineSystem === 'basic' && (
+      {mainTab === 'basic' && (
         <div className="space-y-3 animate-in fade-in duration-200">
           <div className="bg-gradient-to-r from-emerald-950/40 via-zinc-900 to-zinc-950 border border-emerald-500/30 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-md">
             <div className="space-y-0.5">
@@ -344,7 +448,7 @@ export default function RoutineList({
       )}
 
       {/* 2B. GIAO DIỆN CẨM NANG GYM PHỔ THOL */}
-      {routineSystem === 'thol' && (
+      {mainTab === 'thol' && (
         <div className="space-y-3 animate-in fade-in duration-200">
           <div className="bg-gradient-to-r from-amber-950/60 via-zinc-900 to-zinc-950 border border-amber-500/40 rounded-3xl p-4 sm:p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-lg">
             <div className="flex items-center space-x-3">
@@ -439,14 +543,16 @@ export default function RoutineList({
       )}
 
       {/* Routine Templates Header & View Mode Switcher */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-zinc-800/80">
-        <div className="space-y-0.5">
-          <h3 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
-            <Calendar className="w-4 h-4 text-emerald-400" />
-            <span>
-              {routineSystem === 'basic' ? 'Danh Sách Giáo Án Cơ Bản' : 'Danh Sách Giáo Trình Gym Phổ'} ({filteredRoutines.length} Buổi Tập)
-            </span>
-          </h3>
+      {mainTab !== 'overview' && (
+        <>
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2 border-t border-zinc-800/80">
+            <div className="space-y-0.5">
+              <h3 className="text-base sm:text-lg font-bold text-white flex items-center space-x-2">
+                <Calendar className="w-4 h-4 text-emerald-400" />
+                <span>
+                  {mainTab === 'basic' ? 'Danh Sách Giáo Án Cơ Bản' : 'Danh Sách Giáo Trình Gym Phổ'} ({filteredRoutines.length} Buổi Tập)
+                </span>
+              </h3>
           <p className="text-xs text-zinc-400">
             {isGlobalExpanded
               ? 'Đang hiển thị đầy đủ hình ảnh động tác. Chạm bài tập để xem kỹ thuật chuẩn.'
@@ -654,6 +760,8 @@ export default function RoutineList({
           );
         })}
       </div>
+    </>
+  )}
 
       {/* Modal Tạo Lịch Tập Mới */}
       {isCreatingRoutine && (
@@ -955,7 +1063,7 @@ export default function RoutineList({
         isOpen={isAdvisorModalOpen}
         onClose={() => setIsAdvisorModalOpen(false)}
         onApplyLevel={(filter) => {
-          setRoutineSystem('thol');
+          setMainTab('thol');
           setTholFilter(filter as 'all' | 'tang1' | 'tang2' | 'tang3');
         }}
       />

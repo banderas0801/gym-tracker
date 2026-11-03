@@ -103,6 +103,10 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
   const [prs, setPrs] = useState<RunningPRs>(() => calculateRunningPRs(getRunSessions()));
   const [stravaProfile, setStravaProfile] = useState<StravaProfile>(() => getStravaProfile());
 
+  // Compact / Accordion mode for 7-day schedule
+  const [isAllDaysExpanded, setIsAllDaysExpanded] = useState(false);
+  const [expandedDayKey, setExpandedDayKey] = useState<string | null>(null);
+
   // Heart Rate Profile & Zone State
   const [heartProfile, setHeartProfile] = useState<UserHeartProfile>(() => getUserHeartProfile());
   const [paceSubTab, setPaceSubTab] = useState<'heart_zones' | 'vdot_paces'>('heart_zones');
@@ -467,6 +471,8 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
   const [mibroCadence, setMibroCadence] = useState('');
   const [treadmillIncline, setTreadmillIncline] = useState('0'); // Không ghi thì mặc định = 0!
   const [selectedPlanDayKey, setSelectedPlanDayKey] = useState<string>('');
+  const [expandedDayKey, setExpandedDayKey] = useState<string | null>(null);
+  const [isAllDaysExpanded, setIsAllDaysExpanded] = useState<boolean>(false);
 
   // Tính toán nhanh Live Preview trong Modal
   const inputDurationSec = (parseInt(mibroMin, 10) || 0) * 60 + (parseInt(mibroSec, 10) || 0);
@@ -644,233 +650,293 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
   const currentWeekPlan = HM_TRAINING_PLAN.find((w) => w.weekNumber === currentWeekNum) || HM_TRAINING_PLAN[0];
   const currentSubDetails = SUB_PACE_TABLE[targetSub];
 
+  const todayDayOfWeek = useMemo(() => {
+    // 0=Chủ nhật (8), 1=Thứ 2 (2), 2=Thứ 3 (3), 3=Thứ 4 (4), 4=Thứ 5 (5), 5=Thứ 6 (6), 6=Thứ 7 (7)
+    const d = new Date().getDay();
+    return d === 0 ? 8 : d + 1;
+  }, []);
+
+  const todayDayPlan = useMemo(() => {
+    return currentWeekPlan.days.find((d) => d.dayOfWeek === todayDayOfWeek) || currentWeekPlan.days[0];
+  }, [currentWeekPlan, todayDayOfWeek]);
+
+  const todayPlanDetail = runningGroup === 'groupA' ? todayDayPlan.groupA : todayDayPlan.groupB;
+
   return (
-    <div className="max-w-3xl mx-auto space-y-6 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
-      {/* 1. HERO HEADER: MỤC TIÊU SUB HM & BỘ CHỌN NHANH */}
-      <div className="bg-gradient-to-br from-amber-950/70 via-zinc-900 to-zinc-950 border border-amber-500/30 rounded-3xl p-4 sm:p-6 shadow-2xl relative overflow-hidden space-y-4">
-        {/* Top Bar: Back Button & Sub Badge */}
-        <div className="flex items-center justify-between gap-2 border-b border-zinc-800/80 pb-3">
-          {onGoToGymWorkout ? (
+    <div className="max-w-3xl mx-auto space-y-4 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
+      {/* 🔝 THANH ĐIỀU HƯỚNG & TRẠNG THÁI GỌN GÀNG (STICKY COMPACT HEADER) */}
+      <div className="sticky top-16 z-30 bg-black/95 backdrop-blur-md pt-1 pb-2.5 -mx-3 px-3 sm:-mx-4 sm:px-4 border-b border-zinc-800/80 space-y-2">
+        <div className="flex items-center justify-between gap-2 max-w-3xl mx-auto">
+          {/* Nút quay lại Gym & Badge Sub */}
+          <div className="flex items-center space-x-2 min-w-0">
+            {onGoToGymWorkout && (
+              <button
+                type="button"
+                onClick={onGoToGymWorkout}
+                className="px-2.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-amber-400 border border-zinc-800 text-xs font-bold flex items-center space-x-1 transition active:scale-95 shrink-0"
+                title="Quay lại Gym"
+              >
+                <ArrowLeft className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span className="hidden sm:inline">Gym</span>
+              </button>
+            )}
+
+            {/* Sub & Pace Pill */}
+            <div className="flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-zinc-900 border border-amber-500/30 text-amber-300 font-extrabold text-xs">
+              <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+              <span>{currentSubDetails.label}</span>
+              <span className="text-zinc-500 font-normal">•</span>
+              <span className="font-mono text-white text-[11px]">{currentSubDetails.racePace}/km</span>
+            </div>
+          </div>
+
+          {/* 3 Quick Utility Buttons */}
+          <div className="flex items-center space-x-1 shrink-0">
             <button
               type="button"
-              onClick={onGoToGymWorkout}
-              className="px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-amber-400 hover:text-amber-300 border border-amber-500/40 text-xs font-bold flex items-center space-x-1.5 transition active:scale-95 shadow-sm"
-              title="Quay lại Trang Chủ Giáo Án Gym"
+              onClick={() => setIsVDOTModalOpen(true)}
+              className="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white text-xs font-semibold flex items-center space-x-1 transition active:scale-95"
+              title="Tính toán VDOT Jack Daniels"
             >
-              <ArrowLeft className="w-4 h-4 stroke-[2.5]" />
-              <span>Trang Chủ Gym</span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline text-[11px]">VDOT</span>
             </button>
-          ) : (
-            <div className="w-2" />
-          )}
 
-          <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/15 text-amber-300 font-extrabold text-[11px] sm:text-xs border border-amber-500/30">
-            <Zap className="w-3.5 h-3.5 text-amber-400" />
-            <span>GIÁO ÁN CHINH PHỤC HM 21KM</span>
-          </div>
-        </div>
-
-        {/* 3 Quick Utilities: VDOT, Mibro, Strava */}
-        <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
-          <button
-            onClick={() => setIsVDOTModalOpen(true)}
-            className="w-full py-2 px-1 rounded-xl bg-zinc-900/90 hover:bg-zinc-800 text-zinc-300 hover:text-white border border-zinc-800 text-[11px] font-bold flex items-center justify-center space-x-1 transition active:scale-95 shadow-sm"
-          >
-            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-            <span>Tính VDOT</span>
-          </button>
-
-          <button
-            onClick={() => setIsMibroModalOpen(true)}
-            className="w-full py-2 px-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 text-amber-300 border border-amber-500/30 text-[11px] font-bold flex items-center justify-center space-x-1 transition active:scale-95 shadow-sm"
-          >
-            <Watch className="w-3.5 h-3.5 text-amber-400" />
-            <span>Nhập Mibro</span>
-          </button>
-
-          <button
-            onClick={() => setIsStravaModalOpen(true)}
-            className="w-full py-2 px-1 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 text-blue-300 border border-blue-500/30 text-[11px] font-bold flex items-center justify-center space-x-1 transition active:scale-95 shadow-sm"
-          >
-            <Share2 className="w-3.5 h-3.5 text-blue-400" />
-            <span>Strava / Fit</span>
-          </button>
-        </div>
-
-        {/* Target Sub Selector & Runner Group */}
-        <div className="bg-zinc-950/70 p-3.5 rounded-2xl border border-zinc-800/80 space-y-3">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-            <label className="text-xs font-semibold text-zinc-300 flex items-center space-x-1.5">
-              <span>Mục tiêu Half Marathon:</span>
-            </label>
-            <select
-              value={targetSub}
-              onChange={(e) => setTargetSub(e.target.value as TargetSub)}
-              className="bg-zinc-900 border border-amber-500/40 text-amber-300 font-extrabold px-3 py-1.5 rounded-xl text-xs sm:text-sm focus:outline-none focus:border-amber-400"
+            <button
+              type="button"
+              onClick={() => {
+                setInputSource('mibro');
+                setIsMibroModalOpen(true);
+              }}
+              className="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center space-x-1 transition active:scale-95"
+              title="Nhập dữ liệu đồng hồ Mibro / máy chạy"
             >
-              <option value="sub130">Sub 1:30 (&lt; 1h30m - Tinh hoa)</option>
-              <option value="sub145">Sub 1:45 (&lt; 1h45m - Nâng cao)</option>
-              <option value="sub200">Sub 2:00 (&lt; 2h00m - Khá giỏi)</option>
-              <option value="sub215">Sub 2:15 (&lt; 2h15m - Tiêu chuẩn)</option>
-              <option value="sub230">Sub 2:30 (&lt; 2h30m - Người mới)</option>
-              <option value="sub245">Sub 2:45 (&lt; 2h45m - Khởi đầu)</option>
-              <option value="sub300">Sub 3:00 (&lt; 3h00m - Hoàn thành)</option>
-            </select>
-          </div>
+              <Watch className="w-3.5 h-3.5 text-amber-400" />
+              <span className="hidden sm:inline text-[11px]">Nhập Số</span>
+            </button>
 
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2 border-t border-zinc-800/70">
-            <span className="text-xs font-semibold text-zinc-300">Chế độ giáo án:</span>
-            <div className="grid grid-cols-2 gap-1 rounded-xl bg-zinc-900 p-1 border border-zinc-800">
-              <button
-                type="button"
-                onClick={() => setRunningGroup('groupA')}
-                className={`py-1.5 px-3 rounded-lg text-xs font-bold transition text-center ${
-                  runningGroup === 'groupA'
-                    ? 'bg-amber-500 text-zinc-950 font-black shadow-md'
-                    : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                Nhóm A (Theo Km)
-              </button>
-              <button
-                type="button"
-                onClick={() => setRunningGroup('groupB')}
-                className={`py-1.5 px-3 rounded-lg text-xs font-bold transition text-center ${
-                  runningGroup === 'groupB'
-                    ? 'bg-amber-500 text-zinc-950 font-black shadow-md'
-                    : 'text-zinc-400 hover:text-white'
-                }`}
-              >
-                Nhóm B (Theo Phút)
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => setIsStravaModalOpen(true)}
+              className="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold flex items-center space-x-1 transition active:scale-95"
+              title="Đồng bộ Strava / GPX"
+            >
+              <Share2 className="w-3.5 h-3.5 text-blue-400" />
+              <span className="hidden sm:inline text-[11px]">Strava</span>
+            </button>
           </div>
         </div>
 
-        {/* Hero Pace Display & Paces Breakdown */}
-        <div className="bg-zinc-950/70 p-3.5 rounded-2xl border border-zinc-800/80 space-y-2.5">
-          <div className="flex flex-wrap items-baseline justify-between gap-1">
-            <span className="text-xs text-zinc-400 font-semibold">Pace Thi Đấu Dự Tính:</span>
-            <div className="text-2xl sm:text-3xl font-black text-amber-400 font-mono tracking-tight">
-              {currentSubDetails.racePace} <span className="text-xs text-zinc-400 font-normal">phút/km</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-3 gap-1.5 text-center font-mono">
-            <div className="bg-zinc-900/90 p-2 rounded-xl border border-emerald-500/20">
-              <div className="text-[10px] text-zinc-400 font-sans">Easy (E)</div>
-              <div className="text-xs sm:text-sm font-bold text-emerald-400 truncate">{currentSubDetails.easy}</div>
-            </div>
-            <div className="bg-zinc-900/90 p-2 rounded-xl border border-teal-500/20">
-              <div className="text-[10px] text-zinc-400 font-sans">Long Run (L)</div>
-              <div className="text-xs sm:text-sm font-bold text-teal-400 truncate">{currentSubDetails.longRun}</div>
-            </div>
-            <div className="bg-zinc-900/90 p-2 rounded-xl border border-rose-500/20">
-              <div className="text-[10px] text-zinc-400 font-sans">Interval (I)</div>
-              <div className="text-xs sm:text-sm font-bold text-rose-400 truncate">{currentSubDetails.interval}</div>
-            </div>
-          </div>
-        </div>
-
-        {/* 3 Action Buttons: Outdoor, Treadmill, Interval */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-2 pt-1">
+        {/* 5 SUB-TABS NAVIGATION GỌN GÀNG 5 CỘT - VỪA VẶN MÀN HÌNH MOBILE KHÔNG BỊ TRÀN */}
+        <div className="grid grid-cols-5 gap-1 p-1 bg-zinc-900/90 rounded-2xl border border-zinc-800 shadow-md max-w-3xl mx-auto">
           <button
             type="button"
-            onClick={() => handlePrepareRun('outdoor_gps')}
-            className="w-full py-3 px-3 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-400 hover:from-amber-400 hover:to-orange-300 text-zinc-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/25 transition flex items-center justify-center space-x-2 active:scale-95"
+            onClick={() => setActiveSubTab('plan')}
+            className={`py-2 px-1 rounded-xl font-bold text-[11px] sm:text-xs flex flex-col sm:flex-row items-center justify-center sm:space-x-1 transition active:scale-95 ${
+              activeSubTab === 'plan'
+                ? 'bg-amber-500 text-black font-black shadow-sm'
+                : 'text-zinc-400 hover:text-white'
+            }`}
           >
-            <Compass className="w-4 h-4 text-zinc-950 stroke-[2.5]" />
-            <span>Chạy Ngoài Trời (GPS)</span>
+            <Calendar className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Giáo Án</span>
           </button>
 
           <button
             type="button"
-            onClick={() => handlePrepareRun('treadmill')}
-            className="w-full py-3 px-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs sm:text-sm border border-zinc-700 transition flex items-center justify-center space-x-1.5 active:scale-95"
+            onClick={() => setActiveSubTab('tracker')}
+            className={`py-2 px-1 rounded-xl font-bold text-[11px] sm:text-xs flex flex-col sm:flex-row items-center justify-center sm:space-x-1 transition active:scale-95 ${
+              activeSubTab === 'tracker'
+                ? 'bg-amber-500 text-black font-black shadow-sm'
+                : 'text-zinc-400 hover:text-white'
+            }`}
           >
-            <Activity className="w-4 h-4 text-emerald-400" />
-            <span>Máy Chạy Treadmill</span>
+            <Play className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Vào Chạy</span>
           </button>
 
           <button
             type="button"
-            onClick={() => handlePrepareRun('interval')}
-            className="w-full py-3 px-3 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs sm:text-sm border border-zinc-700 transition flex items-center justify-center space-x-1.5 active:scale-95"
+            onClick={() => setActiveSubTab('paces')}
+            className={`py-2 px-1 rounded-xl font-bold text-[11px] sm:text-xs flex flex-col sm:flex-row items-center justify-center sm:space-x-1 transition active:scale-95 ${
+              activeSubTab === 'paces'
+                ? 'bg-amber-500 text-black font-black shadow-sm'
+                : 'text-zinc-400 hover:text-white'
+            }`}
           >
-            <Zap className="w-4 h-4 text-rose-400" />
-            <span>Biến Tốc Interval</span>
+            <Heart className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Nhịp Tim</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveSubTab('knowledge')}
+            className={`py-2 px-1 rounded-xl font-bold text-[11px] sm:text-xs flex flex-col sm:flex-row items-center justify-center sm:space-x-1 transition active:scale-95 ${
+              activeSubTab === 'knowledge'
+                ? 'bg-amber-500 text-black font-black shadow-sm'
+                : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            <BookOpen className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Cẩm Nang</span>
+          </button>
+
+          <button
+            type="button"
+            onClick={() => setActiveSubTab('history')}
+            className={`py-2 px-1 rounded-xl font-bold text-[11px] sm:text-xs flex flex-col sm:flex-row items-center justify-center sm:space-x-1 transition active:scale-95 ${
+              activeSubTab === 'history'
+                ? 'bg-amber-500 text-black font-black shadow-sm'
+                : 'text-zinc-400 hover:text-white'
+            }`}
+          >
+            <Trophy className="w-3.5 h-3.5 shrink-0" />
+            <span className="truncate">Lịch Sử</span>
           </button>
         </div>
-      </div>
-
-      {/* 2. SUB-TABS NAVIGATION: GIÁO ÁN | BẢNG PACE | LIVE TRACKER | CẨM NANG | KỶ LỤC */}
-      <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none text-xs">
-        <button
-          onClick={() => setActiveSubTab('plan')}
-          className={`px-3.5 py-2 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1.5 ${
-            activeSubTab === 'plan'
-              ? 'bg-amber-500 text-black font-black shadow-sm'
-              : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
-          }`}
-        >
-          <Calendar className="w-4 h-4" />
-          <span>Giáo Án Chạy HM</span>
-        </button>
-
-        <button
-          onClick={() => setActiveSubTab('paces')}
-          className={`px-3.5 py-2 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1.5 ${
-            activeSubTab === 'paces'
-              ? 'bg-amber-500 text-black font-black shadow-sm'
-              : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
-          }`}
-        >
-          <Gauge className="w-4 h-4" />
-          <span>Bảng Tra Pace E/M/T/I</span>
-        </button>
-
-        <button
-          onClick={() => setActiveSubTab('tracker')}
-          className={`px-3.5 py-2 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1.5 ${
-            activeSubTab === 'tracker'
-              ? 'bg-amber-500 text-black font-black shadow-sm'
-              : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
-          }`}
-        >
-          <Play className="w-4 h-4" />
-          <span>Màn Hình Chạy Live</span>
-        </button>
-
-        <button
-          onClick={() => setActiveSubTab('knowledge')}
-          className={`px-3.5 py-2 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1.5 ${
-            activeSubTab === 'knowledge'
-              ? 'bg-amber-500 text-black font-black shadow-sm'
-              : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
-          }`}
-        >
-          <BookOpen className="w-4 h-4" />
-          <span>Cẩm Nang 6 Chương</span>
-        </button>
-
-        <button
-          onClick={() => setActiveSubTab('history')}
-          className={`px-3.5 py-2 rounded-xl font-bold transition whitespace-nowrap active:scale-95 flex items-center space-x-1.5 ${
-            activeSubTab === 'history'
-              ? 'bg-amber-500 text-black font-black shadow-sm'
-              : 'bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white'
-          }`}
-        >
-          <Trophy className="w-4 h-4" />
-          <span>Lịch Sử & PRs ({sessions.length})</span>
-        </button>
       </div>
 
       {/* 3. NỘI DUNG TỪNG SUB-TAB */}
 
       {/* TAB 1: GIÁO ÁN 8 TUẦN HM */}
       {activeSubTab === 'plan' && (
-        <div className="space-y-4">
+        <div className="space-y-4 animate-in fade-in duration-200">
+          {/* Cấu Hình Mục Tiêu & Nhóm Chạy Gọn Gàng */}
+          <div className="bg-zinc-900/90 border border-zinc-800 rounded-3xl p-3.5 sm:p-4 space-y-3">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div className="flex items-center space-x-2">
+                <span className="text-xs font-semibold text-zinc-300">Mục tiêu Half Marathon:</span>
+                <select
+                  value={targetSub}
+                  onChange={(e) => setTargetSub(e.target.value as TargetSub)}
+                  className="bg-zinc-950 border border-amber-500/40 text-amber-300 font-extrabold px-2.5 py-1 rounded-xl text-xs focus:outline-none focus:border-amber-400"
+                >
+                  <option value="sub130">Sub 1:30 (&lt; 1h30m - Tinh hoa)</option>
+                  <option value="sub145">Sub 1:45 (&lt; 1h45m - Nâng cao)</option>
+                  <option value="sub200">Sub 2:00 (&lt; 2h00m - Khá giỏi)</option>
+                  <option value="sub215">Sub 2:15 (&lt; 2h15m - Tiêu chuẩn)</option>
+                  <option value="sub230">Sub 2:30 (&lt; 2h30m - Người mới)</option>
+                  <option value="sub245">Sub 2:45 (&lt; 2h45m - Khởi đầu)</option>
+                  <option value="sub300">Sub 3:00 (&lt; 3h00m - Hoàn thành)</option>
+                </select>
+              </div>
+
+              {/* Nhóm A / Nhóm B toggle */}
+              <div className="flex items-center space-x-1 bg-zinc-950 p-1 rounded-xl border border-zinc-800 self-start sm:self-auto">
+                <button
+                  type="button"
+                  onClick={() => setRunningGroup('groupA')}
+                  className={`py-1 px-2.5 rounded-lg text-xs font-bold transition ${
+                    runningGroup === 'groupA'
+                      ? 'bg-amber-500 text-zinc-950 font-black shadow-sm'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  Nhóm A (Km)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setRunningGroup('groupB')}
+                  className={`py-1 px-2.5 rounded-lg text-xs font-bold transition ${
+                    runningGroup === 'groupB'
+                      ? 'bg-amber-500 text-zinc-950 font-black shadow-sm'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                >
+                  Nhóm B (Phút)
+                </button>
+              </div>
+            </div>
+
+            {/* Dải Pace Nhanh */}
+            <div className="grid grid-cols-3 gap-1.5 text-center font-mono pt-1 border-t border-zinc-800/80">
+              <div className="bg-zinc-950/80 p-1.5 rounded-xl border border-emerald-500/20">
+                <div className="text-[10px] text-zinc-400 font-sans">Easy (E)</div>
+                <div className="text-xs font-bold text-emerald-400 truncate">{currentSubDetails.easy}</div>
+              </div>
+              <div className="bg-zinc-950/80 p-1.5 rounded-xl border border-teal-500/20">
+                <div className="text-[10px] text-zinc-400 font-sans">Long Run (L)</div>
+                <div className="text-xs font-bold text-teal-400 truncate">{currentSubDetails.longRun}</div>
+              </div>
+              <div className="bg-zinc-950/80 p-1.5 rounded-xl border border-rose-500/20">
+                <div className="text-[10px] text-zinc-400 font-sans">Interval (I)</div>
+                <div className="text-xs font-bold text-rose-400 truncate">{currentSubDetails.interval}</div>
+              </div>
+            </div>
+          </div>
+
+          {/* 🔥 THẺ HÔM NAY CHẠY GÌ (TODAY'S RUN HERO CARD) */}
+          <div className="bg-gradient-to-br from-amber-950/80 via-zinc-900 to-zinc-950 border-2 border-amber-500/50 rounded-3xl p-4 sm:p-5 shadow-xl relative overflow-hidden space-y-3">
+            <div className="flex items-center justify-between gap-2">
+              <div className="inline-flex items-center space-x-1.5 px-3 py-1 rounded-full bg-amber-500/20 text-amber-300 font-extrabold text-xs border border-amber-500/30">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>HÔM NAY CHẠY GÌ ({todayDayPlan.dayName} - Tuần {currentWeekPlan.weekNumber})</span>
+              </div>
+
+              {/* Checkbox hoàn thành */}
+              <button
+                type="button"
+                onClick={() => handleToggleDay(currentWeekPlan.weekNumber, todayDayPlan.dayOfWeek)}
+                className="flex items-center space-x-1.5 text-xs text-zinc-300 hover:text-emerald-400 transition"
+              >
+                {completedDays[`w${currentWeekPlan.weekNumber}_d${todayDayPlan.dayOfWeek}`] ? (
+                  <CheckCircle2 className="w-5 h-5 text-emerald-400 fill-emerald-500/20" />
+                ) : (
+                  <Circle className="w-5 h-5 text-zinc-500" />
+                )}
+                <span className="font-semibold text-[11px]">
+                  {completedDays[`w${currentWeekPlan.weekNumber}_d${todayDayPlan.dayOfWeek}`] ? 'Đã xong' : 'Chưa xong'}
+                </span>
+              </button>
+            </div>
+
+            <div>
+              <div className="flex items-center space-x-2">
+                <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full border ${
+                  todayPlanDetail.type === 'interval' ? 'bg-rose-500/20 text-rose-300 border-rose-500/30' :
+                  todayPlanDetail.type === 'long_run' ? 'bg-amber-500/20 text-amber-300 border-amber-500/30' :
+                  todayPlanDetail.type === 'easy' ? 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30' :
+                  'bg-blue-500/10 text-blue-300 border-blue-500/20'
+                }`}>
+                  {todayPlanDetail.type === 'interval' ? '⚡ BIẾN TỐC' : todayPlanDetail.type === 'long_run' ? '🏃 LONG RUN' : todayPlanDetail.type === 'easy' ? '🍃 CHẠY NHẸ' : '💤 NGHỈ NGƠI'}
+                </span>
+                <h4 className="text-base sm:text-lg font-black text-white">
+                  {todayPlanDetail.title}
+                </h4>
+              </div>
+              <p className="text-xs text-zinc-300 mt-1 leading-relaxed">
+                {todayPlanDetail.description}
+              </p>
+            </div>
+
+            {/* Nút 1-chạm vào chạy ngay */}
+            {todayPlanDetail.type !== 'rest' ? (
+              <div className="flex items-center gap-2 pt-1">
+                <button
+                  type="button"
+                  onClick={() => handlePrepareRun(todayPlanDetail.type === 'interval' ? 'interval' : 'outdoor_gps', { week: currentWeekPlan.weekNumber, day: todayDayPlan })}
+                  className="flex-1 py-3 px-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-400 hover:from-amber-400 hover:to-orange-300 text-zinc-950 font-black text-xs sm:text-sm shadow-lg shadow-amber-500/25 transition flex items-center justify-center space-x-2 active:scale-95"
+                >
+                  <Play className="w-4 h-4 fill-zinc-950" />
+                  <span>Vào Chạy Ngay Bài Này (1-Chạm)</span>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => handlePrepareRun('treadmill', { week: currentWeekPlan.weekNumber, day: todayDayPlan })}
+                  className="py-3 px-3.5 rounded-2xl bg-zinc-800 hover:bg-zinc-700 text-white font-bold text-xs border border-zinc-700 transition flex items-center justify-center space-x-1.5 active:scale-95 shrink-0"
+                  title="Chạy trên máy Treadmill"
+                >
+                  <Activity className="w-3.5 h-3.5 text-emerald-400" />
+                  <span>Máy Chạy</span>
+                </button>
+              </div>
+            ) : (
+              <div className="text-xs text-blue-300 bg-blue-500/10 border border-blue-500/20 rounded-xl p-2.5 text-center">
+                💤 Hôm nay là ngày nghỉ ngơi hoặc giãn cơ phục hồi. Hãy ngủ đủ giấc để cơ bắp tái tạo!
+              </div>
+            )}
+          </div>
           {/* Week Selector Bar */}
           <div className="bg-zinc-900/90 border border-zinc-800 rounded-3xl p-4 space-y-3">
             <div className="flex items-center justify-between">
@@ -894,32 +960,61 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
               “{currentWeekPlan.quote}”
             </p>
 
-            {/* Week Pills */}
-            <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none pt-1">
-              {HM_TRAINING_PLAN.map((w) => (
+            {/* Week Pills & View Mode Toggle */}
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-1">
+              <div className="flex items-center space-x-1.5 overflow-x-auto pb-1 scrollbar-none flex-1">
+                {HM_TRAINING_PLAN.map((w) => (
+                  <button
+                    key={w.weekNumber}
+                    onClick={() => setCurrentWeekNum(w.weekNumber)}
+                    className={`px-3.5 py-1.5 rounded-xl font-bold text-xs whitespace-nowrap transition active:scale-95 ${
+                      currentWeekNum === w.weekNumber
+                        ? 'bg-amber-500 text-black font-black shadow-md'
+                        : 'bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white'
+                    }`}
+                  >
+                    Tuần {w.weekNumber}
+                  </button>
+                ))}
+              </div>
+
+              {/* Toggle Gọn / Chi Tiết */}
+              <div className="flex items-center space-x-1 bg-zinc-950 p-1 rounded-xl border border-zinc-800 self-end sm:self-auto shrink-0">
                 <button
-                  key={w.weekNumber}
-                  onClick={() => setCurrentWeekNum(w.weekNumber)}
-                  className={`px-3.5 py-1.5 rounded-xl font-bold text-xs whitespace-nowrap transition active:scale-95 ${
-                    currentWeekNum === w.weekNumber
-                      ? 'bg-amber-500 text-black font-black shadow-md'
-                      : 'bg-zinc-950 border border-zinc-800 text-zinc-400 hover:text-white'
+                  type="button"
+                  onClick={() => setIsAllDaysExpanded(false)}
+                  className={`py-1 px-2.5 rounded-lg text-xs font-bold transition ${
+                    !isAllDaysExpanded
+                      ? 'bg-amber-500 text-zinc-950 font-black shadow-sm'
+                      : 'text-zinc-400 hover:text-white'
                   }`}
+                  title="Chế độ danh sách thu gọn xem nhanh cả tuần"
                 >
-                  Tuần {w.weekNumber}
+                  📑 Gọn
                 </button>
-              ))}
-              <span className="px-2.5 py-1.5 rounded-xl text-[11px] text-zinc-400 border border-dashed border-zinc-800 shrink-0 font-medium">
-                + Thêm Tuần 9+
-              </span>
+                <button
+                  type="button"
+                  onClick={() => setIsAllDaysExpanded(true)}
+                  className={`py-1 px-2.5 rounded-lg text-xs font-bold transition ${
+                    isAllDaysExpanded
+                      ? 'bg-amber-500 text-zinc-950 font-black shadow-sm'
+                      : 'text-zinc-400 hover:text-white'
+                  }`}
+                  title="Mở toàn bộ chi tiết 7 ngày"
+                >
+                  📖 Chi Tiết
+                </button>
+              </div>
             </div>
           </div>
 
           {/* Days Grid in Selected Week */}
-          <div className="space-y-3">
+          <div className="space-y-2 sm:space-y-3">
             {currentWeekPlan.days.map((day) => {
-              const isDone = !!completedDays[`w${currentWeekPlan.weekNumber}_d${day.dayOfWeek}`];
+              const dayKey = `w${currentWeekPlan.weekNumber}_d${day.dayOfWeek}`;
+              const isDone = !!completedDays[dayKey];
               const plan = runningGroup === 'groupA' ? day.groupA : day.groupB;
+              const isExpanded = isAllDaysExpanded || expandedDayKey === dayKey;
               
               let typeBadgeBg = 'bg-zinc-800 text-zinc-300 border-zinc-700';
               if (plan.type === 'interval') typeBadgeBg = 'bg-rose-500/20 text-rose-300 border-rose-500/30';
@@ -927,6 +1022,77 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
               if (plan.type === 'easy') typeBadgeBg = 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
               if (plan.type === 'rest') typeBadgeBg = 'bg-blue-500/10 text-blue-300 border-blue-500/20';
 
+              // CHẾ ĐỘ THU GỌN (COMPACT ACCORDION ROW)
+              if (!isExpanded) {
+                return (
+                  <div
+                    key={day.dayOfWeek}
+                    className={`border rounded-2xl p-2.5 sm:p-3 transition shadow-sm ${
+                      isDone 
+                        ? 'bg-emerald-950/20 border-emerald-500/40 opacity-85'
+                        : 'bg-zinc-900/90 border-zinc-800/90 hover:border-zinc-700'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-2">
+                      <div className="flex items-center space-x-2 sm:space-x-2.5 min-w-0">
+                        <button
+                          type="button"
+                          onClick={() => handleToggleDay(currentWeekPlan.weekNumber, day.dayOfWeek)}
+                          className="text-zinc-400 hover:text-emerald-400 transition shrink-0"
+                          title={isDone ? 'Bỏ đánh dấu' : 'Đánh dấu hoàn thành'}
+                        >
+                          {isDone ? (
+                            <CheckCircle2 className="w-5 h-5 text-emerald-400 fill-emerald-500/20" />
+                          ) : (
+                            <Circle className="w-5 h-5" />
+                          )}
+                        </button>
+
+                        <span className="text-xs font-black text-amber-400 font-mono px-2 py-0.5 rounded-lg bg-zinc-950 border border-zinc-800 shrink-0">
+                          {day.dayName}
+                        </span>
+
+                        <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded-full border shrink-0 ${typeBadgeBg}`}>
+                          {plan.type === 'interval' ? '⚡ BIẾN TỐC' : plan.type === 'long_run' ? '🏃 LONG' : plan.type === 'easy' ? '🍃 EASY' : '💤 NGHỈ'}
+                        </span>
+
+                        <span className={`text-xs font-bold truncate ${isDone ? 'line-through text-zinc-500' : 'text-zinc-200'}`}>
+                          {plan.title}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center space-x-1.5 shrink-0">
+                        {plan.type !== 'rest' && (
+                          <button
+                            type="button"
+                            onClick={() => {
+                              handlePrepareRun(
+                                plan.type === 'interval' ? 'interval' : 'outdoor_gps',
+                                { week: currentWeekPlan.weekNumber, day }
+                              );
+                            }}
+                            className="px-2.5 py-1 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs flex items-center space-x-1 shadow-sm transition active:scale-95"
+                          >
+                            <Play className="w-3 h-3 fill-black" />
+                            <span className="hidden sm:inline">Chạy</span>
+                          </button>
+                        )}
+
+                        <button
+                          type="button"
+                          onClick={() => setExpandedDayKey(dayKey)}
+                          className="p-1.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 transition"
+                          title="Xem chi tiết ngày này"
+                        >
+                          <ChevronDown className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              }
+
+              // CHẾ ĐỘ MỞ RỘNG (FULL CARD)
               return (
                 <div
                   key={day.dayOfWeek}
@@ -937,10 +1103,10 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                   }`}
                 >
                   <div className="flex items-start justify-between gap-3">
-                    <div className="flex items-start space-x-3">
+                    <div className="flex items-start space-x-3 flex-1 min-w-0">
                       <button
                         onClick={() => handleToggleDay(currentWeekPlan.weekNumber, day.dayOfWeek)}
-                        className="mt-0.5 text-zinc-400 hover:text-emerald-400 transition"
+                        className="mt-0.5 text-zinc-400 hover:text-emerald-400 transition shrink-0"
                         title={isDone ? 'Bỏ đánh dấu hoàn thành' : 'Đánh dấu đã hoàn thành'}
                       >
                         {isDone ? (
@@ -950,7 +1116,7 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                         )}
                       </button>
 
-                      <div className="space-y-1">
+                      <div className="space-y-1.5 flex-1 min-w-0">
                         <div className="flex flex-wrap items-center gap-1.5">
                           <span className="text-xs font-black text-amber-400 font-mono px-2 py-0.5 rounded-lg bg-zinc-950 border border-zinc-800">
                             {day.dayName}
@@ -983,8 +1149,7 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                         {(() => {
                           const suppExercises = getSupplementaryExercises(day);
                           if (suppExercises.length === 0) return null;
-                          const dayKey = `w${currentWeekPlan.weekNumber}_d${day.dayOfWeek}`;
-                          const isExpanded = !!expandedSuppDays[dayKey];
+                          const isSuppExpanded = !!expandedSuppDays[dayKey];
 
                           return (
                             <div className="mt-2.5 pt-2.5 border-t border-zinc-800/80 space-y-1.5">
@@ -1000,7 +1165,7 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                                   <span>
                                     {suppExercises.length} Bài Bổ Trợ ({day.strengthFocus === 'lower' ? 'Thân Dưới' : day.strengthFocus === 'upper' ? 'Thân Trên & Core' : 'Khớp & Phục Hồi'})
                                   </span>
-                                  {isExpanded ? <ChevronUp className="w-3.5 h-3.5 ml-0.5" /> : <ChevronDown className="w-3.5 h-3.5 ml-0.5" />}
+                                  {isSuppExpanded ? <ChevronUp className="w-3.5 h-3.5 ml-0.5" /> : <ChevronDown className="w-3.5 h-3.5 ml-0.5" />}
                                 </button>
 
                                 <button
@@ -1013,7 +1178,7 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                                 </button>
                               </div>
 
-                              {isExpanded && (
+                              {isSuppExpanded && (
                                 <div className="space-y-1.5 pt-1 animate-in fade-in duration-200">
                                   {suppExercises.map((ex, exIdx) => {
                                     const itemKey = `${dayKey}_${ex.id}`;
@@ -1082,22 +1247,34 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                       </div>
                     </div>
 
-                    {/* Nút hành động */}
+                    {/* Nút hành động & Thu gọn */}
                     <div className="shrink-0 flex flex-col space-y-1.5 items-end">
-                      {plan.type !== 'rest' && (
-                        <button
-                          onClick={() => {
-                            handlePrepareRun(
-                              plan.type === 'interval' ? 'interval' : 'outdoor_gps',
-                              { week: currentWeekPlan.weekNumber, day }
-                            );
-                          }}
-                          className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs flex items-center space-x-1 shadow-md transition active:scale-95"
-                        >
-                          <Play className="w-3 h-3 fill-black" />
-                          <span>Vào bài chạy này</span>
-                        </button>
-                      )}
+                      <div className="flex items-center space-x-1">
+                        {plan.type !== 'rest' && (
+                          <button
+                            onClick={() => {
+                              handlePrepareRun(
+                                plan.type === 'interval' ? 'interval' : 'outdoor_gps',
+                                { week: currentWeekPlan.weekNumber, day }
+                              );
+                            }}
+                            className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs flex items-center space-x-1 shadow-md transition active:scale-95"
+                          >
+                            <Play className="w-3 h-3 fill-black" />
+                            <span>Vào bài chạy này</span>
+                          </button>
+                        )}
+                        {!isAllDaysExpanded && (
+                          <button
+                            type="button"
+                            onClick={() => setExpandedDayKey(null)}
+                            className="p-1.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 transition"
+                            title="Thu gọn"
+                          >
+                            <ChevronUp className="w-4 h-4" />
+                          </button>
+                        )}
+                      </div>
 
                       {/* Nút Tập bổ trợ Runner */}
                       {(() => {
