@@ -805,6 +805,230 @@ export const HM_TRAINING_PLAN: WeekTrainingPlan[] = [
         notes: 'Hoàn thành mốc 11km khẳng định thể lực của bạn đã sẵn sàng cho nửa sau lộ trình 21km!'
       }
     ]
+  },
+  {
+    weekNumber: 9,
+    phase: 'Giai Đoạn 2: Tim Mạch, Hô Hấp, Tốc Độ & VO2max',
+    title: 'Tuần 9: Cải Thiện Hệ Tim Mạch, Hô Hấp, Tốc Độ & VO2max',
+    focus: 'Tối ưu chỉ số VO2max với Interval 200m x 10 tổ, xây dựng nền tảng thể lực vững chắc',
+    quote: 'Không cần phải đau để mạnh, chỉ cần đều để tiến.',
+    totalKmA: 38,
+    days: [
+      {
+        dayOfWeek: 2,
+        dayName: 'Thứ 2',
+        groupA: { title: 'Nghỉ / Bơi / Đạp xe / Chạy nhẹ 30p', distanceKm: 0, description: 'Phục hồi tích cực, thả lỏng cơ khớp.', type: 'cross' },
+        groupB: { title: 'Nghỉ / Bơi / Đạp xe / Chạy nhẹ 30p', durationMinutes: 30, description: 'Phục hồi tích cực, thả lỏng cơ khớp.', type: 'cross' }
+      },
+      {
+        dayOfWeek: 3,
+        dayName: 'Thứ 3',
+        groupA: { title: '6k Easy + Bổ trợ 30p Thân trên', distanceKm: 6, description: '6km Easy + 30 phút bổ trợ thân trên (hít đất, kéo xà/cáp, core).', type: 'easy' },
+        groupB: { title: '45p Easy + Bổ trợ 30p Thân trên', durationMinutes: 45, description: '45 phút Easy + 30 phút bổ trợ thân trên.', type: 'easy' },
+        strengthFocus: 'upper'
+      },
+      {
+        dayOfWeek: 4,
+        dayName: 'Thứ 4',
+        groupA: { title: '10km Biến Tốc: 6k E + (200m I + 1p đi bộ) x 10 + 1k E', distanceKm: 10, description: '6km khởi động Easy + 10 tổ bứt tốc 200m Interval (I) kèm 1 phút đi bộ chậm + 1km Easy hạ nhiệt.', type: 'interval' },
+        groupB: { title: 'Biến tốc 200m I x 10 hiệp', durationMinutes: 60, description: 'Khởi động + 10 hiệp (200m Interval + 1p đi bộ) + hạ nhiệt.', type: 'interval' },
+        notes: 'Nâng lên 10 tổ 200m giúp đẩy cao ngưỡng chịu đựng và tối ưu chỉ số VO2max.'
+      },
+      {
+        dayOfWeek: 5,
+        dayName: 'Thứ 5',
+        groupA: { title: '6k Easy + Bổ trợ 30p Thân dưới', distanceKm: 6, description: '6km Easy + 30 phút bổ trợ chân mông đùi (Squat, Lunge, Calf raise).', type: 'easy' },
+        groupB: { title: '45p Easy + Bổ trợ 30p Thân dưới', durationMinutes: 45, description: '45 phút Easy + 30 phút bổ trợ chân mông đùi.', type: 'easy' },
+        strengthFocus: 'lower'
+      },
+      {
+        dayOfWeek: 6,
+        dayName: 'Thứ 6',
+        groupA: { title: 'Nghỉ Hoàn Toàn', distanceKm: 0, description: 'Nghỉ ngơi 100%, ngủ đủ giấc để cơ bắp tái tạo.', type: 'rest' },
+        groupB: { title: 'Nghỉ Hoàn Toàn', durationMinutes: 0, description: 'Nghỉ ngơi 100%, ngủ đủ giấc để cơ bắp tái tạo.', type: 'rest' }
+      },
+      {
+        dayOfWeek: 7,
+        dayName: 'Thứ 7',
+        groupA: { title: '6k Easy Thư Giãn', distanceKm: 6, description: '6km chạy nhẹ nhàng nhịp tim Zone 2 chuẩn bị cho bài chạy dài.', type: 'recovery' },
+        groupB: { title: '45p Easy Thư Giãn', durationMinutes: 45, description: '45 phút chạy nhẹ nhàng nhịp tim Zone 2.', type: 'recovery' }
+      },
+      {
+        dayOfWeek: 8,
+        dayName: 'Chủ Nhật',
+        groupA: { title: 'Long Run 11km (5k L + 5k M + 1k E)', distanceKm: 11, description: '5km Long Run (L) + 5km Marathon Pace (M) tốc độ thi đấu + 1km Easy hạ nhiệt.', type: 'long_run' },
+        groupB: { title: 'Long Run 95 phút', durationMinutes: 95, description: '95 phút chạy dài bền bỉ với 5km tốc độ thi đấu M.', type: 'long_run' },
+        notes: 'Tăng lên 5km Marathon Pace rèn luyện khả năng duy trì tốc độ mục tiêu khi chân bắt đầu mỏi.'
+      }
+    ]
+  },
+  {
+    weekNumber: 10,
+    phase: 'Giai Đoạn 2: Tim Mạch, Hô Hấp, Tốc Độ & VO2max',
+    title: 'Tuần 10: Chinh Phục Interval 400M & Mốc Long Run 12KM',
+    focus: 'Chuyển sang biến tốc 400m x 6 tổ và chạm mốc cự ly 12km (với 6km Marathon Pace)',
+    quote: 'Nếu hôm nay bạn chưa thể chạy xa, hãy cứ chạy — rồi bạn sẽ đến.',
+    totalKmA: 39,
+    days: [
+      {
+        dayOfWeek: 2,
+        dayName: 'Thứ 2',
+        groupA: { title: 'Nghỉ / Bơi / Đạp xe / Chạy nhẹ 30p', distanceKm: 0, description: 'Phục hồi tích cực, giãn cơ thả lỏng.', type: 'cross' },
+        groupB: { title: 'Nghỉ / Bơi / Đạp xe / Chạy nhẹ 30p', durationMinutes: 30, description: 'Phục hồi tích cực, giãn cơ thả lỏng.', type: 'cross' }
+      },
+      {
+        dayOfWeek: 3,
+        dayName: 'Thứ 3',
+        groupA: { title: '6k Easy + Bổ trợ 30p Thân trên', distanceKm: 6, description: '6km Easy + 30 phút bổ trợ thân trên.', type: 'easy' },
+        groupB: { title: '45p Easy + Bổ trợ 30p Thân trên', durationMinutes: 45, description: '45 phút Easy + 30 phút bổ trợ thân trên.', type: 'easy' },
+        strengthFocus: 'upper'
+      },
+      {
+        dayOfWeek: 4,
+        dayName: 'Thứ 4',
+        groupA: { title: '9km Biến Tốc: 5k E + (400m I + 2p đi bộ) x 6 + 1k E', distanceKm: 9, description: '5km Easy + 6 hiệp biến tốc 400m Interval (I) kèm 2 phút đi bộ + 1km Easy hạ nhiệt.', type: 'interval' },
+        groupB: { title: 'Biến tốc 400m I x 6 hiệp', durationMinutes: 55, description: 'Khởi động + 6 hiệp (400m Interval + 2p đi bộ) + hạ nhiệt.', type: 'interval' },
+        notes: 'Chuyển từ 200m sang 400m giúp nâng cao ngưỡng chịu đựng của hệ hô hấp và cải thiện sức mạnh tốc độ.'
+      },
+      {
+        dayOfWeek: 5,
+        dayName: 'Thứ 5',
+        groupA: { title: '6k Easy + 30p Linh hoạt khớp & Hồi phục cơ', distanceKm: 6, description: '6km Easy + 30 phút tập linh hoạt khớp và phục hồi cơ, giúp cơ bắp thư giãn và tái tạo.', type: 'easy' },
+        groupB: { title: '45p Easy + 30p Linh hoạt khớp', durationMinutes: 45, description: '45 phút Easy + 30 phút tập dẻo dai khớp.', type: 'easy' },
+        strengthFocus: 'mobility'
+      },
+      {
+        dayOfWeek: 6,
+        dayName: 'Thứ 6',
+        groupA: { title: 'Nghỉ Hoàn Toàn', distanceKm: 0, description: 'Nghỉ ngơi 100%.', type: 'rest' },
+        groupB: { title: 'Nghỉ Hoàn Toàn', durationMinutes: 0, description: 'Nghỉ ngơi 100%.', type: 'rest' }
+      },
+      {
+        dayOfWeek: 7,
+        dayName: 'Thứ 7',
+        groupA: { title: '6k Easy Thư Giãn', distanceKm: 6, description: '6km chạy Easy nhẹ nhàng chuẩn bị cho Long Run 12km.', type: 'recovery' },
+        groupB: { title: '45p Easy Thư Giãn', durationMinutes: 45, description: '45 phút chạy nhẹ nhàng.', type: 'recovery' }
+      },
+      {
+        dayOfWeek: 8,
+        dayName: 'Chủ Nhật',
+        groupA: { title: 'Long Run 12km (5k L + 6k M + 1k E)', distanceKm: 12, description: 'Mốc 12km tự hào! 5km Long Run (L) + 6km Marathon Pace (M) + 1km Easy hạ nhiệt.', type: 'long_run' },
+        groupB: { title: 'Long Run 100 phút', durationMinutes: 100, description: '100 phút chạy bền vững vàng với 6km tốc độ race.', type: 'long_run' },
+        notes: 'Tăng tổng cự ly lên 12km và phần Marathon Pace tăng lên 6km giúp củng cố nhịp điệu và sự bền bỉ.'
+      }
+    ]
+  },
+  {
+    weekNumber: 11,
+    phase: 'Giai Đoạn 2: Tim Mạch, Hô Hấp, Tốc Độ & VO2max',
+    title: 'Tuần 11: Nâng Khối Lượng 40KM & Bứt Phá 8 Hiệp 400M Interval',
+    focus: 'Tuần cuối Chặng 2: Nâng biến tốc lên 400m x 8 tổ, Marathon Pace 7km',
+    quote: 'Đừng đợi có động lực mới chạy. Hãy chạy rồi động lực sẽ đến.',
+    totalKmA: 40,
+    days: [
+      {
+        dayOfWeek: 2,
+        dayName: 'Thứ 2',
+        groupA: { title: 'Bơi / Đạp xe / Chạy nhẹ 30p', distanceKm: 0, description: 'Phục hồi tích cực, thả lỏng toàn thân.', type: 'cross' },
+        groupB: { title: 'Bơi / Đạp xe / Chạy nhẹ 30p', durationMinutes: 30, description: 'Phục hồi tích cực, thả lỏng toàn thân.', type: 'cross' }
+      },
+      {
+        dayOfWeek: 3,
+        dayName: 'Thứ 3',
+        groupA: { title: '6k Easy + Bổ trợ 30p Thân trên', distanceKm: 6, description: '6km Easy + 30 phút bổ trợ thân trên.', type: 'easy' },
+        groupB: { title: '45p Easy + Bổ trợ 30p Thân trên', durationMinutes: 45, description: '45 phút Easy + 30 phút bổ trợ thân trên.', type: 'easy' },
+        strengthFocus: 'upper'
+      },
+      {
+        dayOfWeek: 4,
+        dayName: 'Thứ 4',
+        groupA: { title: '10km Biến Tốc: 5k E + (400m I + 2p đi bộ) x 8 + 1k E', distanceKm: 10, description: '5km Easy + 8 tổ biến tốc 400m Interval (I) kèm 2 phút đi bộ + 1km Easy hạ nhiệt.', type: 'interval' },
+        groupB: { title: 'Biến tốc 400m I x 8 hiệp', durationMinutes: 65, description: 'Khởi động + 8 tổ (400m Interval + 2p đi bộ) + hạ nhiệt.', type: 'interval' },
+        notes: 'Tăng lên 8 tổ 400m Interval nhằm đẩy sâu hơn ngưỡng VO2max.'
+      },
+      {
+        dayOfWeek: 5,
+        dayName: 'Thứ 5',
+        groupA: { title: '6k Easy + Bổ trợ 30p Thân dưới', distanceKm: 6, description: '6km Easy + 30 phút bổ trợ chân mông đùi gia tăng sức mạnh đôi chân.', type: 'easy' },
+        groupB: { title: '45p Easy + Bổ trợ 30p Thân dưới', durationMinutes: 45, description: '45 phút Easy + 30 phút bổ trợ chân.', type: 'easy' },
+        strengthFocus: 'lower'
+      },
+      {
+        dayOfWeek: 6,
+        dayName: 'Thứ 6',
+        groupA: { title: 'Nghỉ Hoàn Toàn', distanceKm: 0, description: 'Nghỉ ngơi 100%.', type: 'rest' },
+        groupB: { title: 'Nghỉ Hoàn Toàn', durationMinutes: 0, description: 'Nghỉ ngơi 100%.', type: 'rest' }
+      },
+      {
+        dayOfWeek: 7,
+        dayName: 'Thứ 7',
+        groupA: { title: '6k Easy Thư Giãn', distanceKm: 6, description: '6km chạy Easy nhẹ nhàng chuẩn bị cho bài chạy dài.', type: 'recovery' },
+        groupB: { title: '45p Easy Thư Giãn', durationMinutes: 45, description: '45 phút chạy nhẹ nhàng.', type: 'recovery' }
+      },
+      {
+        dayOfWeek: 8,
+        dayName: 'Chủ Nhật',
+        groupA: { title: 'Long Run 12km (4k L + 7k M + 1k E)', distanceKm: 12, description: '4km Long Run (L) + 7km Marathon Pace (M) + 1km Easy hạ nhiệt.', type: 'long_run' },
+        groupB: { title: 'Long Run 105 phút', durationMinutes: 105, description: '105 phút chạy dài với 7km duy trì tốc độ thi đấu mục tiêu.', type: 'long_run' },
+        notes: 'Tăng thời lượng Marathon Pace từ 6km lên 7km, giúp cơ thể thuần thục tốc độ thi đấu Half Marathon.'
+      }
+    ]
+  },
+  {
+    weekNumber: 12,
+    phase: 'Giai Đoạn 3: Tốc Độ Ngưỡng, Đỉnh Khối Lượng & Tạo Đỉnh',
+    title: 'Tuần 12: Tạo Đỉnh Thể Lực Half Marathon (44KM)',
+    focus: 'Đỉnh cao khối lượng 44km/tuần, bài Tempo ngưỡng Lactic 3km và Long Run 13km (8km M)',
+    quote: 'Kỷ luật mang bạn đến nơi mà động lực không thể.',
+    totalKmA: 44,
+    days: [
+      {
+        dayOfWeek: 2,
+        dayName: 'Thứ 2',
+        groupA: { title: 'Bơi / Đạp xe / Chạy nhẹ 30p', distanceKm: 0, description: 'Phục hồi tích cực, thả lỏng cơ khớp trước tuần tạo đỉnh.', type: 'cross' },
+        groupB: { title: 'Bơi / Đạp xe / Chạy nhẹ 30p', durationMinutes: 30, description: 'Phục hồi tích cực, thả lỏng cơ khớp.', type: 'cross' }
+      },
+      {
+        dayOfWeek: 3,
+        dayName: 'Thứ 3',
+        groupA: { title: '8k Easy + Bổ trợ 30p Thân trên', distanceKm: 8, description: '8km Easy nhẹ nhàng + 30 phút bổ trợ thân trên và core.', type: 'easy' },
+        groupB: { title: '55p Easy + Bổ trợ 30p Thân trên', durationMinutes: 55, description: '55 phút Easy + 30 phút bổ trợ thân trên.', type: 'easy' },
+        strengthFocus: 'upper'
+      },
+      {
+        dayOfWeek: 4,
+        dayName: 'Thứ 4',
+        groupA: { title: '9km Tempo & Pace: 1k E + 4k M + 3k T + 1k E', distanceKm: 9, description: '1km Easy khởi động + 4km Marathon Pace (M) + 3km Tempo ngưỡng Lactic (T) + 1km Easy hạ nhiệt.', type: 'interval' },
+        groupB: { title: '60p Tempo & Pace (4k M + 3k T)', durationMinutes: 60, description: 'Khởi động + 4km M + 3km tốc độ ngưỡng Tempo (T) + hạ nhiệt.', type: 'interval' },
+        notes: 'Bài tập vàng kết hợp Marathon Pace và 3km Tempo ngưỡng Lactic Threshold (T) giúp bứt phá trần tốc độ!'
+      },
+      {
+        dayOfWeek: 5,
+        dayName: 'Thứ 5',
+        groupA: { title: '8k Easy + Bổ trợ 30p Thân dưới', distanceKm: 8, description: '8km Easy + 30 phút bổ trợ chân mông đùi (Squat, Lunge, Glute bridge).', type: 'easy' },
+        groupB: { title: '55p Easy + Bổ trợ 30p Thân dưới', durationMinutes: 55, description: '55 phút Easy + 30 phút bổ trợ chân mông đùi.', type: 'easy' },
+        strengthFocus: 'lower'
+      },
+      {
+        dayOfWeek: 6,
+        dayName: 'Thứ 6',
+        groupA: { title: 'Nghỉ Hoàn Toàn', distanceKm: 0, description: 'Nghỉ ngơi 100%, bổ sung dinh dưỡng và ngủ sâu.', type: 'rest' },
+        groupB: { title: 'Nghỉ Hoàn Toàn', durationMinutes: 0, description: 'Nghỉ ngơi 100%, bổ sung dinh dưỡng và ngủ sâu.', type: 'rest' }
+      },
+      {
+        dayOfWeek: 7,
+        dayName: 'Thứ 7',
+        groupA: { title: '6k Easy Thư Giãn', distanceKm: 6, description: '6km chạy Easy nhẹ nhàng giải phóng cơ thể chuẩn bị cho Long Run 13km.', type: 'recovery' },
+        groupB: { title: '45p Easy Thư Giãn', durationMinutes: 45, description: '45 phút chạy nhẹ nhàng nhịp tim Zone 2.', type: 'recovery' }
+      },
+      {
+        dayOfWeek: 8,
+        dayName: 'Chủ Nhật',
+        groupA: { title: 'Long Run 13km Tạo Đỉnh (4k L + 8k M + 1k E)', distanceKm: 13, description: 'Đỉnh cao Long Run 13km! 4km Long Run (L) + 8km Marathon Pace (M) tốc độ mục tiêu Half Marathon + 1km Easy hạ nhiệt.', type: 'long_run' },
+        groupB: { title: 'Long Run 110 phút', durationMinutes: 110, description: '110 phút chạy dài đỉnh cao với 8km duy trì tốc độ thi đấu mục tiêu 21K.', type: 'long_run' },
+        notes: 'Chinh phục 8km ở tốc độ Marathon Pace trong bài Long Run 13km là bước khẳng định 90% bạn sẽ hoàn thành cự ly 21K!'
+      }
+    ]
   }
 ];
 
@@ -1018,15 +1242,24 @@ export const RUNNING_KNOWLEDGE_CHAPTERS: RunningChapter[] = [
           'Gel năng lượng & Viên muối: Với các bài chạy dài trên 60 phút, cần nạp 1 gói Energy Gel mỗi 40-45 phút kèm nước lọc, bổ sung viên muối điện giải (Natri, Kali, Magie) để tránh "đụng tường" (sập nguồn).'
         ],
         badge: 'Chống đụng tường'
+      },
+      {
+        heading: '4. Khoa học Giấc Ngủ Phục Hồi — "Ngủ là tập luyện, không ngủ là bỏ tập!"',
+        content: [
+          'Tại sao Giấc Ngủ là vũ khí bí mật số 1?: Khi bạn chạy, cơ bắp bị vi tổn thương và tiêu hao năng lượng; nhưng cơ thể chỉ thực sự khỏe lên, thích nghi và phát triển trong lúc ngủ sâu. Ngủ không đủ, cơ thể không kịp phục hồi, tích tụ mỏi mệt dẫn tới chấn thương và suy giảm hệ miễn dịch.',
+          'Cơ chế 2 pha REM & NREM: Giai đoạn ngủ sâu NREM (Non-REM / Deep Sleep) là lúc tuyến yên tiết ra hormone tăng trưởng HGH đỉnh cao để hàn gắn vi tổn thương sợi cơ và tái khoáng xương. Giai đoạn REM (giấc ngủ mơ) giúp phục hồi hệ thần kinh trung ương, củng cố trí nhớ vận động và giải tỏa căng thẳng tâm lý.',
+          'Mẹo vàng tối ưu chất lượng giấc ngủ: Giữ phòng ngủ mát mẻ (18-22°C), tối hoàn toàn; không dùng điện thoại/màn hình xanh trước khi ngủ 45 phút; tránh nạp caffeine sau 14h chiều; duy trì giờ đi ngủ cố định (7-8 tiếng/đêm) để nhịp sinh học đạt phong độ cao nhất trước ngày race 21KM.'
+        ],
+        badge: 'Ngủ là tập luyện'
       }
     ]
   },
   {
     id: 'chap-6',
     chapterNumber: 'CHƯƠNG VI',
-    title: 'Nguyên Tắc An Toàn & Xử Lý Chấn Thương',
+    title: 'Nguyên Tắc An Toàn & Phòng Trị Chấn Thương Runner',
     iconName: 'HeartPulse',
-    summary: 'Quy tắc 10%, nguyên tắc 80/20, xử lý lật sơ mi, đau khớp gối và chuột rút.',
+    summary: 'Quy tắc 10%, nguyên tắc 80/20, xử lý đau gân Asin, viêm cân gan chân, dải chậu chày ITB, đau xương bánh chè và lật sơ mi.',
     sections: [
       {
         heading: '1. Hai quy tắc vàng kiểm soát khối lượng',
@@ -1036,11 +1269,20 @@ export const RUNNING_KNOWLEDGE_CHAPTERS: RunningChapter[] = [
         ]
       },
       {
-        heading: '2. Nhận biết và xử lý chấn thương phổ biến',
+        heading: '2. Bốn chấn thương kinh điển & Phác đồ hồi phục chuyên sâu',
         content: [
-          'Lật sơ mi mắt cá chân (Ankle Sprain): Do sụp ổ gà, hụt chân. Xử lý chuẩn phác đồ R.I.C.E: Rest (Nghỉ), Ice (Chườm đá lạnh 15 phút), Compression (Băng ép nhẹ), Elevation (Gác cao chân).',
-          'Đau khớp gối bánh chè (Runner’s Knee): Đau âm ỉ quanh xương bánh chè do tăng khối lượng quá vội hoặc cơ đùi yếu. Xử lý: Giảm ngay km, chườm lạnh, tập tăng cường cơ đùi trước (Quad) và dải chậu chày (IT Band).',
-          'Chuột rút (Muscle Cramps): Co cứng cơ đột ngột do thiếu muối điện giải hoặc cơ bắp quá tải. Xử lý: Dừng lại ngay, kéo giãn nhẹ nhàng cơ bị rút theo chiều ngược lại, uống nước điện giải và xoa bóp làm ấm cơ.'
+          '① ĐAU GÂN ASIN (Achilles Tendinitis – "Hung thần" sau gót chân): Gân Asin là sợi gân lớn nhất cơ thể, chịu lực gấp 3-5 lần trọng lượng khi tiếp đất. Triệu chứng: Đau nhức cứng gân sau gót, rõ nhất vào buổi sáng khi vừa bước xuống giường hoặc lúc khởi động. Nguyên nhân: Tăng tải quá vội, giày drop quá thấp (zero-drop), chạy dốc hoặc gân bắp chuối bị bó cứng. Xử lý: Nghỉ bài tốc độ/leo dốc, chườm lạnh sau chạy; tập bài Eccentric Heel Drop (hạ gót chậm trên bậc thềm) để tái tạo sợi collagen của gân.',
+          '② VIÊM CÂN GAN CHÂN (Đau gan – gót bàn chân / Plantar Fasciitis): Cảm giác đau nhói buốt dưới lòng bàn chân hoặc rìa gót chân ở những bước đi đầu tiên sau khi ngủ dậy. Nguyên nhân: Tăng cự ly đột ngột, vòm bàn chân sụp/bẹt, giày quá mòn thiếu đệm êm, cơ lòng bàn chân yếu. Xử lý: Dùng bóng tennis hoặc chai nước đông đá lăn dưới lòng bàn chân 10-15 phút; tập bài kéo khăn (Towel Curls) bằng ngón chân để gia cố các nhóm cơ nhỏ dưới vòm bàn chân.',
+          '③ ĐAU XƯƠNG BÁNH CHÈ - ĐẦU GỐI (Runner’s Knee / Patellofemoral Pain Syndrome): Đau âm ỉ quanh hoặc sau xương bánh chè, đau tăng rõ rệt khi leo cầu thang hoặc ngồi gập gối lâu. Nguyên nhân: Cơ đùi trước (Quads) và cơ mông nhỡ yếu làm xương bánh chè trượt lệch rãnh đùi khi co duỗi. Xử lý: Giảm cự ly, chườm đá lạnh; tập tăng cường sức mạnh cơ mông (Glute Bridge, Clamshells) và cơ tứ đầu đùi (Straight Leg Raise, Wall Sit).',
+          '④ HỘI CHỨNG DẢI CHẬU - CHÀY (IT Band Syndrome - ITBS): Cảm giác đau nhói buốt ở mặt ngoài khớp gối, đặc biệt đau dữ dội khi sải chân chạy xuống dốc. Nguyên nhân: Dải chậu chày bị căng cứng cọ xát liên tục vào lồi cầu ngoài xương đùi do cơ mông nhỡ (Gluteus Medius) yếu khiến hông bị nghiêng khi tiếp đất. Xử lý: Tránh chạy đường dốc, dùng con lăn bọt (Foam Roller) massage cơ căng mạc đùi (TFL) và mông (không lăn trực tiếp lên gân IT Band); tập củng cố cơ mông nhỡ và giãn cơ hình lê (Pigeon Pose).'
+        ],
+        badge: 'Phác đồ 4 chấn thương'
+      },
+      {
+        heading: '3. Lật sơ mi mắt cá chân & Chuột rút (Muscle Cramps)',
+        content: [
+          'Lật sơ mi mắt cá chân (Ankle Sprain): Do sụp mép đường, trượt chân. Xử lý chuẩn phác đồ P.R.I.C.E: Protect (Bảo vệ), Rest (Nghỉ chạy ngay), Ice (Chườm đá lạnh 15 phút), Compression (Băng thun ép nhẹ), Elevation (Gác cao chân hơn tim).',
+          'Chuột rút (Muscle Cramps): Co cứng cơ đột ngột do mất cân bằng điện giải (thiếu Natri, Magie, Kali) hoặc cơ bắp bị quá tải vượt ngưỡng chịu đựng. Xử lý: Dừng lại ngay, duỗi thẳng và kéo giãn nhẹ nhàng cơ bị rút theo chiều ngược lại, uống nước điện giải từng ngụm nhỏ và xoa bóp làm ấm cơ.'
         ]
       }
     ]

@@ -216,7 +216,7 @@ export function getCurrentTrainingWeek(): number {
     const saved = localStorage.getItem(CURRENT_WEEK_KEY);
     if (saved) {
       const num = parseInt(saved, 10);
-      if (!isNaN(num) && num >= 1 && num <= 8) return num;
+      if (!isNaN(num) && num >= 1 && num <= 24) return num;
     }
   } catch {}
   return 1;
