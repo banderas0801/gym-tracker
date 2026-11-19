@@ -1,16 +1,16 @@
 @echo off
 chcp 65001 > nul
-title CAP NHAT GYM TRACKER - TRON BO GIAO TRINH TUAN 1 DEN 12
+title CAP NHAT GYM TRACKER - DON DEP LAYOUT & BANG TRA PACE 5KM
 color 0A
 echo ====================================================================
-echo   CAP NHAT GYM TRACKER: TRON BO GIAO TRINH CHAY BO TUAN 1 - 12
+echo   CAP NHAT GYM TRACKER: DON DEP TRUNG LAP LAYOUT & TRA PACE 5KM
 echo ====================================================================
 cd /d C:\Users\Admin\gym-tracker
 
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "feat(running): complete weeks 1-12 HM training plan, peak 44km, sleep science and 4 injury recovery protocols"
+git commit -m "feat(ui): deduplicate back buttons & banners, clean expanded run cards, add interactive 5KM Race Pace Chart"
 git push origin master
 
 echo.

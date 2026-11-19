@@ -1,4 +1,4 @@
-=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-11-03T00:39:48.969Z ===
+=== BẮT ĐẦU SỬA LỖI 502 & BUILD: 2026-11-18T09:51:11.496Z ===
 Đang kết nối máy chủ VPS 103.77.209.87...
 ✅ Đã kết nối VPS thành công!
 
@@ -8,22 +8,22 @@
 ┌─────┬───────────────────┬─────────────┬─────────┬─────────┬──────────┬────────┬──────┬───────────┬──────────┬──────────┬──────────┬──────────┐
 │ id  │ name              │ namespace   │ version │ mode    │ pid      │ uptime │ ↺    │ status    │ cpu      │ mem      │ user     │ watching │
 ├─────┼───────────────────┼─────────────┼─────────┼─────────┼──────────┼────────┼──────┼───────────┼──────────┼──────────┼──────────┼──────────┤
-│ 16  │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 14D    │ 1    │ online    │ 0%       │ 7.8mb    │ root     │ disabled │
-│ 15  │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 14D    │ 1    │ online    │ 0%       │ 7.5mb    │ root     │ disabled │
-│ 17  │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 14D    │ 1    │ online    │ 0%       │ 7.9mb    │ root     │ disabled │
-│ 9   │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 14D    │ 6    │ online    │ 0%       │ 22.8mb   │ root     │ disabled │
-│ 18  │ flowdesk          │ default     │ 0.1.0   │ fork    │ 3954388  │ 2D     │ 17   │ online    │ 0%       │ 23.1mb   │ root     │ disabled │
-│ 10  │ gemini-proxy      │ default     │ N/A     │ fork    │ 3393340  │ 4D     │ 26   │ online    │ 0%       │ 15.0mb   │ root     │ disabled │
-│ 176 │ gym-tracker       │ default     │ N/A     │ fork    │ 303050   │ 10h    │ 0    │ online    │ 0%       │ 59.5mb   │ root     │ disabled │
-│ 0   │ maccanh           │ default     │ 1.0.0   │ fork    │ 2147160  │ 8D     │ 83   │ online    │ 0%       │ 71.5mb   │ root     │ disabled │
-│ 12  │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 14D    │ 16   │ online    │ 0%       │ 7.5mb    │ root     │ disabled │
-│ 11  │ muse-bridge       │ default     │ N/A     │ fork    │ 1391148  │ 11D    │ 1    │ online    │ 0%       │ 26.6mb   │ root     │ disabled │
-│ 157 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 2147125  │ 8D     │ 0    │ online    │ 0%       │ 56.1mb   │ root     │ disabled │
-│ 180 │ taxcouncil-web    │ default     │ 16.4.2  │ fork    │ 429028   │ 11m    │ 0    │ online    │ 0%       │ 159.3mb  │ root     │ disabled │
-│ 5   │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 16D    │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
-│ 158 │ vieneu-tts        │ default     │ 0.1.0   │ fork    │ 2147143  │ 8D     │ 0    │ online    │ 0%       │ 386.5mb  │ root     │ disabled │
+│ 16  │ agent-dech        │ default     │ N/A     │ fork    │ 295340   │ 30D    │ 1    │ online    │ 0%       │ 7.3mb    │ root     │ disabled │
+│ 15  │ agent-gehihi      │ default     │ N/A     │ fork    │ 295329   │ 30D    │ 1    │ online    │ 0%       │ 7.2mb    │ root     │ disabled │
+│ 17  │ agent-matnet      │ default     │ N/A     │ fork    │ 295355   │ 30D    │ 1    │ online    │ 0%       │ 7.5mb    │ root     │ disabled │
+│ 9   │ buzz-council      │ default     │ N/A     │ fork    │ 328221   │ 30D    │ 6    │ online    │ 0%       │ 21.9mb   │ root     │ disabled │
+│ 18  │ flowdesk          │ default     │ 0.1.0   │ fork    │ 668447   │ 14D    │ 18   │ online    │ 0%       │ 11.6mb   │ root     │ disabled │
+│ 10  │ gemini-proxy      │ default     │ N/A     │ fork    │ 3393340  │ 19D    │ 26   │ online    │ 0%       │ 9.0mb    │ root     │ disabled │
+│ 176 │ gym-tracker       │ default     │ N/A     │ fork    │ 303050   │ 15D    │ 0    │ online    │ 0%       │ 50.0mb   │ root     │ disabled │
+│ 0   │ maccanh           │ default     │ 1.0.0   │ fork    │ 3956799  │ 3D     │ 84   │ online    │ 0%       │ 81.1mb   │ root     │ disabled │
+│ 12  │ muse-agent        │ default     │ N/A     │ fork    │ 295394   │ 30D    │ 16   │ online    │ 0%       │ 6.3mb    │ root     │ disabled │
+│ 11  │ muse-bridge       │ default     │ N/A     │ fork    │ 1391148  │ 26D    │ 1    │ online    │ 0%       │ 28.5mb   │ root     │ disabled │
+│ 186 │ ta-ao-reader      │ default     │ N/A     │ fork    │ 3956766  │ 3D     │ 0    │ online    │ 0%       │ 58.4mb   │ root     │ disabled │
+│ 185 │ taxcouncil-web    │ default     │ 16.4.2  │ fork    │ 447732   │ 15D    │ 0    │ online    │ 0%       │ 147.5mb  │ root     │ disabled │
+│ 5   │ vdisplay          │ default     │ N/A     │ fork    │ 91136    │ 32D    │ 0    │ online    │ 0%       │ 1.9mb    │ root     │ disabled │
+│ 187 │ vieneu-tts        │ default     │ 0.1.0   │ fork    │ 3956784  │ 3D     │ 0    │ online    │ 0%       │ 531.0mb  │ root     │ disabled │
 └─────┴───────────────────┴─────────────┴─────────┴─────────┴──────────┴────────┴──────┴───────────┴──────────┴──────────┴──────────┴──────────┘
-host metrics | cpu: 25.6% | ram usage: 54.9% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.034mb/s ⇑ 0.003mb/s drop 30/min | disk: ⇓ 3.548mb/s ⇑ 2.516mb/s / 62.21%
+host metrics | cpu: 6.6% | ram usage: 55.5% | lo: ⇓ 0.001mb/s ⇑ 0.001mb/s | ens192: ⇓ 0.031mb/s ⇑ 0.003mb/s drop 38/min | disk: ⇓ 0.122mb/s ⇑ 0.007mb/s / 63.4%
 tcp   LISTEN 0      511                *:3008             *:*    users:(("next-server (v1",pid=303071,fd=18))                                            
 
 --- BƯỚC 2: Kéo commit mới nhất từ GitHub ---
@@ -31,11 +31,11 @@ tcp   LISTEN 0      511                *:3008             *:*    users:(("next-s
 >>> [VPS] cd /var/www/gym-tracker && git fetch origin master && git reset --hard origin/master && git log -n 3 --oneline
 From https://github.com/banderas0801/gym-tracker
  * branch            master     -> FETCH_HEAD
-   ded5695..5508a84  master     -> origin/master
-HEAD is now at 5508a84 feat(running): compact mobile running UI, sticky 5-col tab grid, today run hero card with 1-tap start, and accordion week schedule
+   5508a84..52c7214  master     -> origin/master
+HEAD is now at 52c7214 feat(running): complete weeks 1-12 HM training plan, peak 44km, sleep science and 4 injury recovery protocols
+52c7214 feat(running): complete weeks 1-12 HM training plan, peak 44km, sleep science and 4 injury recovery protocols
 5508a84 feat(running): compact mobile running UI, sticky 5-col tab grid, today run hero card with 1-tap start, and accordion week schedule
 ded5695 fix: defer HomeDashboardOverview calculations to useEffect to resolve Next.js 16 prerender error
-56e179f fix: resolve ArrowLeft missing import and runSession date in HomeDashboardOverview
 
 --- BƯỚC 3: Kiểm tra và đảm bảo các file mã nguồn mới nhất trên VPS ---
 
@@ -139,7 +139,7 @@ ded5695 fix: defer HomeDashboardOverview calculations to useEffect to resolve Ne
 > next build
 
 ▲ Next.js 16.4.2 (Turbopack)
-✓ Running next.config.ts took 143ms
+✓ Running next.config.ts took 1155ms
 - Cache Components enabled
 - Partial Prefetching enabled
 

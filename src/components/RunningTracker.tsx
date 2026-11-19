@@ -61,7 +61,8 @@ import {
   suggestSubFromVDOT,
   formatSecondsToTime,
   formatPace,
-  getSupplementaryExercises
+  getSupplementaryExercises,
+  FIVE_KM_PACE_CHART
 } from '@/data/runningCurriculum';
 import { 
   getTargetSub, 
@@ -109,7 +110,8 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
 
   // Heart Rate Profile & Zone State
   const [heartProfile, setHeartProfile] = useState<UserHeartProfile>(() => getUserHeartProfile());
-  const [paceSubTab, setPaceSubTab] = useState<'heart_zones' | 'vdot_paces'>('heart_zones');
+  const [paceSubTab, setPaceSubTab] = useState<'heart_zones' | 'pace_5k' | 'vdot_paces'>('heart_zones');
+  const [selected5kPace, setSelected5kPace] = useState<string>('6:00');
   const [testRecoveryPeakHr, setTestRecoveryPeakHr] = useState('');
   const [testRecovery1MinHr, setTestRecovery1MinHr] = useState('');
 
@@ -667,28 +669,21 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
       {/* 🔝 THANH ĐIỀU HƯỚNG & TRẠNG THÁI GỌN GÀNG (STICKY COMPACT HEADER) */}
       <div className="sticky top-16 z-30 bg-black/95 backdrop-blur-md pt-1 pb-2.5 -mx-3 px-3 sm:-mx-4 sm:px-4 border-b border-zinc-800/80 space-y-2">
         <div className="flex items-center justify-between gap-2 max-w-3xl mx-auto">
-          {/* Nút quay lại Gym & Badge Sub */}
-          <div className="flex items-center space-x-2 min-w-0">
-            {onGoToGymWorkout && (
-              <button
-                type="button"
-                onClick={onGoToGymWorkout}
-                className="px-2.5 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-amber-400 border border-zinc-800 text-xs font-bold flex items-center space-x-1 transition active:scale-95 shrink-0"
-                title="Quay lại Gym"
-              >
-                <ArrowLeft className="w-3.5 h-3.5 stroke-[2.5]" />
-                <span className="hidden sm:inline">Gym</span>
-              </button>
-            )}
-
-            {/* Sub & Pace Pill */}
-            <div className="flex items-center space-x-1.5 px-3 py-1 rounded-xl bg-zinc-900 border border-amber-500/30 text-amber-300 font-extrabold text-xs">
-              <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>{currentSubDetails.label}</span>
-              <span className="text-zinc-500 font-normal">•</span>
-              <span className="font-mono text-white text-[11px]">{currentSubDetails.racePace}/km</span>
-            </div>
-          </div>
+          {/* Sub & Pace Pill (Bấm để xem bảng Pace & Nhịp Tim) */}
+          <button
+            type="button"
+            onClick={() => {
+              setActiveSubTab('paces');
+              setPaceSubTab('vdot_paces');
+            }}
+            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-amber-500/30 text-amber-300 font-extrabold text-xs transition active:scale-95 min-w-0 truncate"
+            title="Xem chi tiết bảng Pace & Nhịp Tim"
+          >
+            <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+            <span className="truncate">{currentSubDetails.label}</span>
+            <span className="text-zinc-500 font-normal">•</span>
+            <span className="font-mono text-white text-[11px] shrink-0">{currentSubDetails.racePace}/km</span>
+          </button>
 
           {/* 3 Quick Utility Buttons */}
           <div className="flex items-center space-x-1 shrink-0">
@@ -1247,60 +1242,30 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                       </div>
                     </div>
 
-                    {/* Nút hành động & Thu gọn */}
-                    <div className="shrink-0 flex flex-col space-y-1.5 items-end">
-                      <div className="flex items-center space-x-1">
-                        {plan.type !== 'rest' && (
-                          <button
-                            onClick={() => {
-                              handlePrepareRun(
-                                plan.type === 'interval' ? 'interval' : 'outdoor_gps',
-                                { week: currentWeekPlan.weekNumber, day }
-                              );
-                            }}
-                            className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs flex items-center space-x-1 shadow-md transition active:scale-95"
-                          >
-                            <Play className="w-3 h-3 fill-black" />
-                            <span>Vào bài chạy này</span>
-                          </button>
-                        )}
-                        {!isAllDaysExpanded && (
-                          <button
-                            type="button"
-                            onClick={() => setExpandedDayKey(null)}
-                            className="p-1.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 transition"
-                            title="Thu gọn"
-                          >
-                            <ChevronUp className="w-4 h-4" />
-                          </button>
-                        )}
-                      </div>
-
-                      {/* Nút Tập bổ trợ Runner */}
-                      {(() => {
-                        const suppExercises = getSupplementaryExercises(day);
-                        if (suppExercises.length === 0) return null;
-                        return (
-                          <button
-                            type="button"
-                            onClick={() => setOpenSuppModalDay({ weekNum: currentWeekPlan.weekNumber, day, exercises: suppExercises })}
-                            className="px-2.5 py-1.5 rounded-xl bg-teal-500/20 hover:bg-teal-500/30 text-teal-300 font-bold text-xs flex items-center space-x-1 border border-teal-500/40 shadow-sm transition active:scale-95"
-                            title="Mở bài tập bổ trợ chuyên biệt với đồng hồ đếm set"
-                          >
-                            <Dumbbell className="w-3 h-3 text-teal-400" />
-                            <span>Tập bổ trợ ({suppExercises.length})</span>
-                          </button>
-                        );
-                      })()}
-
-                      {day.strengthFocus && day.strengthFocus !== 'none' && onGoToGymWorkout && (
+                    {/* Nút hành động & Thu gọn gọn gàng */}
+                    <div className="shrink-0 flex items-center space-x-1.5">
+                      {plan.type !== 'rest' && (
                         <button
-                          onClick={onGoToGymWorkout}
-                          className="px-2.5 py-1 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white text-[11px] font-medium flex items-center space-x-1 border border-zinc-700 transition"
-                          title="Mở tab bài tập Gym để tập bổ trợ"
+                          onClick={() => {
+                            handlePrepareRun(
+                              plan.type === 'interval' ? 'interval' : 'outdoor_gps',
+                              { week: currentWeekPlan.weekNumber, day }
+                            );
+                          }}
+                          className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs flex items-center space-x-1 shadow-md transition active:scale-95"
                         >
-                          <Dumbbell className="w-3 h-3 text-zinc-400" />
-                          <span>Tập Gym</span>
+                          <Play className="w-3 h-3 fill-black" />
+                          <span>Chạy</span>
+                        </button>
+                      )}
+                      {!isAllDaysExpanded && (
+                        <button
+                          type="button"
+                          onClick={() => setExpandedDayKey(null)}
+                          className="p-1.5 rounded-xl bg-zinc-950 hover:bg-zinc-800 text-zinc-400 hover:text-white border border-zinc-800 transition"
+                          title="Thu gọn"
+                        >
+                          <ChevronUp className="w-4 h-4" />
                         </button>
                       )}
                     </div>
@@ -1315,34 +1280,181 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
       {/* TAB 2: BẢNG TRA PACE & VÙNG NHỊP TIM MỤC TIÊU 21K */}
       {activeSubTab === 'paces' && (
         <div className="space-y-4">
-          {/* Sub Navigation: Vùng Nhịp Tim vs Bảng Pace Sub */}
-          <div className="flex rounded-2xl bg-zinc-900 border border-zinc-800 p-1.5 shadow-md">
+          {/* Sub Navigation 3 cột gọn gàng: Vùng Nhịp Tim | Tra Pace 5K | Bảng Sub HM */}
+          <div className="grid grid-cols-3 gap-1 rounded-2xl bg-zinc-900 border border-zinc-800 p-1 shadow-md">
             <button
               type="button"
               onClick={() => setPaceSubTab('heart_zones')}
-              className={`flex-1 py-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition active:scale-95 ${
+              className={`py-2 px-1.5 rounded-xl font-black text-[11px] sm:text-xs flex items-center justify-center space-x-1 transition active:scale-95 ${
                 paceSubTab === 'heart_zones'
                   ? 'bg-gradient-to-r from-rose-500 to-amber-500 text-zinc-950 shadow-md font-black'
                   : 'text-zinc-400 hover:text-white'
               }`}
             >
-              <Heart className="w-4 h-4 fill-current" />
-              <span>❤️ 5 Vùng Nhịp Tim (Zone 1 - 5)</span>
+              <Heart className="w-3.5 h-3.5 fill-current shrink-0" />
+              <span className="truncate">5 Vùng Tim</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => setPaceSubTab('pace_5k')}
+              className={`py-2 px-1.5 rounded-xl font-black text-[11px] sm:text-xs flex items-center justify-center space-x-1 transition active:scale-95 ${
+                paceSubTab === 'pace_5k'
+                  ? 'bg-emerald-500 text-zinc-950 shadow-md font-black'
+                  : 'text-zinc-400 hover:text-white'
+              }`}
+            >
+              <Zap className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">Tra Pace 5K</span>
             </button>
 
             <button
               type="button"
               onClick={() => setPaceSubTab('vdot_paces')}
-              className={`flex-1 py-2.5 rounded-xl font-black text-xs sm:text-sm flex items-center justify-center space-x-1.5 transition active:scale-95 ${
+              className={`py-2 px-1.5 rounded-xl font-black text-[11px] sm:text-xs flex items-center justify-center space-x-1 transition active:scale-95 ${
                 paceSubTab === 'vdot_paces'
                   ? 'bg-amber-500 text-zinc-950 shadow-md font-black'
                   : 'text-zinc-400 hover:text-white'
               }`}
             >
-              <Gauge className="w-4 h-4" />
-              <span>⏱️ Bảng Pace Sub HM (Jack Daniels)</span>
+              <Gauge className="w-3.5 h-3.5 shrink-0" />
+              <span className="truncate">Sub HM 21K</span>
             </button>
           </div>
+
+          {/* VIEW 2: TRA CỨU PACE TẬP LUYỆN THEO THÀNH TÍCH 5KM */}
+          {paceSubTab === 'pace_5k' && (() => {
+            const activeRow = FIVE_KM_PACE_CHART.find((r) => r.pace5k === selected5kPace) || FIVE_KM_PACE_CHART[5];
+            return (
+              <div className="space-y-4 animate-in fade-in duration-200">
+                {/* Bộ chọn nhanh Pace 5KM hiện tại */}
+                <div className="bg-gradient-to-br from-zinc-900 via-zinc-900 to-emerald-950/30 border border-emerald-500/30 rounded-3xl p-4 sm:p-5 space-y-4 shadow-xl">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800 pb-3">
+                    <div>
+                      <h3 className="text-base sm:text-lg font-black text-white flex items-center space-x-2">
+                        <Zap className="w-5 h-5 text-emerald-400" />
+                        <span>Tra Pace Tập Luyện Theo 5KM Race</span>
+                      </h3>
+                      <p className="text-xs text-zinc-400 mt-0.5">
+                        Chọn tốc độ chạy 5KM nhanh nhất của bạn để tự động quy đổi 5 vùng tốc độ tập luyện chuẩn.
+                      </p>
+                    </div>
+                    <div className="px-3.5 py-2 rounded-2xl bg-zinc-950 border border-emerald-500/40 text-center shrink-0">
+                      <span className="text-[10px] uppercase font-bold text-zinc-400 block">Thành tích 5KM</span>
+                      <span className="text-lg font-black text-emerald-400 font-mono">
+                        {activeRow.pace5k}/km <span className="text-xs text-zinc-400 font-normal">({activeRow.total5kTime})</span>
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* Thanh chọn Pace 5KM dạng nút chạm nhanh */}
+                  <div className="space-y-1.5">
+                    <span className="text-[11px] font-bold text-zinc-400 uppercase tracking-wider">Chọn Pace 5KM của bạn (phút/km):</span>
+                    <div className="flex items-center space-x-1.5 overflow-x-auto pb-1.5 scrollbar-none">
+                      {FIVE_KM_PACE_CHART.map((row) => (
+                        <button
+                          key={row.pace5k}
+                          type="button"
+                          onClick={() => setSelected5kPace(row.pace5k)}
+                          className={`px-3 py-2 rounded-xl font-mono text-xs font-black whitespace-nowrap transition active:scale-95 border ${
+                            selected5kPace === row.pace5k
+                              ? 'bg-emerald-500 text-zinc-950 border-emerald-400 shadow-md shadow-emerald-500/20'
+                              : 'bg-zinc-950 text-zinc-300 border-zinc-800 hover:border-zinc-700'
+                          }`}
+                        >
+                          {row.pace5k}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* 5 Thẻ kết quả trực quan cho Pace 5KM đang chọn */}
+                  <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+                    <div className="p-3 rounded-2xl bg-zinc-950/90 border border-emerald-500/30 space-y-1">
+                      <span className="text-[10px] font-black text-emerald-400 uppercase block">🍃 Easy (Z1-Z2)</span>
+                      <div className="text-sm sm:text-base font-black text-white font-mono">{activeRow.easy}</div>
+                      <p className="text-[10px] text-zinc-400 leading-snug">Thoải mái, nói chuyện được, xây nền bền.</p>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-zinc-950/90 border border-teal-500/30 space-y-1">
+                      <span className="text-[10px] font-black text-teal-400 uppercase block">🏃 Long Run (Z2)</span>
+                      <div className="text-sm sm:text-base font-black text-white font-mono">{activeRow.longRun}</div>
+                      <p className="text-[10px] text-zinc-400 leading-snug">Đều đặn, đốt mỡ, tích lũy sức bền dài.</p>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-zinc-950/90 border border-amber-500/30 space-y-1">
+                      <span className="text-[10px] font-black text-amber-400 uppercase block">⚡ Tempo (Z3)</span>
+                      <div className="text-sm sm:text-base font-black text-white font-mono">{activeRow.tempo}</div>
+                      <p className="text-[10px] text-zinc-400 leading-snug">Khó vừa phải, nâng ngưỡng Lactate.</p>
+                    </div>
+
+                    <div className="p-3 rounded-2xl bg-zinc-950/90 border border-orange-500/30 space-y-1">
+                      <span className="text-[10px] font-black text-orange-400 uppercase block">🔥 Threshold (Z4)</span>
+                      <div className="text-sm sm:text-base font-black text-white font-mono">{activeRow.threshold}</div>
+                      <p className="text-[10px] text-zinc-400 leading-snug">Cường độ cao, đẩy trần VO2max & tốc độ.</p>
+                    </div>
+
+                    <div className="col-span-2 sm:col-span-1 p-3 rounded-2xl bg-zinc-950/90 border border-rose-500/30 space-y-1">
+                      <span className="text-[10px] font-black text-rose-400 uppercase block">🚀 Intervals (Z4-Z5)</span>
+                      <div className="text-sm sm:text-base font-black text-white font-mono">{activeRow.intervals}</div>
+                      <p className="text-[10px] text-zinc-400 leading-snug">Rất nặng, bứt phá sức mạnh & guồng chân.</p>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Bảng tra cứu đầy đủ toàn bộ 11 mốc Pace 5KM */}
+                <div className="bg-zinc-900 border border-zinc-800 rounded-3xl p-4 sm:p-5 space-y-3 shadow-xl">
+                  <div className="flex items-center justify-between">
+                    <h4 className="text-sm font-black text-white">Bảng Quy Đổi Đầy Đủ (Pace 3:30 → 8:30 /km)</h4>
+                    <span className="text-[10px] text-zinc-400">Chạm dòng để chọn</span>
+                  </div>
+
+                  <div className="overflow-x-auto -mx-2 px-2">
+                    <table className="w-full text-left border-collapse text-[11px] sm:text-xs font-mono">
+                      <thead>
+                        <tr className="border-b border-zinc-800 text-zinc-400 font-sans text-[10px] uppercase">
+                          <th className="py-2 px-2">5K Pace</th>
+                          <th className="py-2 px-2 text-emerald-400">Easy</th>
+                          <th className="py-2 px-2 text-amber-400">Tempo</th>
+                          <th className="py-2 px-2 text-orange-400">VO2 Max</th>
+                          <th className="py-2 px-2 text-rose-400">Intervals</th>
+                        </tr>
+                      </thead>
+                      <tbody className="divide-y divide-zinc-800/60">
+                        {FIVE_KM_PACE_CHART.map((row) => {
+                          const isSelected = row.pace5k === selected5kPace;
+                          return (
+                            <tr
+                              key={row.pace5k}
+                              onClick={() => setSelected5kPace(row.pace5k)}
+                              className={`cursor-pointer transition ${
+                                isSelected
+                                  ? 'bg-emerald-500/20 text-white font-bold'
+                                  : 'hover:bg-zinc-800/50 text-zinc-300'
+                              }`}
+                            >
+                              <td className="py-2 px-2 font-black text-white">
+                                {isSelected && <span className="text-emerald-400 mr-1">✓</span>}
+                                {row.pace5k}
+                              </td>
+                              <td className="py-2 px-2 text-emerald-400">{row.easy}</td>
+                              <td className="py-2 px-2 text-amber-400">{row.tempo}</td>
+                              <td className="py-2 px-2 text-orange-400">{row.threshold}</td>
+                              <td className="py-2 px-2 text-rose-400">{row.intervals}</td>
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <p className="text-[11px] text-zinc-400 italic pt-1">
+                    💡 Mẹo: Hãy lắng nghe cơ thể! Nếu hôm nào trời nóng hoặc mệt mỏi, hãy ưu tiên chạy theo cảm nhận nỗ lực (nhịp tim) thay vì ép chặt theo con số Pace.
+                  </p>
+                </div>
+              </div>
+            );
+          })()}
 
           {/* VIEW 1: VÙNG NHỊP TIM KHOA HỌC (HEART RATE ZONES) */}
           {paceSubTab === 'heart_zones' && (() => {

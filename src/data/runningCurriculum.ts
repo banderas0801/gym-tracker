@@ -1413,3 +1413,28 @@ export function formatPace(paceSeconds: number): string {
   const s = Math.round(paceSeconds % 60);
   return `${m}:${s.toString().padStart(2, '0')}`;
 }
+
+// 5. BẢNG TRA PACE TẬP LUYỆN THEO THÀNH TÍCH CHẠY 5KM (KNOW YOUR PACE CHART)
+export interface FiveKmPaceRow {
+  pace5k: string;      // VD: '6:00'
+  total5kTime: string; // VD: '30:00'
+  easy: string;        // Z1 - Z2
+  longRun: string;     // Z2
+  tempo: string;       // Z3
+  threshold: string;   // Z4 (Threshold / VO2 Max)
+  intervals: string;   // Z4 - Z5
+}
+
+export const FIVE_KM_PACE_CHART: FiveKmPaceRow[] = [
+  { pace5k: '3:30', total5kTime: '17:30', easy: '4:30 - 5:15', longRun: '4:30 - 5:15', tempo: '3:20 - 3:40', threshold: '3:05 - 3:20', intervals: '2:45 - 3:05' },
+  { pace5k: '4:00', total5kTime: '20:00', easy: '5:00 - 5:45', longRun: '5:00 - 5:45', tempo: '3:50 - 4:10', threshold: '3:30 - 3:45', intervals: '3:10 - 3:30' },
+  { pace5k: '4:30', total5kTime: '22:30', easy: '5:30 - 6:15', longRun: '5:30 - 6:15', tempo: '4:20 - 4:40', threshold: '3:55 - 4:10', intervals: '3:30 - 3:50' },
+  { pace5k: '5:00', total5kTime: '25:00', easy: '6:00 - 6:45', longRun: '6:00 - 6:45', tempo: '4:50 - 5:10', threshold: '4:20 - 4:35', intervals: '3:50 - 4:10' },
+  { pace5k: '5:30', total5kTime: '27:30', easy: '6:30 - 7:15', longRun: '6:30 - 7:15', tempo: '5:20 - 5:40', threshold: '4:45 - 5:00', intervals: '4:10 - 4:30' },
+  { pace5k: '6:00', total5kTime: '30:00', easy: '7:00 - 7:45', longRun: '7:00 - 7:45', tempo: '5:50 - 6:10', threshold: '5:10 - 5:25', intervals: '4:30 - 4:50' },
+  { pace5k: '6:30', total5kTime: '32:30', easy: '7:30 - 8:15', longRun: '7:30 - 8:15', tempo: '6:20 - 6:40', threshold: '5:35 - 5:50', intervals: '4:50 - 5:10' },
+  { pace5k: '7:00', total5kTime: '35:00', easy: '8:00 - 8:45', longRun: '8:00 - 8:45', tempo: '6:50 - 7:10', threshold: '6:00 - 6:15', intervals: '5:10 - 5:30' },
+  { pace5k: '7:30', total5kTime: '37:30', easy: '8:30 - 9:15', longRun: '8:30 - 9:15', tempo: '7:20 - 7:40', threshold: '6:25 - 6:40', intervals: '5:30 - 5:50' },
+  { pace5k: '8:00', total5kTime: '40:00', easy: '9:00 - 9:45', longRun: '9:00 - 9:45', tempo: '7:50 - 8:10', threshold: '6:50 - 7:05', intervals: '5:50 - 6:10' },
+  { pace5k: '8:30', total5kTime: '42:30', easy: '9:30 - 10:15', longRun: '9:30 - 10:15', tempo: '8:20 - 8:40', threshold: '7:15 - 7:30', intervals: '6:10 - 6:30' }
+];

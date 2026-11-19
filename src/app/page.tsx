@@ -136,19 +136,6 @@ export default function Home() {
                 {zoomScale === 1 ? '100%' : zoomScale === 1.15 ? '115%' : '130%'}
               </span>
             </button>
-
-            {/* Persistent Mini Session Banner if active */}
-            {activeSession && isSessionMinimized && (
-              <button
-                onClick={() => setIsSessionMinimized(false)}
-                className="px-2.5 sm:px-3 py-1.5 rounded-xl bg-emerald-500/20 border border-emerald-500/40 text-emerald-300 text-xs font-bold flex items-center space-x-1.5 hover:bg-emerald-500/30 transition active:scale-95 animate-pulse"
-                title="Đang có buổi tập chạy ngầm - Nhấn để tiếp tục tập"
-              >
-                <Flame className="w-3.5 h-3.5 text-emerald-400 fill-emerald-400" />
-                <span className="hidden sm:inline">Tiếp tục:</span>
-                <span className="truncate max-w-[80px] sm:max-w-[120px]">{activeSession.title}</span>
-              </button>
-            )}
           </div>
         </div>
 
@@ -259,17 +246,17 @@ export default function Home() {
             )}
             {activeTab === 'body' && (
               <ErrorBoundary fallbackTitle="Không thể tải chỉ số hình thể">
-                <BodyTracker onBackToHome={handleGoHome} />
+                <BodyTracker />
               </ErrorBoundary>
             )}
             {activeTab === 'exercises' && (
               <ErrorBoundary fallbackTitle="Không thể tải thư viện bài tập">
-                <ExerciseBrowser onBackToHome={handleGoHome} />
+                <ExerciseBrowser />
               </ErrorBoundary>
             )}
             {activeTab === 'history' && (
               <ErrorBoundary fallbackTitle="Không thể tải lịch sử tập">
-                <HistoryAnalytics onBackToHome={handleGoHome} />
+                <HistoryAnalytics />
               </ErrorBoundary>
             )}
           </>
