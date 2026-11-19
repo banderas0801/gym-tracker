@@ -56,6 +56,11 @@ export default function RoutineList({
     setTodayRec(getTodayRecommendation(new Date().getDay()));
   }, []);
 
+  // Tự động cuộn lên đầu khi chuyển tab Tổng Quan / Giáo Án / Gym Phổ
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, [mainTab]);
+
   // Bắt đầu buổi tập gợi ý hôm nay (1-chạm)
   const handleStartTodayRecommendation = () => {
     const matched = routines.find((r) => r.id === todayRec.routineId) || routines[0];

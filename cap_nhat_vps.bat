@@ -1,16 +1,16 @@
 @echo off
 chcp 65001 > nul
-title CAP NHAT GYM TRACKER - DON DEP LAYOUT & BANG TRA PACE 5KM
+title CAP NHAT GYM TRACKER - XOA TRUNG LAP MAN HINH CHAY BO
 color 0A
 echo ====================================================================
-echo   CAP NHAT GYM TRACKER: DON DEP TRUNG LAP LAYOUT & TRA PACE 5KM
+echo   CAP NHAT GYM TRACKER: XOA TRUNG LAP MAN HINH CHAY BO & BUILD
 echo ====================================================================
 cd /d C:\Users\Admin\gym-tracker
 
 echo.
 echo [1/3] Day thay doi len GitHub...
 git add .
-git commit -m "feat(ui): deduplicate back buttons & banners, clean expanded run cards, add interactive 5KM Race Pace Chart"
+git commit -m "fix(running): remove duplicate Treadmill manual input banner, prevent pace text truncation on mobile"
 git push origin master
 
 echo.

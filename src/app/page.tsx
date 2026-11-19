@@ -21,6 +21,11 @@ export default function Home() {
   const [zoomScale, setZoomScale] = useState<number>(1);
   const [isMobileDevice, setIsMobileDevice] = useState(false);
 
+  // Tự động cuộn lên đầu trang khi chuyển Tab chính để không bị kẹt ở vị trí cuộn cũ
+  React.useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, [activeTab]);
+
   React.useEffect(() => {
     // 1. Khôi phục kích thước chữ & zoom an toàn trên mọi trình duyệt di động
     const saved = localStorage.getItem('gym_zoom_scale');

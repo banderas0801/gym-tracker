@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Play, 
   Pause, 
@@ -158,6 +158,13 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
   const timerIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const metronomeIntervalRef = useRef<NodeJS.Timeout | null>(null);
   const audioCtxRef = useRef<AudioContext | null>(null);
+  const pace5kTopRef = useRef<HTMLDivElement | null>(null);
+  const [isGoalConfigOpen, setIsGoalConfigOpen] = useState(false);
+
+  // Tự động cuộn lên đầu mỗi khi chuyển Sub-Tab chạy bộ hoặc đổi bảng Pace
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+  }, [activeSubTab, paceSubTab]);
 
   // Khởi tạo và đồng bộ
   useEffect(() => {
@@ -473,8 +480,6 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
   const [mibroCadence, setMibroCadence] = useState('');
   const [treadmillIncline, setTreadmillIncline] = useState('0'); // Không ghi thì mặc định = 0!
   const [selectedPlanDayKey, setSelectedPlanDayKey] = useState<string>('');
-  const [expandedDayKey, setExpandedDayKey] = useState<string | null>(null);
-  const [isAllDaysExpanded, setIsAllDaysExpanded] = useState<boolean>(false);
 
   // Tính toán nhanh Live Preview trong Modal
   const inputDurationSec = (parseInt(mibroMin, 10) || 0) * 60 + (parseInt(mibroSec, 10) || 0);
@@ -652,10 +657,11 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
   const currentWeekPlan = HM_TRAINING_PLAN.find((w) => w.weekNumber === currentWeekNum) || HM_TRAINING_PLAN[0];
   const currentSubDetails = SUB_PACE_TABLE[targetSub];
 
-  const todayDayOfWeek = useMemo(() => {
+  const [todayDayOfWeek, setTodayDayOfWeek] = useState<number>(2);
+  useEffect(() => {
     // 0=Chủ nhật (8), 1=Thứ 2 (2), 2=Thứ 3 (3), 3=Thứ 4 (4), 4=Thứ 5 (5), 5=Thứ 6 (6), 6=Thứ 7 (7)
     const d = new Date().getDay();
-    return d === 0 ? 8 : d + 1;
+    setTodayDayOfWeek(d === 0 ? 8 : d + 1);
   }, []);
 
   const todayDayPlan = useMemo(() => {
@@ -665,64 +671,64 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
   const todayPlanDetail = runningGroup === 'groupA' ? todayDayPlan.groupA : todayDayPlan.groupB;
 
   return (
-    <div className="max-w-3xl mx-auto space-y-4 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
-      {/* 🔝 THANH ĐIỀU HƯỚNG & TRẠNG THÁI GỌN GÀNG (STICKY COMPACT HEADER) */}
-      <div className="sticky top-16 z-30 bg-black/95 backdrop-blur-md pt-1 pb-2.5 -mx-3 px-3 sm:-mx-4 sm:px-4 border-b border-zinc-800/80 space-y-2">
-        <div className="flex items-center justify-between gap-2 max-w-3xl mx-auto">
-          {/* Sub & Pace Pill (Bấm để xem bảng Pace & Nhịp Tim) */}
+    <div className="max-w-3xl mx-auto space-y-3 pb-24 px-3 sm:px-4 animate-in fade-in duration-300">
+      {/* Thanh tiện ích nhanh (Cuộn đi tự nhiên khi vuốt xuống để không chiếm diện tích màn hình) */}
+      <div className="flex items-center justify-between gap-2 max-w-3xl mx-auto pt-0.5">
+        {/* Sub & Pace Pill (Bấm để xem bảng Pace & Nhịp Tim) */}
+        <button
+          type="button"
+          onClick={() => {
+            setActiveSubTab('paces');
+            setPaceSubTab('vdot_paces');
+          }}
+          className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-amber-500/30 text-amber-300 font-extrabold text-xs transition active:scale-95 min-w-0 truncate"
+          title="Xem chi tiết bảng Pace & Nhịp Tim"
+        >
+          <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+          <span className="truncate">{currentSubDetails.label}</span>
+          <span className="text-zinc-500 font-normal">•</span>
+          <span className="font-mono text-white text-[11px] shrink-0">{currentSubDetails.racePace}/km</span>
+        </button>
+
+        {/* 3 Quick Utility Buttons */}
+        <div className="flex items-center space-x-1 shrink-0">
+          <button
+            type="button"
+            onClick={() => setIsVDOTModalOpen(true)}
+            className="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white text-xs font-semibold flex items-center space-x-1 transition active:scale-95"
+            title="Tính toán VDOT Jack Daniels"
+          >
+            <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline text-[11px]">VDOT</span>
+          </button>
+
           <button
             type="button"
             onClick={() => {
-              setActiveSubTab('paces');
-              setPaceSubTab('vdot_paces');
+              setInputSource('mibro');
+              setIsMibroModalOpen(true);
             }}
-            className="flex items-center space-x-1.5 px-3 py-1.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-amber-500/30 text-amber-300 font-extrabold text-xs transition active:scale-95 min-w-0 truncate"
-            title="Xem chi tiết bảng Pace & Nhịp Tim"
+            className="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center space-x-1 transition active:scale-95"
+            title="Nhập dữ liệu đồng hồ Mibro / máy chạy"
           >
-            <Zap className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-            <span className="truncate">{currentSubDetails.label}</span>
-            <span className="text-zinc-500 font-normal">•</span>
-            <span className="font-mono text-white text-[11px] shrink-0">{currentSubDetails.racePace}/km</span>
+            <Watch className="w-3.5 h-3.5 text-amber-400" />
+            <span className="hidden sm:inline text-[11px]">Nhập Số</span>
           </button>
 
-          {/* 3 Quick Utility Buttons */}
-          <div className="flex items-center space-x-1 shrink-0">
-            <button
-              type="button"
-              onClick={() => setIsVDOTModalOpen(true)}
-              className="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-300 hover:text-white text-xs font-semibold flex items-center space-x-1 transition active:scale-95"
-              title="Tính toán VDOT Jack Daniels"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden sm:inline text-[11px]">VDOT</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => {
-                setInputSource('mibro');
-                setIsMibroModalOpen(true);
-              }}
-              className="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/30 text-amber-300 text-xs font-semibold flex items-center space-x-1 transition active:scale-95"
-              title="Nhập dữ liệu đồng hồ Mibro / máy chạy"
-            >
-              <Watch className="w-3.5 h-3.5 text-amber-400" />
-              <span className="hidden sm:inline text-[11px]">Nhập Số</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => setIsStravaModalOpen(true)}
-              className="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold flex items-center space-x-1 transition active:scale-95"
-              title="Đồng bộ Strava / GPX"
-            >
-              <Share2 className="w-3.5 h-3.5 text-blue-400" />
-              <span className="hidden sm:inline text-[11px]">Strava</span>
-            </button>
-          </div>
+          <button
+            type="button"
+            onClick={() => setIsStravaModalOpen(true)}
+            className="p-1.5 sm:px-2.5 sm:py-1 rounded-xl bg-blue-500/10 hover:bg-blue-500/20 border border-blue-500/30 text-blue-300 text-xs font-semibold flex items-center space-x-1 transition active:scale-95"
+            title="Đồng bộ Strava / GPX"
+          >
+            <Share2 className="w-3.5 h-3.5 text-blue-400" />
+            <span className="hidden sm:inline text-[11px]">Strava</span>
+          </button>
         </div>
+      </div>
 
-        {/* 5 SUB-TABS NAVIGATION GỌN GÀNG 5 CỘT - VỪA VẶN MÀN HÌNH MOBILE KHÔNG BỊ TRÀN */}
+      {/* 🔝 THANH 5 SUB-TAB SIÊU MỎNG DÍNH TRÊN CÙNG (CHỈ DÍNH ĐÚNG 1 HÀNG TAB) */}
+      <div className="sticky top-16 z-30 bg-black/95 backdrop-blur-md py-1.5 -mx-3 px-3 sm:-mx-4 sm:px-4 border-b border-zinc-800/80">
         <div className="grid grid-cols-5 gap-1 p-1 bg-zinc-900/90 rounded-2xl border border-zinc-800 shadow-md max-w-3xl mx-auto">
           <button
             type="button"
@@ -793,71 +799,93 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
 
       {/* 3. NỘI DUNG TỪNG SUB-TAB */}
 
-      {/* TAB 1: GIÁO ÁN 8 TUẦN HM */}
+      {/* TAB 1: GIÁO ÁN 12 TUẦN HM */}
       {activeSubTab === 'plan' && (
-        <div className="space-y-4 animate-in fade-in duration-200">
-          {/* Cấu Hình Mục Tiêu & Nhóm Chạy Gọn Gàng */}
-          <div className="bg-zinc-900/90 border border-zinc-800 rounded-3xl p-3.5 sm:p-4 space-y-3">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-              <div className="flex items-center space-x-2">
-                <span className="text-xs font-semibold text-zinc-300">Mục tiêu Half Marathon:</span>
-                <select
-                  value={targetSub}
-                  onChange={(e) => setTargetSub(e.target.value as TargetSub)}
-                  className="bg-zinc-950 border border-amber-500/40 text-amber-300 font-extrabold px-2.5 py-1 rounded-xl text-xs focus:outline-none focus:border-amber-400"
-                >
-                  <option value="sub130">Sub 1:30 (&lt; 1h30m - Tinh hoa)</option>
-                  <option value="sub145">Sub 1:45 (&lt; 1h45m - Nâng cao)</option>
-                  <option value="sub200">Sub 2:00 (&lt; 2h00m - Khá giỏi)</option>
-                  <option value="sub215">Sub 2:15 (&lt; 2h15m - Tiêu chuẩn)</option>
-                  <option value="sub230">Sub 2:30 (&lt; 2h30m - Người mới)</option>
-                  <option value="sub245">Sub 2:45 (&lt; 2h45m - Khởi đầu)</option>
-                  <option value="sub300">Sub 3:00 (&lt; 3h00m - Hoàn thành)</option>
-                </select>
+        <div className="space-y-3.5 animate-in fade-in duration-200">
+          {/* Thanh Cấu Hình Mục Tiêu Siêu Gọn (Thu gọn mặc định, chạm để đổi Sub / Nhóm A-B) */}
+          <div className="bg-zinc-900/90 border border-zinc-800 rounded-2xl overflow-hidden">
+            <button
+              type="button"
+              onClick={() => setIsGoalConfigOpen(!isGoalConfigOpen)}
+              className="w-full px-3.5 py-2.5 flex items-center justify-between text-xs hover:bg-zinc-800/60 transition"
+            >
+              <div className="flex items-center space-x-2 min-w-0 truncate">
+                <Sliders className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span className="text-zinc-400 shrink-0">Cấu hình:</span>
+                <span className="font-black text-amber-300 truncate">{currentSubDetails.label.split(' ')[0]} {currentSubDetails.label.split(' ')[1]}</span>
+                <span className="text-zinc-600">•</span>
+                <span className="font-bold text-white shrink-0">{runningGroup === 'groupA' ? 'Nhóm A (Km)' : 'Nhóm B (Phút)'}</span>
               </div>
+              <span className="text-[11px] font-bold text-zinc-400 flex items-center space-x-1 shrink-0 ml-2">
+                <span>{isGoalConfigOpen ? 'Thu gọn' : 'Đổi'}</span>
+                {isGoalConfigOpen ? <ChevronUp className="w-3.5 h-3.5" /> : <ChevronDown className="w-3.5 h-3.5" />}
+              </span>
+            </button>
 
-              {/* Nhóm A / Nhóm B toggle */}
-              <div className="flex items-center space-x-1 bg-zinc-950 p-1 rounded-xl border border-zinc-800 self-start sm:self-auto">
-                <button
-                  type="button"
-                  onClick={() => setRunningGroup('groupA')}
-                  className={`py-1 px-2.5 rounded-lg text-xs font-bold transition ${
-                    runningGroup === 'groupA'
-                      ? 'bg-amber-500 text-zinc-950 font-black shadow-sm'
-                      : 'text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  Nhóm A (Km)
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setRunningGroup('groupB')}
-                  className={`py-1 px-2.5 rounded-lg text-xs font-bold transition ${
-                    runningGroup === 'groupB'
-                      ? 'bg-amber-500 text-zinc-950 font-black shadow-sm'
-                      : 'text-zinc-400 hover:text-white'
-                  }`}
-                >
-                  Nhóm B (Phút)
-                </button>
-              </div>
-            </div>
+            {isGoalConfigOpen && (
+              <div className="px-3.5 pb-3.5 pt-2 border-t border-zinc-800/80 space-y-3 animate-in fade-in duration-150">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <div className="flex items-center space-x-2">
+                    <span className="text-xs font-semibold text-zinc-300">Mục tiêu HM:</span>
+                    <select
+                      value={targetSub}
+                      onChange={(e) => setTargetSub(e.target.value as TargetSub)}
+                      className="bg-zinc-950 border border-amber-500/40 text-amber-300 font-extrabold px-2.5 py-1 rounded-xl text-xs focus:outline-none focus:border-amber-400"
+                    >
+                      <option value="sub130">Sub 1:30 (&lt; 1h30m - Tinh hoa)</option>
+                      <option value="sub145">Sub 1:45 (&lt; 1h45m - Nâng cao)</option>
+                      <option value="sub200">Sub 2:00 (&lt; 2h00m - Khá giỏi)</option>
+                      <option value="sub215">Sub 2:15 (&lt; 2h15m - Tiêu chuẩn)</option>
+                      <option value="sub230">Sub 2:30 (&lt; 2h30m - Người mới)</option>
+                      <option value="sub245">Sub 2:45 (&lt; 2h45m - Khởi đầu)</option>
+                      <option value="sub300">Sub 3:00 (&lt; 3h00m - Hoàn thành)</option>
+                    </select>
+                  </div>
 
-            {/* Dải Pace Nhanh */}
-            <div className="grid grid-cols-3 gap-1.5 text-center font-mono pt-1 border-t border-zinc-800/80">
-              <div className="bg-zinc-950/80 p-1.5 rounded-xl border border-emerald-500/20">
-                <div className="text-[10px] text-zinc-400 font-sans">Easy (E)</div>
-                <div className="text-xs font-bold text-emerald-400 truncate">{currentSubDetails.easy}</div>
+                  {/* Nhóm A / Nhóm B toggle */}
+                  <div className="flex items-center space-x-1 bg-zinc-950 p-1 rounded-xl border border-zinc-800 self-start sm:self-auto">
+                    <button
+                      type="button"
+                      onClick={() => setRunningGroup('groupA')}
+                      className={`py-1 px-2.5 rounded-lg text-xs font-bold transition ${
+                        runningGroup === 'groupA'
+                          ? 'bg-amber-500 text-zinc-950 font-black shadow-sm'
+                          : 'text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      Nhóm A (Km)
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setRunningGroup('groupB')}
+                      className={`py-1 px-2.5 rounded-lg text-xs font-bold transition ${
+                        runningGroup === 'groupB'
+                          ? 'bg-amber-500 text-zinc-950 font-black shadow-sm'
+                          : 'text-zinc-400 hover:text-white'
+                      }`}
+                    >
+                      Nhóm B (Phút)
+                    </button>
+                  </div>
+                </div>
+
+                {/* Dải Pace Nhanh */}
+                <div className="grid grid-cols-3 gap-1.5 text-center font-mono pt-1 border-t border-zinc-800/80">
+                  <div className="bg-zinc-950/80 p-1.5 rounded-xl border border-emerald-500/20">
+                    <div className="text-[10px] text-zinc-400 font-sans">Easy (E)</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-emerald-400 whitespace-nowrap">{currentSubDetails.easy}</div>
+                  </div>
+                  <div className="bg-zinc-950/80 p-1.5 rounded-xl border border-teal-500/20">
+                    <div className="text-[10px] text-zinc-400 font-sans">Long Run (L)</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-teal-400 whitespace-nowrap">{currentSubDetails.longRun}</div>
+                  </div>
+                  <div className="bg-zinc-950/80 p-1.5 rounded-xl border border-rose-500/20">
+                    <div className="text-[10px] text-zinc-400 font-sans">Interval (I)</div>
+                    <div className="text-[11px] sm:text-xs font-bold text-rose-400 whitespace-nowrap">{currentSubDetails.interval}</div>
+                  </div>
+                </div>
               </div>
-              <div className="bg-zinc-950/80 p-1.5 rounded-xl border border-teal-500/20">
-                <div className="text-[10px] text-zinc-400 font-sans">Long Run (L)</div>
-                <div className="text-xs font-bold text-teal-400 truncate">{currentSubDetails.longRun}</div>
-              </div>
-              <div className="bg-zinc-950/80 p-1.5 rounded-xl border border-rose-500/20">
-                <div className="text-[10px] text-zinc-400 font-sans">Interval (I)</div>
-                <div className="text-xs font-bold text-rose-400 truncate">{currentSubDetails.interval}</div>
-              </div>
-            </div>
+            )}
           </div>
 
           {/* 🔥 THẺ HÔM NAY CHẠY GÌ (TODAY'S RUN HERO CARD) */}
@@ -1326,7 +1354,7 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
           {paceSubTab === 'pace_5k' && (() => {
             const activeRow = FIVE_KM_PACE_CHART.find((r) => r.pace5k === selected5kPace) || FIVE_KM_PACE_CHART[5];
             return (
-              <div className="space-y-4 animate-in fade-in duration-200">
+              <div ref={pace5kTopRef} className="space-y-4 animate-in fade-in duration-200 scroll-mt-32">
                 {/* Bộ chọn nhanh Pace 5KM hiện tại */}
                 <div className="bg-gradient-to-br from-zinc-900 via-zinc-900 to-emerald-950/30 border border-emerald-500/30 rounded-3xl p-4 sm:p-5 space-y-4 shadow-xl">
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-zinc-800 pb-3">
@@ -1426,7 +1454,10 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                           return (
                             <tr
                               key={row.pace5k}
-                              onClick={() => setSelected5kPace(row.pace5k)}
+                              onClick={() => {
+                                setSelected5kPace(row.pace5k);
+                                pace5kTopRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                              }}
                               className={`cursor-pointer transition ${
                                 isSelected
                                   ? 'bg-emerald-500/20 text-white font-bold'
@@ -1965,31 +1996,6 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
                     <span>Biến Tốc Interval</span>
                   </button>
                 </div>
-
-                {/* Lựa chọn Nhập Cứng nếu đã chạy xong hoặc không muốn bấm nút bắt đầu */}
-                <div className="pt-1 flex items-center justify-between gap-2 p-2.5 rounded-xl bg-zinc-950/80 border border-amber-500/20">
-                  <div className="min-w-0">
-                    <span className="text-xs font-bold text-amber-300 block truncate flex items-center space-x-1">
-                      <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-                      <span>Đã chạy xong máy mà không bật bấm giờ?</span>
-                    </span>
-                    <span className="text-[10px] text-zinc-400 block truncate">
-                      Nhập cứng Tốc độ (km/h) + Số phút + Độ dốc (mặc định 0%)
-                    </span>
-                  </div>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setInputSource('treadmill');
-                      setManualInputMethod('by_speed');
-                      setIsMibroModalOpen(true);
-                    }}
-                    className="px-3 py-1.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-black text-xs shrink-0 transition active:scale-95 shadow-sm flex items-center space-x-1"
-                  >
-                    <Sliders className="w-3.5 h-3.5" />
-                    <span>Nhập Cứng</span>
-                  </button>
-                </div>
               </div>
             )}
 
@@ -2058,9 +2064,22 @@ export default function RunningTracker({ onGoToGymWorkout }: RunningTrackerProps
             {/* Input Treadmill Manual Distance if in Treadmill mode */}
             {runMode === 'treadmill' && (
               <div className="p-3.5 rounded-2xl bg-zinc-900 border border-zinc-800 space-y-2">
-                <span className="text-xs font-bold text-zinc-300 block">
-                  Nhập thông số máy chạy bộ (Treadmill):
-                </span>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-xs font-bold text-zinc-300">
+                    Thông số máy chạy (Treadmill):
+                  </span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setInputSource('treadmill');
+                      setManualInputMethod('by_speed');
+                      setIsMibroModalOpen(true);
+                    }}
+                    className="text-[11px] font-bold text-amber-400 hover:text-amber-300 underline shrink-0"
+                  >
+                    Nhập nhanh theo km/h
+                  </button>
+                </div>
                 <div className="grid grid-cols-2 gap-2">
                   <div>
                     <label className="text-[11px] text-zinc-400 block">Số Km trên máy:</label>
